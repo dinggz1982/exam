@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         .and()
         .and()  
         .logout()  
-        .logoutSuccessUrl("/index") //退出登录后的默认网址是”/home”  
+        .logoutSuccessUrl("/login") //退出登录后的默认网址是”/login”  
         .permitAll()  
         .invalidateHttpSession(true)  
         .and()  

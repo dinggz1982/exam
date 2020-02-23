@@ -22,7 +22,7 @@ public class AdminController  {
 	@Autowired
 	private HttpSession session;
 	
-	@GetMapping("/admin")
+	@GetMapping("/system/index")
 	public String admin(Model model){
 		User currentUser=  (User) session.getAttribute("currentUser");
 		Set<Resource> resources =  resourceService.getMenuByUser(currentUser);

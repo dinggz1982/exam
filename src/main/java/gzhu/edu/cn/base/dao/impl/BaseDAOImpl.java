@@ -332,14 +332,16 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 		set = map.keySet();
 		List<String> list = new ArrayList<>(set);
 		List<Object> filedlist = new ArrayList<>();
+		int k = 0;//占位符
 		for (String filed : list) {
-			sql += "u." + filed + "=? and ";
+			sql += "u." + filed + "=?"+k+" and ";
 			filedlist.add(filed);
+			k++;
 		}
 		sql = sql.substring(0, sql.length() - 4);
 		Query query = entityManager.createQuery(sql);
 		for (int i = 0; i < filedlist.size(); i++) {
-			query.setParameter(i + 1, map.get(filedlist.get(i)));
+			query.setParameter(i, map.get(filedlist.get(i)));
 		}
 		return query.getSingleResult();
 	}

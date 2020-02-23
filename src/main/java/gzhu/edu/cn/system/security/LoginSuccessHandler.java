@@ -38,7 +38,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 		if(url!=null&&!url.equals("")){
 			response.sendRedirect(url);
 		}else{
-			response.sendRedirect("/admin");
+			response.sendRedirect("/system/index");
 		}
 		
 		// super.onAuthenticationSuccess(request, response, authentication);
