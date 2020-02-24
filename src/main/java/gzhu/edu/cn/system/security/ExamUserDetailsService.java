@@ -24,6 +24,9 @@ public class ExamUserDetailsService implements UserDetailsService {
 	@Autowired
 	private IResourceService resourceService;
 
+	/**
+	 * 校验用户
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// 本例使用User中的name作为用户名:

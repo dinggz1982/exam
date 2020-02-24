@@ -136,7 +136,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T findOneBySql(String filed, Object o) {
-		String sql = "from " + className + " u WHERE u." + filed + "=?";
+		String sql = "from " + className + " u WHERE u." + filed + "=?1";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, o);
 		entityManager.close();

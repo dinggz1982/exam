@@ -4,13 +4,7 @@
 <html>
   <head>
     <title>考试系统登录</title>
-	<link rel="stylesheet" href="../../assets/libs/layui/css/layui.css"/>
-    <link rel="stylesheet" href="../../assets/css/login.css?v=316">
-    <link rel="stylesheet" href="../../assets/module/admin.css?v=316">
-     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+	<%@include file="/WEB-INF/views/include/head.jsp" %>
     <script>
         if (window != top) {
             top.location.replace(location.href);
@@ -27,7 +21,7 @@
             <div class="layui-card-header">
                 <i class="layui-icon layui-icon-engine"></i>&nbsp;&nbsp;用户登录
             </div>
-            <form class="layui-card-body layui-form layui-form-pane">
+            <form action="/login" method="post"  class="layui-card-body layui-form layui-form-pane">
                 <div class="layui-form-item">
                     <label class="layui-form-label"><i class="layui-icon layui-icon-username"></i></label>
                     <div class="layui-input-block">
@@ -47,7 +41,7 @@
                     <a href="javascript:;" class="layui-link pull-right">忘记密码？</a>
                 </div>
                 <div class="layui-form-item">
-                    <button lay-filter="login-submit" class="layui-btn layui-btn-fluid" lay-submit>登 录</button>
+                	<input type="submit" class="layui-btn layui-btn-fluid" value="登录"/>
                 </div>
                 <div class="layui-form-item login-other">
                     <label>第三方登录</label>
@@ -68,8 +62,6 @@
 </div>
 
 <!-- js部分 -->
-<script type="text/javascript" src="../../assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="../../assets/js/common.js?v=316"></script>
 <script>
     layui.use(['layer', 'form'], function () {
         var $ = layui.jquery;
@@ -77,13 +69,13 @@
         var form = layui.form;
 
         // 表单提交
-        form.on('submit(login-submit)', function (obj) {
+        /* form.on('submit(login-submit)', function (obj) {
             console.log(obj.field);
             layer.msg('登录成功', {icon: 1, time: 1500}, function () {
                 location.replace('../../index.html')
             });
             return false;
-        });
+        }); */
     });
 </script>
 </body>

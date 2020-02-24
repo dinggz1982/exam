@@ -1,6 +1,7 @@
 package gzhu.edu.cn.system.entity;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,11 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+
 import org.springframework.security.core.GrantedAuthority;
 
 
@@ -47,7 +47,11 @@ public class User implements java.io.Serializable {
 	@ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@OrderBy("id asc")
 	private Set<Role> roles;
+	
+	@Column(name = "state", unique = true, columnDefinition = ("bit(1) comment '用户状态' default 0 "))
+	private boolean state;
 
+	private Date createTime;
 
 	public User() {
 	}
@@ -55,6 +59,22 @@ public class User implements java.io.Serializable {
 	@Column(name = "username", unique = true, columnDefinition = ("varchar(255) comment '用户名'"))
 	private String username;
 	
+	public boolean isState() {
+		return state;
+	}
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	private String realname;
 
 	@Column(name = "password")

@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override  
     protected void configure(HttpSecurity http) throws Exception { 
     	http.headers().frameOptions().disable();
+    	http.csrf().disable();
         http  
         .authorizeRequests()  
         .antMatchers("/assets/**","/static/**").permitAll()//访问：/home 无需登录认证权限  

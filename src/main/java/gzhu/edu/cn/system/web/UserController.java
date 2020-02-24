@@ -15,11 +15,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import gzhu.edu.cn.base.model.JsonData;
 import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.model.TableSplitResult;
 import gzhu.edu.cn.base.util.UploadUserUtils;
@@ -31,7 +31,6 @@ import gzhu.edu.cn.system.service.IResourceService;
 import gzhu.edu.cn.system.service.IUserService;
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
@@ -76,7 +75,7 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("/list")
+	@GetMapping({"/system/user","/system/user/","/system/user/index"})
 	public String list(Integer pageIndex, Integer pageSize, Model model) {
 		pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
 		pageSize = 10;
@@ -99,17 +98,23 @@ public class UserController {
 		return "system/user/list";
 	}
 
-	@GetMapping("/user/userList1")
+	/**
+	 * 返回用户json数据
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	@GetMapping("/user/list.json")
 	@ResponseBody
-	public TableSplitResult<User> userList1(Integer pageIndex, Integer pageSize) {
+	public JsonData<User> userList1(Integer pageIndex, Integer pageSize) {
 		pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
 		pageSize = 10;
-
 		PageData<User> pageData = this.userService.getPageData(pageIndex, pageSize, "");
-		TableSplitResult<User> pageJson = new TableSplitResult<User>();
-		pageJson.setTotal(pageData.getTotalCount());
-		pageJson.setRows(pageData.getPageData());
-		pageJson.setPage(pageIndex);
+		JsonData<User> pageJson = new JsonData<User>();
+		pageJson.setCode(0);
+		pageJson.setCount(pageData.getTotalCount());
+		pageJson.setMsg("用户列表");
+		pageJson.setData(pageData.getPageData());
 		return pageJson;
 	}
 

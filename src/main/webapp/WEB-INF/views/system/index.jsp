@@ -4,17 +4,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="assets/libs/layui/css/layui.css"/>
-<link rel="stylesheet" href="assets/module/admin.css"/>
+<title>后台管理</title>
+<%@include file="/WEB-INF/views/include/head.jsp" %>
 </head>
-body class="layui-layout-body">
+<body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <!-- 头部 -->
     <div class="layui-header">
         <div class="layui-logo">
-            <img src="./assets/images/exam.png"/>
-            <cite>&nbsp;EasyWeb iframe</cite>
+            <img src="${ctx }/assets/images/exam.png"/>
+            <cite>&nbsp;考试系统</cite>
         </div>
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item" lay-unselect>
@@ -73,7 +72,7 @@ body class="layui-layout-body">
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-set"></i>&emsp;<cite>系统管理</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="page/system/user.html">用户管理</a></dd>
+                        <dd><a lay-href="${ctx }/system/user">用户管理</a></dd>
                         <dd><a lay-href="page/system/role.html">角色管理</a></dd>
                         <dd><a lay-href="page/system/authorities.html">权限管理</a></dd>
                         <dd><a lay-href="page/system/loginRecord.html">登录日志</a></dd>
@@ -218,9 +217,6 @@ body class="layui-layout-body">
     </div>
 </div>
 
-<!-- js部分 -->
-<script type="text/javascript" src="./assets/libs/layui/layui.js"></script>
-<script type="text/javascript" src="./assets/js/common.js?v=316"></script>
 <script>
     layui.use(['index'], function () {
         var $ = layui.jquery;
