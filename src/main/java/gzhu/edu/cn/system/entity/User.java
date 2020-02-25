@@ -40,15 +40,13 @@ public class User implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	//int ==> Integer
-	//long ==> Long
+
 
 	@ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@OrderBy("id asc")
 	private Set<Role> roles;
 	
-	@Column(name = "state", unique = true, columnDefinition = ("bit(1) comment '用户状态' default 0 "))
+	@Column(name = "state", columnDefinition = ("bit(1) comment '用户状态' default 0 "))
 	private boolean state;
 
 	private Date createTime;

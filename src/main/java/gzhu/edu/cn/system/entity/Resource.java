@@ -16,7 +16,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Formula;
 
 /**
- * 
  * <p>
  * Title : Resource
  * </p>
@@ -26,9 +25,8 @@ import org.hibernate.annotations.Formula;
  * <p>
  * Company :
  * </p>
- * 
  * @author 丁国柱
- * @date 2017年11月12日 上午1:54:17
+ * @date 2019年11月12日 上午1:54:17
  */
 @Entity
 @Table(name = "sys_resource")

@@ -21,15 +21,15 @@
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">账&emsp;号：</label>
+                        <label class="layui-form-label w-auto">用户名：</label>
                         <div class="layui-input-inline mr0">
-                            <input name="username" class="layui-input" type="text" placeholder="输入账号"/>
+                            <input name="username" class="layui-input" type="text" placeholder="输入用户名"/>
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">用户名：</label>
+                        <label class="layui-form-label w-auto">真实姓名：</label>
                         <div class="layui-input-inline mr0">
-                            <input name="nickName" class="layui-input" type="text" placeholder="输入用户名"/>
+                            <input name="realname" class="layui-input" type="text" placeholder="输入真实姓名"/>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -72,16 +72,16 @@
     <form id="modelUserForm" lay-filter="modelUserForm" class="layui-form model-form">
         <input name="userId" type="hidden"/>
         <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">账号</label>
+            <label class="layui-form-label layui-form-required">用户名</label>
             <div class="layui-input-block">
-                <input name="username" placeholder="请输入账号" type="text" class="layui-input" maxlength="20"
+                <input name="username" placeholder="请输入用户名" type="text" class="layui-input" maxlength="20"
                        lay-verType="tips" lay-verify="required" required/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">用户名</label>
+            <label class="layui-form-label layui-form-required">真实姓名</label>
             <div class="layui-input-block">
-                <input name="nickName" placeholder="请输入用户名" type="text" class="layui-input" maxlength="20"
+                <input name="realname" placeholder="请输入真实姓名" type="text" class="layui-input" maxlength="20"
                        lay-verType="tips" lay-verify="required" required/>
             </div>
         </div>
@@ -98,8 +98,8 @@
                 <select name="roleId" lay-verType="tips" lay-verify="required">
                     <option value="">请选择角色</option>
                     <option value="1">管理员</option>
-                    <option value="2">普通用户</option>
-                    <option value="3">游客</option>
+                    <option value="3">教师</option>
+                    <option value="2">学生</option>
                 </select>
             </div>
         </div>
@@ -130,7 +130,7 @@
             cols: [[
                 {type: 'numbers'},
                 {field: 'username', sort: true, title: '账号'},
-                {field: 'realname', sort: true, title: '用户名'},
+                {field: 'realname', sort: true, title: '真实姓名'},
                 {field: 'sex', sort: true, title: '性别'},
                 {
                     field: 'createTime', sort: true, templet: function (d) {
@@ -159,7 +159,7 @@
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
             } else if (layEvent === 'del') { // 删除
-                doDel(data.userId, data.nickName);
+                doDel(data.id, data.username);
             } else if (layEvent === 'reset') { // 重置密码
                 resetPsw(data.userId, data.nickName);
             }
@@ -197,8 +197,8 @@
         }
 
         // 删除
-        function doDel(userId, nickName) {
-            layer.confirm('确定要删除“' + nickName + '”吗？', {
+        function doDel(userId, username) {
+            layer.confirm('确定要删除“' + username + '”吗？', {
                 skin: 'layui-layer-admin',
                 shade: .1
             }, function (i) {

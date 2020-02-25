@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import gzhu.edu.cn.base.model.JsonData;
 import gzhu.edu.cn.base.model.PageData;
-import gzhu.edu.cn.base.model.TableSplitResult;
 import gzhu.edu.cn.base.util.UploadUserUtils;
 import gzhu.edu.cn.system.entity.Resource;
 import gzhu.edu.cn.system.entity.ResourceButton;
@@ -76,15 +75,15 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping({"/system/user","/system/user/","/system/user/index"})
-	public String list(Integer pageIndex, Integer pageSize, Model model) {
-		pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
+	public String list(Model model) {
+		/*pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
 		pageSize = 10;
 		PageData<User> pageData = this.userService.getPageData(pageIndex, pageSize, "");
 		model.addAttribute("dataList", pageData.getPageData());
 		model.addAttribute("total", pageData.getTotalCount());
 		model.addAttribute("pages", pageData.getTotalPage());
 		model.addAttribute("pagesize", pageData.getPageSize());
-		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("pageIndex", pageIndex);*/
 
 		// 取得用户的按钮权限
 		User currentUser = (User) session.getAttribute("currentUser");
@@ -106,10 +105,24 @@ public class UserController {
 	 */
 	@GetMapping("/user/list.json")
 	@ResponseBody
-	public JsonData<User> userList1(Integer pageIndex, Integer pageSize) {
-		pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
-		pageSize = 10;
-		PageData<User> pageData = this.userService.getPageData(pageIndex, pageSize, "");
+	public JsonData<User> userList1(Integer page, Integer limit,String sex,String username,String realname) {
+		page = page == null ? 1 : page < 1 ? 1 : page;
+		limit = limit == null ? 10 : limit < 1 ? 1 : limit;
+		
+		String hql = "";
+		if(username!=null&&username!=""){
+			hql = "and username like '%"+username+"%' and";
+		}
+		if(realname!=null&&realname!=""){
+			hql = hql +  " realname like '%"+realname+"%' and";
+		}
+		if(sex!=null&&sex!=""){
+			hql = hql + " sex = '" + sex+"' and";
+		}
+		if(hql.length()>0){
+			hql = hql.substring(0, hql.length() - 4);
+		}
+		PageData<User> pageData = this.userService.getPageData(page, limit, hql);
 		JsonData<User> pageJson = new JsonData<User>();
 		pageJson.setCode(0);
 		pageJson.setCount(pageData.getTotalCount());

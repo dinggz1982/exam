@@ -1,6 +1,7 @@
 package gzhu.edu.cn;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,20 +60,62 @@ public class InitUser {
 		this.roleService.save(role1);
 		this.roleService.save(role2);
 
-		User user = new User();
+		//新增管理员信息
+		User admin = new User();
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder(4);
-		user.setPassword(bc.encode("dgz123"));
-		user.setUsername("丁国柱");
-		user.setEmail("dgz888@163.com");
-		user.setNickName("丁国柱");
-		user.setSex("男");
+		admin.setPassword(bc.encode("dgz123"));
+		admin.setUsername("丁国柱");
+		admin.setEmail("dgz888@163.com");
+		admin.setNickName("丁国柱");
+		admin.setSex("男");
 		Set<Role>  roles = new HashSet<Role>();
 		roles.add(role1);
 		//roles.add(role2);
-		user.setRoles(roles);
+		admin.setRoles(roles);
 		
-		userService.saveUser(user);
+		userService.saveUser(admin);
+		
+		//新增学生信息
+		for (int i = 1; i <= 100; i++) {
+			User user  = new User();
+			user.setCreateTime(new Date());
+			user.setPassword(bc.encode("123456"));
+			user.setUsername("学生"+i);
+			user.setEmail("student"+i+"@163.com");
+			user.setNickName("学生"+i);
+			user.setSex("男");
+			roles.clear();
+			roles.add(role1);
+			
+			this.userService.save(user);
+			System.out.println("保存："+ i);
+		}
+		
 	}
+	/*
+	*//**
+	 * 新增学生用户
+	 *//*
+	@Test
+	public void addStudent(){
+		
+		for (int i = 1; i <= 100; i++) {
+			User user  = new User();
+			user.setCreateTime(new Date());
+			BCryptPasswordEncoder bc = new BCryptPasswordEncoder(4);
+			user.setPassword(bc.encode("123456"));
+			user.setUsername("学生"+i);
+			user.setEmail("student"+i+"@163.com");
+			user.setNickName("学生"+i);
+			user.setSex("男");
+			Set<Role>  roles = new HashSet<Role>();
+			Role role1 = new Role();
+			role1.setId(2l);
+			roles.add(role1);
+			this.userService.save(user);
+		}
+		
+	}*/
 	
 	/*@Test
 	public void getPageDataTest(){
