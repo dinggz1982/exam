@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import gzhu.edu.cn.base.log.annotation.Log;
 import gzhu.edu.cn.base.model.JsonData;
 import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UploadUserUtils;
@@ -76,7 +77,8 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping({"/user","/user/","/user/index"})
+	@Log("用户列表页面")
+	@GetMapping("/user/index")
 	public String list(Model model) {
 		/*pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
 		pageSize = 10;

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Service;
+
+import gzhu.edu.cn.base.log.annotation.Log;
 
 /**
  * 认证异常处理器
@@ -18,14 +21,14 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
  * @author 丁国柱
  * @date 2017年12月28日 上午1:25:32
  */
-
+@Service
 public class ExamAuthenticationFailureHandler implements AuthenticationFailureHandler{
 
 	@Override
+	@Log("登录失败")
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		// TODO Auto-generated method stub
-		//例3：自定义跳转到哪个URL  
         //假设login.jsp在webapp路径下  
         //注意：不能访问WEB-INF下的jsp。  
         String strUrl = request.getContextPath() + "/login.jsp";  

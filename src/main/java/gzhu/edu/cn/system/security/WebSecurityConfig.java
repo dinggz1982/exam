@@ -36,6 +36,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Resource
 	private ExamAccessDeniedHandler accessDeniedHandler;
+	
+	@Resource
+	private ExamLogoutHandler logoutHandler;
+	
+	@Resource
+	private ExamAuthenticationFailureHandler authenticationFailureHandler;
 
 	// http://localhost:8080/login 输入正确的用户名密码 并且选中remember-me 则登陆成功，转到 index页面
 	// 再次访问index页面无需登录直接访问
@@ -67,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and().and().logout().logoutSuccessUrl("/login") // 退出登录后的默认网址是”/login”
 				.permitAll().invalidateHttpSession(true).and().rememberMe()// 登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
 				.tokenValiditySeconds(20);*/
-		http.formLogin().loginPage("/login")// 指定登录页是”/login”
+		http.formLogin().loginPage("/login").failureHandler(authenticationFailureHandler)// 指定登录页是”/login”
 		.permitAll().successHandler(loginSuccessHandler()) // 登录成功后可使用loginSuccessHandler()存储用户信息，可选。
 		.and().sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry()).expiredUrl("/login")
 		.and().and().logout().logoutSuccessUrl("/login") // 退出登录后的默认网址是”/login”
@@ -94,6 +100,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
         //访问没有权处理器
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+        
+        //用户退出处理器
+        http.logout().addLogoutHandler(logoutHandler);
 		
 	}
 	

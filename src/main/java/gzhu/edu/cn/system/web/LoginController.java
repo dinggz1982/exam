@@ -30,7 +30,6 @@ public class LoginController {
 
 	/**
 	 * 退出登陆
-	 * 
 	 * @return
 	 */
 	@GetMapping("/logout")
@@ -39,10 +38,20 @@ public class LoginController {
 		if (session != null) {
 			session.invalidate(); // 使当前会话失效
 		}
-
 		SecurityContextHolder.clearContext(); // 清空安全上下文
 		return "login";
 	}
+	
+	/*@GetMapping("/logout")
+	public String logout(HttpServletRequest request,HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			// tokenRepository.removeUserTokens(getPrincipal());
+			new CookieClearingLogoutHandler("remember-me").logout(request, response, auth);
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		return "welcome";
+	}*/
 
 	/**
 	 * 处理登录
