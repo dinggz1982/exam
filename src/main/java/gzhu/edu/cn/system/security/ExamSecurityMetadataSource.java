@@ -40,15 +40,17 @@ public class ExamSecurityMetadataSource implements FilterInvocationSecurityMetad
 		Collection<ConfigAttribute> array;
 		ConfigAttribute cfg;
 		List<Resource> resources = this.resourceService.findAll();
-		//找到所有的按鈕資源
-		
+		//找到所有的按钮资源
 		for (Resource resource : resources) {
 			array = new ArrayList<>();
-			cfg = new SecurityConfig(resource.getUrl());
-			// 此处只添加了用户的名字，其实还可以添加更多权限的信息，例如请求方法到ConfigAttribute的集合中去。此处添加的信息将会作为MyAccessDecisionManager类的decide的第三个参数。
-			array.add(cfg);
-			// 用权限的getUrl() 作为map的key，用ConfigAttribute的集合作为 value，
-			map.put(resource.getUrl(), array);
+			String url = resource.getUrl();
+			if(url!=null&&url.length()>0){
+				cfg = new SecurityConfig(resource.getUrl());
+				// 此处只添加了用户的名字，其实还可以添加更多权限的信息，例如请求方法到ConfigAttribute的集合中去。此处添加的信息将会作为MyAccessDecisionManager类的decide的第三个参数。
+				array.add(cfg);
+				// 用权限的getUrl() 作为map的key，用ConfigAttribute的集合作为 value，
+				map.put(resource.getUrl(), array);
+			}
 		}
 
 	}

@@ -68,7 +68,7 @@ public class UploadUserUtils {
 						BCryptPasswordEncoder bc = new BCryptPasswordEncoder(4);
 						user.setPassword(bc.encode("123456"));
 						Role role = new Role();
-						role.setId(2l);
+						role.setId(2);
 						Set<Role> roles = new HashSet<Role>();
 						roles.add(role);
 						
@@ -119,7 +119,7 @@ public class UploadUserUtils {
 						BCryptPasswordEncoder bc = new BCryptPasswordEncoder(4);
 						user.setPassword(bc.encode("123456"));
 						Role role = new Role();
-						role.setId(2l);
+						role.setId(2);
 						Set<Role> roles = new HashSet<Role>();
 						roles.add(role);
 						user.setUrl(defaultUrl);

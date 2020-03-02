@@ -15,9 +15,12 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
 
+import gzhu.edu.cn.base.entity.BaseEntity;
+
+
 /**
  * <p>
- * Title : Resource
+ * Title : 权限菜单、资源
  * </p>
  * <p>
  * Description :
@@ -30,11 +33,15 @@ import org.hibernate.annotations.Formula;
  */
 @Entity
 @Table(name = "sys_resource")
-public class Resource {
+public class Resource extends BaseEntity {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private int datapermission;
 	
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -42,7 +49,6 @@ public class Resource {
 		return result;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -83,6 +89,9 @@ public class Resource {
 	@Column(columnDefinition = "bit(1) DEFAULT 0 comment '是否为菜单上的url'")
 	private boolean isMenu;
 	
+	@Transient
+	private int parentId;
+	
 /*	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parentId")
 	private Resource parent;*/
@@ -94,6 +103,18 @@ public class Resource {
 	public void setParent(Resource parent) {
 		this.parent = parent;
 	}*/
+
+	public int getParentId() {
+		if(parent!=null&&parent.getId()!=0){
+			return parent.getId();
+		}else{
+			return -1;
+		}
+	}
+
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
 
 	public boolean isHasChildren() {
 		return hasChildren;
@@ -123,13 +144,6 @@ public class Resource {
 		this.children = children;
 	}
 
-	public boolean isDelFlag() {
-		return delFlag;
-	}
-
-	public void setDelFlag(boolean delFlag) {
-		this.delFlag = delFlag;
-	}
 
 	@Column(name = "remark", length = 200)
 	private String remark;// 备注
@@ -146,6 +160,17 @@ public class Resource {
 	@Formula(value = "(select count(*) from sys_resource_button srb where srb.resource_id = id)")
 	private boolean hasButton;
 	
+	@Column(columnDefinition = "int(2) comment '菜单排序'")
+	private int orderNumber;
+	
+	public int getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(int orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
 	@Transient
 	private Set<ResourceButton> operates;
 	
@@ -157,9 +182,7 @@ public class Resource {
 		this.operates = operates;
 	}
 
-	// 删除标示
-	@Column(columnDefinition = "bit(1) DEFAULT 0 comment '软删除标识'")
-	private boolean delFlag;
+	
 
 	public int getId() {
 		return id;

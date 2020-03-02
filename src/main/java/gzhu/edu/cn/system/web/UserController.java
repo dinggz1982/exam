@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,7 @@ import gzhu.edu.cn.system.service.IResourceService;
 import gzhu.edu.cn.system.service.IUserService;
 
 @Controller
+@RequestMapping("/system")
 public class UserController {
 
 	@Autowired
@@ -74,7 +76,7 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping({"/system/user","/system/user/","/system/user/index"})
+	@GetMapping({"/user","/user/","/user/index"})
 	public String list(Model model) {
 		/*pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
 		pageSize = 10;
@@ -94,7 +96,7 @@ public class UserController {
 		Set<ResourceButton> buttons = this.resourceButtonService.getResourceButtonByUserId(resource, currentUser);
 		model.addAttribute("buttons", buttons);
 
-		return "system/user/list";
+		return "system/user/index";
 	}
 
 	/**
@@ -137,7 +139,7 @@ public class UserController {
 	 * @throws IOException
 	 * @throws IllegalStateException
 	 */
-	@PostMapping("/saveUserFromFile")
+	@PostMapping("/user/saveUserFromFile")
 	public String saveUserFromFile(@RequestParam("file") MultipartFile file, Model model)
 			throws IllegalStateException, IOException {
 

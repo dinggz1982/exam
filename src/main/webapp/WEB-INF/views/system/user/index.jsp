@@ -123,7 +123,7 @@
         // 渲染表格
         var insTb = table.render({
             elem: '#tableUser',
-            url: '${ctx}/user/list.json',
+            url: '${ctx}/system/user/list.json',
             page: true,
             toolbar: true,
             cellMinWidth: 100,

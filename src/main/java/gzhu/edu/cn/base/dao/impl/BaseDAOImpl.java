@@ -88,7 +88,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	}
 
 	public List<T> findBySql(String filed, Object o) {
-		String sql = "from " + className + " u WHERE u." + filed + "=?";
+		String sql = "from " + className + " u WHERE u.delFlag=0 and u." + filed + "=?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, o);
 		@SuppressWarnings("unchecked")
@@ -99,12 +99,13 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	
 	/**
 	 * 根据sql获取一个对象
+	 * 如有参数，需要加上and
 	 * @param hql
 	 * @return
 	 */
 	public T getByHql(String hql)  {
 		try {
-			Query query = entityManager.createQuery(" from " + className + " where " + hql);
+			Query query = entityManager.createQuery(" from " + className + " where delFlag=0 " + hql);
 			query.setMaxResults(1);
 			T t =  (T) query.getSingleResult();
 			entityManager.close();
@@ -119,7 +120,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	
 	public T findOne(String filed, Object o) {
 		try {
-		String sql = "from " + className + " u WHERE u." + filed + "=?";
+		String sql = "from " + className + " u WHERE u.delFlag=0 and u." + filed + "=?";
 		Query query = entityManager.createQuery(sql);
 		query.setMaxResults(1);
 		query.setParameter(1, o);
@@ -136,7 +137,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T findOneBySql(String filed, Object o) {
-		String sql = "from " + className + " u WHERE u." + filed + "=?1";
+		String sql = "from " + className + " u WHERE u.delFlag=0 and u." + filed + "=?1";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, o);
 		entityManager.close();
@@ -160,7 +161,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 
 	@Override
 	public List<T> findByMoreFiled(String tablename, LinkedHashMap<String, Object> map) {
-		String sql = "from " + tablename + " u WHERE ";
+		String sql = "from " + tablename + " u WHERE u.delFlag=0 and ";
 		Set<String> set = null;
 		set = map.keySet();
 		List<String> list = new ArrayList<>(set);
@@ -169,6 +170,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 			sql += "u." + filed + "=? and ";
 			filedlist.add(filed);
 		}
+		//去掉最后一个and
 		sql = sql.substring(0, sql.length() - 4);
 		Query query = entityManager.createQuery(sql);
 		for (int i = 0; i < filedlist.size(); i++) {
@@ -180,7 +182,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	}
 
 	public List<T> findByMoreFiled(LinkedHashMap<String, Object> map) {
-		String sql = "from " + className + " u WHERE ";
+		String sql = "from " + className + " u WHERE u.delFlag=0 and ";
 		Set<String> set = null;
 		set = map.keySet();
 		List<String> list = new ArrayList<>(set);
@@ -202,7 +204,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	@Override
 	public List<T> findByMoreFiledpages(String tablename, LinkedHashMap<String, Object> map, int start,
 			int pageNumber) {
-		String sql = "from " + tablename + " u WHERE ";
+		String sql = "from " + tablename + " u WHERE u.delFlag=0 and";
 		Set<String> set = null;
 		set = map.keySet();
 		List<String> list = new ArrayList<>(set);
@@ -224,7 +226,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	}
 
 	public List<T> findByMoreFiledpages(LinkedHashMap<String, Object> map, int start, int pageNumber) {
-		String sql = "from " + className + " u WHERE ";
+		String sql = "from " + className + " u WHERE u.delFlag=0 and ";
 		Set<String> set = null;
 		set = map.keySet();
 		List<String> list = new ArrayList<>(set);
@@ -234,7 +236,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 			filedlist.add(filed);
 		}
 		sql = sql.substring(0, sql.length() - 4);
-		System.out.println(sql + "--------sql语句-------------");
+		//System.out.println(sql + "--------sql语句-------------");
 		Query query = entityManager.createQuery(sql);
 		for (int i = 0; i < filedlist.size(); i++) {
 			query.setParameter(i + 1, map.get(filedlist.get(i)));
@@ -248,7 +250,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 
 	@Override
 	public List<T> findpages(String tablename, String filed, Object o, int start, int pageNumer) {
-		String sql = "from " + tablename + " u WHERE u." + filed + "=?";
+		String sql = "from " + tablename + " u WHERE u.delFlag=0 and u." + filed + "=?";
 		List<T> list = new ArrayList<>();
 		try {
 			Query query = entityManager.createQuery(sql);
@@ -258,6 +260,8 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 			list = query.getResultList();
 			entityManager.close();
 		} catch (Exception e) {
+			e.printStackTrace();
+			//后期要加入到错误日志中
 			System.out.println("------------分页错误---------------");
 		}
 
@@ -265,7 +269,13 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	}
 	
 	public List<T> find(String hql) {
-		Query query = entityManager.createQuery(" from " + className +" "+hql );
+		if(hql!=null&&hql.length()>0){
+			hql = " from " + className +" WHERE delFlag=0 and "+hql;
+		}
+		else{
+			hql = " from " + className +" WHERE delFlag=0";
+		}
+		Query query = entityManager.createQuery(hql);
 		return query.getResultList();
 	}
 
@@ -317,17 +327,32 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	public boolean delete(T entity) {
 		boolean flag = false;
 		try {
-			entityManager.remove(entityManager.merge(entity));
+			entityManager.remove(entity);
 			flag = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("---------------删除出错---------------");
 		}
 		return flag;
 	}
+	
+	@Override
+	@Transactional
+	public int softDelete(Serializable id){
+		int resurlt = 0;
+		try {
+			Query query = entityManager.createQuery("update  " + className +" set delFlag=1  where id=" +id);
+			resurlt = query.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("---------------删除出错---------------");
+		}
+		return resurlt;
+	}
 
 	@Override
 	public Object findCount(LinkedHashMap<String, Object> map) {
-		String sql = "select count(u) from " + className + " u WHERE ";
+		String sql = "select count(u) from " + className + " u WHERE u.delFlag=0 and ";
 		Set<String> set = null;
 		set = map.keySet();
 		List<String> list = new ArrayList<>(set);
@@ -349,7 +374,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	@Override
 	public List<T> findAll() throws SQLException  {
 		// TODO Auto-generated method stub
-		Query query = entityManager.createQuery("FROM " + className);
+		Query query = entityManager.createQuery("FROM " + className +" where delFlag=0");
 		List<T> result = query.getResultList();
 		return result;
 	}
@@ -371,7 +396,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 
 	@Override
 	public int queryDataCount(Map<String, Object> params) {
-		StringBuffer chql = new StringBuffer("SELECT COUNT(*) FROM ").append(className).append(" o WHERE 1=1 ");
+		StringBuffer chql = new StringBuffer("SELECT COUNT(*) FROM ").append(className).append(" u WHERE u.delFlag=0 ");
 		if (params != null) {
 			for (String key : params.keySet()) {
 				chql.append(" AND ").append(key).append("=").append(params.get(key));
@@ -383,7 +408,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 
 	@Override
 	public Long queryPageTotalCount(String hql, final Map<String, Object> params) {
-		StringBuffer chql = new StringBuffer("SELECT COUNT(*) FROM ").append(className).append(" o WHERE 1=1 ");
+		StringBuffer chql = new StringBuffer("SELECT COUNT(*) FROM ").append(className).append(" u WHERE u.delFlag=0 ");
 		if (params != null) {
 			for (String key : params.keySet()) {
 				chql.append(" AND ").append(key).append("=").append(params.get(key));
@@ -397,7 +422,7 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	@Override
 	public List<T> queryPageData(int start, int maxSize, Map<String, Object> paramMap) {
 		StringBuilder hql = new StringBuilder();
-		hql.append("from " + className + "  where 1=1");
+		hql.append("from " + className + "  where delFlag=0");
 		if (paramMap != null) {
 			for (String key : paramMap.keySet()) {
 				hql.append(" and " + key + " = " + paramMap.get(key));
@@ -420,18 +445,26 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	}
 	
 	public List<T> getPageList(int page, int pageSize, String hql)  {
-		Query query = entityManager.createQuery(" from " + className + " where 1=1  " + hql);
+		if(hql!=null&&hql.length()>0){
+			hql = " from " + className +" WHERE delFlag=0 and "+hql;
+		}
+		else{
+			hql = " from " + className +" WHERE delFlag=0";
+		}
+		Query query = entityManager.createQuery(hql);
 		query.setFirstResult((page - 1) * pageSize);
 		query.setMaxResults(pageSize);
 		return query.getResultList();
 	}
-
-	
 	
 	public int count(String hql) throws SQLGrammarException {
-		String sql = "select count(*) from " + className + " u where 1=1 " + hql;
-
-		Query query = entityManager.createQuery(sql);
+		if(hql!=null&&hql.length()>0){
+			hql = "select count(*) from " + className +" WHERE delFlag=0 and "+hql;
+		}
+		else{
+			hql = "select count(*) from " + className +" WHERE delFlag=0";
+		}
+		Query query = entityManager.createQuery(hql);
 
 		return Integer.parseInt(query.getSingleResult().toString());
 	}
@@ -481,11 +514,13 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	@Override
 	public List<T> queryPageData(int start, int maxSize, String appendSql) {
 		StringBuilder hql = new StringBuilder();
-		hql.append("from " + className + "  where 1=1").append(appendSql);
+		if(appendSql!=null&&appendSql.length()>0){
+			appendSql = " and "+appendSql;
+		}
+		hql.append("from " + className + "  where  delFlag=0 ").append(appendSql);
 		
 		hql.append(" order by id desc");
-		return null;
-		//return this.queryPageList(hql.toString(), paramMap, start, maxSize);
+		return this.queryPageList(hql.toString(), null, start, maxSize);
 	}
 
 	@Override

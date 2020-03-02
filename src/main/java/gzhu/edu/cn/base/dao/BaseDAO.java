@@ -161,6 +161,14 @@ public interface BaseDAO<T,ID extends Serializable> {
      * @param  entity
      */
     boolean delete(T entity);
+    
+    /**
+     * 软删除，即将字段delFlag置为真（1）
+     * @param id
+     * @return
+     */
+    int softDelete(Serializable id);
+    
     /**
      * 更新对象
      * @param e

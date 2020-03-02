@@ -68,6 +68,13 @@ public interface IResourceService extends BaseService<Resource, Long>{
 	public String getResourceTree(Integer roleId);
 	
 	/**
+	 * 根据角色id获取权限树，用于角色权限配置
+	 * @param roleId
+	 * @return
+	 */
+	public String getAuthTreeByRoleId(Integer roleId);
+	
+	/**
 	 * 通过url获取资源
 	 * <p>方法名:getResourceByURL </p>
 	 * <p>Description : </p>

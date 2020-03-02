@@ -23,8 +23,8 @@ public class ExamFilterSecurityInterceptor extends AbstractSecurityInterceptor i
 	private ExamSecurityMetadataSource securityMetadataSource;
 
 	@Autowired
-	public void setAccessDecisionManager(ExamAccessDecisionManager ctAccessDecisionManager) {
-		super.setAccessDecisionManager(ctAccessDecisionManager);
+	public void setAccessDecisionManager(ExamAccessDecisionManager examAccessDecisionManager) {
+		super.setAccessDecisionManager(examAccessDecisionManager);
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

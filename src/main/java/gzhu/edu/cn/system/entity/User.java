@@ -17,6 +17,8 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import gzhu.edu.cn.base.entity.BaseEntity;
+
 
 /**
  * 用户类
@@ -33,7 +35,7 @@ import org.springframework.security.core.GrantedAuthority;
  * @date 2017年12月27日 下午6:09:13
  */
 @Entity(name = "sys_user")
-public class User implements java.io.Serializable {
+public class User extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 

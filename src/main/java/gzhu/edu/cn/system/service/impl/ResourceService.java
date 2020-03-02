@@ -68,7 +68,9 @@ public class ResourceService extends BaseDAOImpl<Resource, Long> implements IRes
 				Object[] objects = (Object[]) iterator.next();
 				Resource resource = new Resource();
 				resource.setId(Integer.parseInt(objects[0].toString()));
-				resource.setUrl(objects[1].toString());
+				if(objects[1]!=null&&!objects[1].toString().equals("")){
+					resource.setUrl(objects[1].toString());
+				}
 				resource.setName(objects[2].toString());
 
 				// 找到子菜单
@@ -138,18 +140,19 @@ public class ResourceService extends BaseDAOImpl<Resource, Long> implements IRes
 						bf.append(",open:true");
 					}
 					bf.append("},");
-					
-					//判断当前资源中是否有对应的按钮操作
+
+					// 判断当前资源中是否有对应的按钮操作
 					List<Object[]> buttonObjects = this.findBySql(
-							"select rb.id as id,rb.name as name from sys_resource_button rb where rb.resource_id=" +object[0] );
-					if(buttonObjects!=null&&buttonObjects.size()>0){
+							"select rb.id as id,rb.name as name from sys_resource_button rb where rb.resource_id="
+									+ object[0]);
+					if (buttonObjects != null && buttonObjects.size() > 0) {
 						for (Iterator iterator2 = buttonObjects.iterator(); iterator2.hasNext();) {
 							Object[] objects2 = (Object[]) iterator2.next();
-							int buttonId = 10000+ Integer.parseInt(objects2[0].toString());
-							bf.append("{id:\"" + buttonId + "\",pId:\"" + object[0] + "\",name:\"" + objects2[1] + "\"},");
+							int buttonId = 10000 + Integer.parseInt(objects2[0].toString());
+							bf.append("{id:\"" + buttonId + "\",pId:\"" + object[0] + "\",name:\"" + objects2[1]
+									+ "\"},");
 						}
 					}
-					
 				}
 				return bf.deleteCharAt(bf.length() - 1).toString() + "]";
 			} else {
@@ -162,6 +165,42 @@ public class ResourceService extends BaseDAOImpl<Resource, Long> implements IRes
 	public Resource getResourceByURL(String url) {
 		// TODO Auto-generated method stub
 		return this.findOneBySql("url", url);
+	}
+
+	@Override
+	public String getAuthTreeByRoleId(Integer roleId) {
+		//1.当前角色下可以有的权限
+		List<Object> objects = this.findObjectBySql(
+				"select r.id as id from sys_resource r,sys_role_resources rr where r.delFlag=0 and r.id= rr.resources_id and rr.role_id="
+						+ roleId);
+		//2.当前系统的全部权限信息
+		List<Object[]> allAuths = this.findBySql("select id,name,isMenu,parentId,orderNumber from sys_resource where delFlag=0");
+		
+		if (allAuths != null && allAuths.size() > 0) {
+			StringBuffer bf = new StringBuffer();
+			bf.append("[");
+			for (Iterator iterator = allAuths.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				bf.append("{\"id\":" + object[0] + ",\"pId\":" + object[3] + ",\"name\":\"" + object[1] + "\"");
+
+				int childNum = this.getCountBySql("select count(*) from sys_resource where parentId=" + object[0]);
+				if (childNum > 0) {
+					// 有子树的情况
+					bf.append(",\"open\":true");
+				}
+				if(objects.contains(object[0])){
+					//当前角色有对应的权限id
+					bf.append(",\"checked\": true");
+				}else{
+					bf.append(",\"checked\": false");
+				}
+				bf.append("},");
+			}
+			return bf.deleteCharAt(bf.length() - 1).toString() + "]";
+		} else {
+			return "[]";
+		}
+
 	}
 
 }

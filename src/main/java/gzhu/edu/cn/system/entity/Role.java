@@ -8,18 +8,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
+
+import gzhu.edu.cn.base.entity.BaseEntity;
 @Entity
 @Table(name = "sys_role")
-public class Role {
+public class Role extends BaseEntity{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
-    @GeneratedValue
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 	
 	@Column(name="name",unique=true)
     private String name;
@@ -54,11 +62,11 @@ public class Role {
 		this.resources = resources;
 	}
 
-	public Long getId() {
+	public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

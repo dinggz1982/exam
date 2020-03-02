@@ -50,7 +50,9 @@ public class ExamUserDetailsService implements UserDetailsService {
 		Set<Resource> resources = this.resourceService.getResourcesByUserId(user);
 		Set<GrantedAuthority> authSet = new HashSet<GrantedAuthority>();
 		for (Resource res : resources) {
+			if(res.getUrl()!=null&&res.getUrl().length()>0){
 			authSet.add(new SimpleGrantedAuthority(res.getUrl()));
+			}
 		}
 		return authSet;
 	}
