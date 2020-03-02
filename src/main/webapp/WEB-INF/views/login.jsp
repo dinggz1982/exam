@@ -19,7 +19,7 @@
     <div class="login-body">
         <div class="layui-card">
             <div class="layui-card-header">
-                <i class="layui-icon layui-icon-engine"></i>&nbsp;&nbsp;用户登录
+                <i class="layui-icon layui-icon-engine"></i>&nbsp;&nbsp;用户登录 <span style="color: red">${message }</span>
             </div>
             <form action="/login" method="post"  class="layui-card-body layui-form layui-form-pane">
                 <div class="layui-form-item">
