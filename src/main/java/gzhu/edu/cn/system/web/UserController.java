@@ -2,9 +2,14 @@ package gzhu.edu.cn.system.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +31,11 @@ import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UploadUserUtils;
 import gzhu.edu.cn.system.entity.Resource;
 import gzhu.edu.cn.system.entity.ResourceButton;
+import gzhu.edu.cn.system.entity.Role;
 import gzhu.edu.cn.system.entity.User;
 import gzhu.edu.cn.system.service.IResourceButtonService;
 import gzhu.edu.cn.system.service.IResourceService;
+import gzhu.edu.cn.system.service.IRoleService;
 import gzhu.edu.cn.system.service.IUserService;
 
 @Controller
@@ -44,6 +51,9 @@ public class UserController {
 
 	@Autowired
 	private HttpSession session;
+	
+	@Autowired
+	private IRoleService roleService;
 
 	@Autowired
 	private HttpServletRequest request;
@@ -76,10 +86,11 @@ public class UserController {
 	 * @param pageSize
 	 * @param model
 	 * @return
+	 * @throws SQLException 
 	 */
 	@Log("用户列表页面")
 	@GetMapping("/user/index")
-	public String list(Model model) {
+	public String list(Model model) throws SQLException {
 		/*pageIndex = pageIndex == null ? 1 : pageIndex < 1 ? 1 : pageIndex;
 		pageSize = 10;
 		PageData<User> pageData = this.userService.getPageData(pageIndex, pageSize, "");
@@ -90,13 +101,17 @@ public class UserController {
 		model.addAttribute("pageIndex", pageIndex);*/
 
 		// 取得用户的按钮权限
-		User currentUser = (User) session.getAttribute("currentUser");
+	//	User currentUser = (User) session.getAttribute("currentUser");
+		
+		//给出角色列表
+		List<Role> roles = this.roleService.findAll();
+		model.addAttribute("roles", roles);
 
-		System.out.println(request.getRequestURI());
+	/*	//System.out.println(request.getRequestURI());
 		String url = request.getRequestURI();
 		Resource resource = resourceService.getResourceByURL(url);
 		Set<ResourceButton> buttons = this.resourceButtonService.getResourceButtonByUserId(resource, currentUser);
-		model.addAttribute("buttons", buttons);
+		model.addAttribute("buttons", buttons);*/
 
 		return "system/user/index";
 	}
@@ -134,6 +149,49 @@ public class UserController {
 		pageJson.setData(pageData.getPageData());
 		return pageJson;
 	}
+	/**
+	 * 编辑或修改用户
+	 * @param id
+	 * @param name
+	 * @param url
+	 * @param description
+	 * @return
+	 */
+	@PostMapping("/user/edit")
+	@ResponseBody
+	public Map<String, Object> edit(Long id, String username, String realname, String sex,Integer[] roleIds) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (id == null) {
+				// 新增
+				User user = new User();
+				user.setUsername(username);
+				user.setRealname(realname);
+				user.setCreateTime(new Date());
+				user.setSex(sex);
+				Set<Role> roles = new HashSet<Role>();
+				if(roleIds!=null){
+					for (int i = 0; i < roleIds.length; i++) {
+						Role role = new Role();
+						role.setId(roleIds[i]);
+						roles.add(role);
+					}
+				}
+				user.setRoles(roles);
+				this.userService.save(user);
+				map.put("msg", "保存成功");
+			} else {
+				//用户修改后期补上
+				map.put("msg", "修改成功");
+			}
+			map.put("code", 200);
+		} catch (Exception e) {
+			map.put("code", 200);
+			map.put("msg", "出现错误：" + e);
+		}
+		return map;
+	}
+	
 
 	/**
 	 * 实现文件上传

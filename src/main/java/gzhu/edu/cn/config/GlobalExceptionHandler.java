@@ -35,6 +35,8 @@ public class GlobalExceptionHandler {
         
         LogInfo logInfo = new LogInfo();
         
+        logInfo.setOperation("异常页面");
+        
         logInfo.setMessage(e.getMessage());
         
      // 设置IP地址

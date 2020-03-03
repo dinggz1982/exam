@@ -72,10 +72,10 @@
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-set"></i>&emsp;<cite>系统管理</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="${ctx }/system/user">用户管理</a></dd>
-                        <dd><a lay-href="${ctx }/system/role">角色管理</a></dd>
-                        <dd><a lay-href="${ctx }/system/resource">权限管理</a></dd>
-                        <dd><a lay-href="page/system/loginRecord.html">登录日志</a></dd>
+                        <dd><a lay-href="${ctx }/system/user/index">用户管理</a></dd>
+                        <dd><a lay-href="${ctx }/system/role/index">角色管理</a></dd>
+                        <dd><a lay-href="${ctx }/system/resource/index">权限管理</a></dd>
+                        <dd><a lay-href="${ctx }/system/log/index">操作日志</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">

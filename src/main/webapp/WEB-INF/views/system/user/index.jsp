@@ -70,7 +70,7 @@
 <!-- 表单弹窗 -->
 <script type="text/html" id="modelUser">
     <form id="modelUserForm" lay-filter="modelUserForm" class="layui-form model-form">
-        <input name="userId" type="hidden"/>
+        <input name="id" type="hidden"/>
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">用户名</label>
             <div class="layui-input-block">
@@ -95,12 +95,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">角色</label>
             <div class="layui-input-block">
-                <select name="roleId" lay-verType="tips" lay-verify="required">
-                    <option value="">请选择角色</option>
-                    <option value="1">管理员</option>
-                    <option value="3">教师</option>
-                    <option value="2">学生</option>
-                </select>
+					<c:forEach items="${roles }" var="role">
+						<input type="checkbox" name="roleIds" value="${role.id}"/>${role.name} &nbsp;
+					</c:forEach>
             </div>
         </div>
         <div class="layui-form-item text-right">
@@ -109,7 +106,6 @@
         </div>
     </form>
 </script>
-
 <!-- js部分 -->
 <script>
     layui.use(['layer', 'form', 'table', 'util', 'admin'], function () {
@@ -173,7 +169,7 @@
                 content: $('#modelUser').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
-                    var url = mUser ? '../../json/ok.json' : '../../json/ok.json';
+                    var url = '${ctx}/system/user/edit';
                     mUser && (mUser.roleId = mUser.roles[0].roleId);
                     // 回显数据
                     form.val('modelUserForm', mUser);
