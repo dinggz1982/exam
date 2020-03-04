@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>用户管理</title>
+<title>日志记录</title>
 <%@include file="/WEB-INF/views/include/head.jsp" %>
 </head>
 <body>
@@ -27,39 +27,28 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">真实姓名：</label>
+                        <label class="layui-form-label w-auto">操作信息：</label>
                         <div class="layui-input-inline mr0">
-                            <input name="realname" class="layui-input" type="text" placeholder="输入真实姓名"/>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label w-auto">性&emsp;别：</label>
-                        <div class="layui-input-inline mr0">
-                            <select name="sex">
-                                <option value="">选择性别</option>
-                                <option value="男">男</option>
-                                <option value="女">女</option>
-                            </select>
+                            <input name="operate" class="layui-input" type="text" placeholder="输入操作信息"/>
                         </div>
                     </div>
                     <div class="layui-inline" style="padding-right: 110px;">
                         <button class="layui-btn icon-btn" lay-filter="formSubSearchUser" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="btnAddUser" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
                     </div>
                 </div>
             </div>
 
-            <table id="tableUser" lay-filter="tableUser"></table>
+            <table id="tableLog" lay-filter="tableLog"></table>
         </div>
     </div>
 </div>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="tableBarUser">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+<script type="text/html" id="tableBarLog">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="findLogByUser">查看用户日志</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">查看本类型的全部日志</a>
     <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
 </script>
 <!-- 表格状态列 -->
@@ -70,7 +59,7 @@
 <!-- 表单弹窗 -->
 <script type="text/html" id="modelUser">
     <form id="modelUserForm" lay-filter="modelUserForm" class="layui-form model-form">
-        <input name="id" type="hidden"/>
+        <input name="userId" type="hidden"/>
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">用户名</label>
             <div class="layui-input-block">
@@ -95,9 +84,12 @@
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">角色</label>
             <div class="layui-input-block">
-					<c:forEach items="${roles }" var="role">
-						<input type="checkbox" name="roleIds" value="${role.id}"/>${role.name} &nbsp;
-					</c:forEach>
+                <select name="roleId" lay-verType="tips" lay-verify="required">
+                    <option value="">请选择角色</option>
+                    <option value="1">管理员</option>
+                    <option value="3">教师</option>
+                    <option value="2">学生</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item text-right">
@@ -106,6 +98,7 @@
         </div>
     </form>
 </script>
+
 <!-- js部分 -->
 <script>
     layui.use(['layer', 'form', 'table', 'util', 'admin'], function () {
@@ -118,23 +111,23 @@
 
         // 渲染表格
         var insTb = table.render({
-            elem: '#tableUser',
-            url: '${ctx}/system/user/list.json',
+            elem: '#tableLog',
+            url: '${ctx}/system/log/list.json',
             page: true,
             toolbar: true,
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
+                {field: 'operation', sort: true, title: '操作信息'},
+                {field: 'url', sort: true, title: 'url'},
                 {field: 'username', sort: true, title: '账号'},
-                {field: 'realname', sort: true, title: '真实姓名'},
-                {field: 'sex', sort: true, title: '性别'},
+                {field: 'time', sort: true, title: '时间消耗'},
                 {
                     field: 'createTime', sort: true, templet: function (d) {
                         return util.toDateString(d.createTime);
-                    }, title: '创建时间'
-                },
-                {field: 'state', sort: true, templet: '#tableStateUser', title: '状态'},
-                {align: 'center', toolbar: '#tableBarUser', title: '操作', minWidth: 200}
+                    }, title: '操作时间'
+                }
+                //,{align: 'center', toolbar: '#tableBarLog', title: '操作', minWidth: 200}
             ]]
         });
 
@@ -149,11 +142,11 @@
         });
 
         // 工具条点击事件
-        table.on('tool(tableUser)', function (obj) {
+        table.on('tool(tableLog)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
-            if (layEvent === 'edit') { // 修改
-                showEditModel(data);
+            if (layEvent === 'findLogByUser') { // 修改
+                showModel(data);
             } else if (layEvent === 'del') { // 删除
                 doDel(data.id, data.username);
             } else if (layEvent === 'reset') { // 重置密码
@@ -162,14 +155,14 @@
         });
 
         // 显示表单弹窗
-        function showEditModel(mUser) {
+        function showModel(mUser) {
             admin.open({
                 type: 1,
                 title: (mUser ? '修改' : '添加') + '用户',
                 content: $('#modelUser').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
-                    var url = '${ctx}/system/user/edit';
+                    var url = mUser ? '../../json/ok.json' : '../../json/ok.json';
                     mUser && (mUser.roleId = mUser.roles[0].roleId);
                     // 回显数据
                     form.val('modelUserForm', mUser);
