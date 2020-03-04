@@ -112,8 +112,8 @@ public class InitSystem {
 		
 		//教师
 		Role role3 = new Role();
-		role2.setName("教师");
-		role2.setDescription("这是教师角色");
+		role3.setName("教师");
+		role3.setDescription("这是教师角色");
 
 		this.roleService.save(role1);
 		this.roleService.save(role2);

@@ -9,6 +9,11 @@
 
 ## 二、系统运行截图
 ### 1.用户管理
-![image](https://github.com/xxx/xx.png)
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86.png?raw=true)
+### 2.角色管理
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86.png?raw=true)
+### 3.权限菜单
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86.png?raw=true)
+
 
 
