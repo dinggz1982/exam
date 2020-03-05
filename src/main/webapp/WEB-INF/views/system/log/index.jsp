@@ -29,7 +29,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label w-auto">操作信息：</label>
                         <div class="layui-input-inline mr0">
-                            <input name="operate" class="layui-input" type="text" placeholder="输入操作信息"/>
+                            <input name="operation" class="layui-input" type="text" placeholder="输入操作信息"/>
                         </div>
                     </div>
                     <div class="layui-inline" style="padding-right: 110px;">

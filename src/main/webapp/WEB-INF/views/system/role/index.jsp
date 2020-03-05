@@ -21,7 +21,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label w-auto">搜索：</label>
                         <div class="layui-input-inline mr0">
-                            <input name="keyword" class="layui-input" type="text" placeholder="输入关键字"/>
+                            <input name="name" class="layui-input" type="text" placeholder="输入关键字"/>
                         </div>
                     </div>
                     <div class="layui-inline">

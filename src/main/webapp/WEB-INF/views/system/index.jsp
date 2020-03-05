@@ -78,13 +78,24 @@
                         <dd><a lay-href="${ctx }/system/log/index">操作日志</a></dd>
                     </dl>
                 </li>
+                 <li class="layui-nav-item">
+                    <a><i class="layui-icon layui-icon-set"></i>&emsp;<cite>学校基础数据</cite></a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="${ctx }/profile/school/index">学校管理</a></dd>
+                        <dd><a lay-href="${ctx }/profile/college/index">学院管理</a></dd>
+                        <dd><a lay-href="${ctx }/system/resource/index">权限管理</a></dd>
+                        <dd><a lay-href="${ctx }/system/log/index">操作日志</a></dd>
+                    </dl>
+                </li>
+                
+                
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-template"></i>&emsp;<cite>模板页面</cite></a>
                     <dl class="layui-nav-child">
                         <dd>
                             <a>表单页</a>
                             <dl class="layui-nav-child">
-                                <dd><a lay-href="page/template/form/form-basic.html">基础表单</a></dd>
+                                <dd><a lay-href="${ctx }/profile/school/index">学校管理</a></dd>
                                 <dd><a lay-href="page/template/form/form-advance.html">复杂表单</a></dd>
                                 <dd><a lay-href="page/template/form/form-step.html">分步表单</a></dd>
                             </dl>

@@ -55,7 +55,7 @@ public class RoleController {
 
 		String hql = "";
 		if (name != null && name != "") {
-			hql = "and name like '%" + name + "%'";
+			hql = " name like '%" + name + "%'";
 		}
 		PageData<Role> pageData = this.roleService.getPageData(page, limit, hql);
 		JsonData<Role> pageJson = new JsonData<Role>();

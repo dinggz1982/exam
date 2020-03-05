@@ -130,7 +130,7 @@ public class UserController {
 		
 		String hql = "";
 		if(username!=null&&username!=""){
-			hql = "and username like '%"+username+"%' and";
+			hql = " username like '%"+username+"%' and";
 		}
 		if(realname!=null&&realname!=""){
 			hql = hql +  " realname like '%"+realname+"%' and";

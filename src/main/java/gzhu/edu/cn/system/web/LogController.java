@@ -37,13 +37,13 @@ public class LogController {
 	 */
 	@GetMapping("/log/list.json")
 	@ResponseBody
-	public JsonData<LogInfo> userList1(Integer page, Integer limit,String username,String operate) {
+	public JsonData<LogInfo> userList1(Integer page, Integer limit,String username,String operation) {
 		String hql = "";
 		if(username!=null&&username.length()>0){
 			hql = " username='"+username+"' and";
 		}
-		if(operate!=null&&operate.length()>0){
-			hql = " operate='"+operate+"' and";
+		if(operation!=null&&operation.length()>0){
+			hql = " operation='"+operation+"' and";
 		}
 		if(hql.length()>0){
 			hql = hql.substring(0, hql.length() - 4);
