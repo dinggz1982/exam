@@ -149,6 +149,8 @@ public class UserController {
 		pageJson.setData(pageData.getPageData());
 		return pageJson;
 	}
+	
+	
 	/**
 	 * 编辑或修改用户
 	 * @param id
@@ -192,6 +194,29 @@ public class UserController {
 		return map;
 	}
 	
+	/**
+	 * 软删除用户
+	 * @param id
+	 * @return
+	 */
+	@PostMapping("/user/delete")
+	@ResponseBody
+	public Map<String,Object> delete(Long id){
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			int result = this.userService.softDelete(id);
+			if(result==1){
+				map.put("msg", "删除成功！");
+			}else{
+				map.put("msg", "未能正常删除！");
+			}
+			map.put("code", 200);
+		} catch (Exception e) {
+			map.put("code", 200);
+			map.put("msg", "出现错误：" + e);
+		}
+		return map;
+	}
 
 	/**
 	 * 实现文件上传

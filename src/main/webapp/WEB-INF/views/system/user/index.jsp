@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -96,7 +97,7 @@
             <label class="layui-form-label layui-form-required">角色</label>
             <div class="layui-input-block">
 					<c:forEach items="${roles }" var="role">
-						<input type="checkbox" name="roleIds" value="${role.id}"/>${role.name} &nbsp;
+						<input type="checkbox" name="roleIds" value="${role.id}" title="${role.name}"/>&nbsp;
 					</c:forEach>
             </div>
         </div>
@@ -129,6 +130,15 @@
                 {field: 'realname', sort: true, title: '真实姓名'},
                 {field: 'sex', sort: true, title: '性别'},
                 {
+                    field: 'roles', templet: function (d) {
+                    var roles="";
+                    	for (var role of d.roles) { // 遍历Set
+    						roles=roles+role.name + ",";	
+						}
+                        return roles
+                    }, title: 'roles'
+                },
+                {
                     field: 'createTime', sort: true, templet: function (d) {
                         return util.toDateString(d.createTime);
                     }, title: '创建时间'
@@ -155,6 +165,7 @@
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
             } else if (layEvent === 'del') { // 删除
+            	alert();
                 doDel(data.id, data.username);
             } else if (layEvent === 'reset') { // 重置密码
                 resetPsw(data.userId, data.nickName);
@@ -170,7 +181,6 @@
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
                     var url = '${ctx}/system/user/edit';
-                    mUser && (mUser.roleId = mUser.roles[0].roleId);
                     // 回显数据
                     form.val('modelUserForm', mUser);
                     // 表单提交事件
@@ -193,15 +203,15 @@
         }
 
         // 删除
-        function doDel(userId, username) {
+        function doDel(id, username) {
             layer.confirm('确定要删除“' + username + '”吗？', {
                 skin: 'layui-layer-admin',
                 shade: .1
             }, function (i) {
                 layer.close(i);
                 layer.load(2);
-                $.get('../../json/ok.json', {
-                    userId: userId
+                $.post('${ctx}/system/user/delete', {
+                    id: id
                 }, function (res) {
                     layer.closeAll('loading');
                     if (res.code == 200) {

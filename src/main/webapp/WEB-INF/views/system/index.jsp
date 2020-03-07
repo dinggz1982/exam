@@ -83,8 +83,8 @@
                     <dl class="layui-nav-child">
                         <dd><a lay-href="${ctx }/profile/school/index">学校管理</a></dd>
                         <dd><a lay-href="${ctx }/profile/college/index">学院管理</a></dd>
-                        <dd><a lay-href="${ctx }/system/resource/index">权限管理</a></dd>
-                        <dd><a lay-href="${ctx }/system/log/index">操作日志</a></dd>
+                        <dd><a lay-href="${ctx }/profile/major/index">专业管理</a></dd>
+                        <dd><a lay-href="${ctx }/profile/major/index">专业管理</a></dd>
                     </dl>
                 </li>
                 
@@ -95,7 +95,6 @@
                         <dd>
                             <a>表单页</a>
                             <dl class="layui-nav-child">
-                                <dd><a lay-href="${ctx }/profile/school/index">学校管理</a></dd>
                                 <dd><a lay-href="page/template/form/form-advance.html">复杂表单</a></dd>
                                 <dd><a lay-href="page/template/form/form-step.html">分步表单</a></dd>
                             </dl>

@@ -180,7 +180,7 @@ public class InitSystem {
 		for (int i = 0; i < teachers.length; i++) {
 			User user = new User();
 			BCryptPasswordEncoder password = new BCryptPasswordEncoder(4);
-			user.setPassword(bc.encode("password"));
+			user.setPassword(password.encode("123456"));
 			user.setUsername(teachers[i]);
 			user.setEmail("");
 			user.setRealname(teachers[i]);
@@ -190,7 +190,7 @@ public class InitSystem {
 				user.setSex("男");
 			}
 			roles.clear();
-			roles.add(role2);
+			roles.add(role3);
 			user.setRoles(roles);
 			userService.saveUser(user);
 		}
@@ -199,14 +199,15 @@ public class InitSystem {
 		for (int i = 1; i <= 100; i++) {
 			User user = new User();
 			user.setCreateTime(new Date());
-			user.setPassword(bc.encode("123456"));
+			BCryptPasswordEncoder password = new BCryptPasswordEncoder(4);
+			user.setPassword(password.encode("123456"));
 			user.setUsername("学生" + i);
 			user.setEmail("student" + i + "@163.com");
 			user.setNickName("学生" + i);
 			user.setSex("男");
 			roles.clear();
 			roles.add(role1);
-
+			user.setRoles(roles);
 			this.userService.save(user);
 			System.out.println("保存：" + i);
 		}
