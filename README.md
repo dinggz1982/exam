@@ -9,14 +9,13 @@
 
 ## 二、系统运行截图
 ### 1.用户管理
-![image](https://github.com/dinggz1982/exam/snapshots/user.png)
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/user.png)
 ### 2.角色管理
-![image](https://github.com/dinggz1982/exam/snapshots/role.png)
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/role.png)
 ### 3.权限菜单
-![image](https://github.com/dinggz1982/exam/snapshots/resource.png)
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/resource.png)
 ### 4.操作日志
-![image](https://github.com/dinggz1982/exam/snapshots/operation.png)
-
+![image](https://github.com/dinggz1982/exam/blob/master/snapshots/operation.png)
 ## 三、关键类或配置说明
 ### 1.系统配置
 

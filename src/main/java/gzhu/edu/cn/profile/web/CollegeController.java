@@ -69,7 +69,7 @@ public class CollegeController {
 			hql = " name like '%"+name+"%' and";
 		}
 		if(school_id!=null&&school_id>0){
-			hql = " school_id = "+school_id +" and";
+			hql =hql +  " school_id = "+school_id +" and";
 		}
 		if(hql.length()>0){
 			hql = hql.substring(0, hql.length() - 4);

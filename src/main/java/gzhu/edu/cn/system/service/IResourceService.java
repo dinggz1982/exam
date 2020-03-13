@@ -85,4 +85,11 @@ public interface IResourceService extends BaseService<Resource, Long>{
 	 * @return
 	 */
 	public Resource getResourceByURL(String url);
+	
+	/**
+	 * 获取用户菜单，并封装成前端格式
+	 * @param user
+	 * @return
+	 */
+	public String getMenuStringByUser(User user);
 }

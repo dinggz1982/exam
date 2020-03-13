@@ -66,8 +66,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label layui-form-required">权限类型</label>
             <div class="layui-input-block">
-                <input name="isMenu" type="radio" value="0" title="菜单" checked/>
-                <input name="isMenu" type="radio" value="1" title="按钮"/>
+                <input name="isMenu" type="radio" value="1" title="菜单" checked/>
+                <input name="isMenu" type="radio" value="0" title="按钮"/>
             </div>
         </div>
         <div class="layui-form-item">

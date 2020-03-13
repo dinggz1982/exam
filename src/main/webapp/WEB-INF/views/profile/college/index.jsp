@@ -24,7 +24,7 @@
                         <label class="layui-form-label w-auto">选择学校：</label>
                         <div class="layui-input-inline mr0">
                             <select name="school_id">
-                            	<option>请选择学校</option>
+                            	<option value="0">请选择学校</option>
                             	<c:forEach items="${schools }" var="school">
                             		<option value="${school.id }">${school.name }</option>
                             	</c:forEach>

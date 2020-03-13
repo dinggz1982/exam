@@ -1,10 +1,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <title>考试系统登录</title>
 	<%@include file="/WEB-INF/views/include/head.jsp" %>
+	<link rel="stylesheet" href="${ctx }/assets/css/login.css?v=316">
     <script>
         if (window != top) {
             top.location.replace(location.href);

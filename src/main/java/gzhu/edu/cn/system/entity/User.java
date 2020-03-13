@@ -16,6 +16,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
 
@@ -35,7 +36,7 @@ import gzhu.edu.cn.base.entity.BaseEntity;
  * @date 2017年12月27日 下午6:09:13
  */
 @Entity(name = "sys_user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails{
 
 	private static final long serialVersionUID = 1L;
 
@@ -113,6 +114,9 @@ public class User extends BaseEntity {
 	
 	@Column(columnDefinition = "varchar(255) comment '学号'",unique=true)
 	private String xuehao;
+	
+	@Column(columnDefinition = "bit(1) DEFAULT 1 comment '账号是否过期'")
+	private boolean accountNonExpired;
 	
 	public String getEthnicity() {
 		return ethnicity;
@@ -226,6 +230,61 @@ public class User extends BaseEntity {
 
 	public void setRealname(String realname) {
 		this.realname = realname;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return grantedAuths;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return accountNonExpired;
+	}
+
+	@Column(columnDefinition = "bit(1) DEFAULT 1 comment '账号是否被锁定'")
+	private boolean accountNonLocked;
+	
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return accountNonLocked;
+	}
+	@Column(columnDefinition = "bit(1) DEFAULT 1 comment '账号的资格证明是否过期'")
+	private boolean credentialsNonExpired;
+	
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return credentialsNonExpired;
+	}
+
+	@Column(columnDefinition = "bit(1) DEFAULT 1 comment '账号是否被启用'")
+	private boolean enabled;
+
+	
+	public void setAccountNonExpired(boolean accountNonExpired) {
+		this.accountNonExpired = accountNonExpired;
+	}
+
+	public void setAccountNonLocked(boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+
+	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+		this.credentialsNonExpired = credentialsNonExpired;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		
+		return enabled;
 	}
 
 }

@@ -4,7 +4,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"></c:set>
 <link rel="stylesheet" href="${ctx }/assets/libs/layui/css/layui.css" />
-<link rel="stylesheet" href="${ctx }/assets/css/login.css?v=316">
 <link rel="stylesheet" href="${ctx }/assets/module/admin.css?v=316">
 <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>

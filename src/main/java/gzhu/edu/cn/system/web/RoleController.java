@@ -163,7 +163,7 @@ public class RoleController {
 
 	/**
 	 * 将字符串数组转成整型数组
-	 * 
+	 * @author dingguozhu
 	 * @param as
 	 * @return
 	 */

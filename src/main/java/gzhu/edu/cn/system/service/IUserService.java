@@ -40,5 +40,6 @@ public interface IUserService extends BaseService<User, Long>{
 	 * @return
 	 */
 	public User getUserByXuehao(String xuehao);
+	
 
 }

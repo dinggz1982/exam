@@ -1,5 +1,7 @@
 package gzhu.edu.cn.profile.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,11 +26,18 @@ import gzhu.edu.cn.base.entity.BaseEntity;
 @Entity
 @Table(name = "profile_subject")
 public class Subject extends BaseEntity{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 	
+	private Date createTime;
 
 	//科目名字
 	private String name;
@@ -53,7 +62,7 @@ public class Subject extends BaseEntity{
 
 	//科目描述
 	@Type(type = "text")
-	@Column(columnDefinition = "text comment '科目说明'")
+	@Column(columnDefinition = "text comment '课元说明'")
 	private String description;
 
 	public int getId() {
@@ -86,6 +95,14 @@ public class Subject extends BaseEntity{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 }

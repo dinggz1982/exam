@@ -20,7 +20,7 @@ import gzhu.edu.cn.system.entity.User;
 
 
 /**
- * 课程
+ * 具体的课程，包括上课教师、学生、课元等信息
  * <p>Title : Course</p>
  * <p>Description : </p>
  * <p>Company : </p>
@@ -52,6 +52,30 @@ public class Course extends BaseEntity{
 	@Column(columnDefinition="varchar(255) comment '这门课的上课时间' ")
 	private String studyTime;
 	
+	@Column(columnDefinition="varchar(255) comment '这门课的课时' ")
+	private String classHour;
+	
+	@ManyToOne
+	@JoinColumn(name = "study_team_id")
+	private StudyTeam studyTeam;
+	
+	public StudyTeam getStudyTeam() {
+		return studyTeam;
+	}
+
+	public void setStudyTeam(StudyTeam studyTeam) {
+		this.studyTeam = studyTeam;
+	}
+
+	public String getClassHour() {
+		return classHour;
+	}
+
+	public void setClassHour(String classHour) {
+		this.classHour = classHour;
+	}
+
+
 	@ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@OrderBy("id asc")
 	private Set<ClassInfo> classInfos; 

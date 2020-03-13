@@ -203,4 +203,11 @@ public class ResourceService extends BaseDAOImpl<Resource, Long> implements IRes
 
 	}
 
+	@Override
+	public String getMenuStringByUser(User user) {
+		//1.获取父类菜单
+		
+		return null;
+	}
+
 }

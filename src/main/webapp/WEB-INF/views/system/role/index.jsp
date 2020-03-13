@@ -200,7 +200,7 @@
                         layer.closeAll('loading');
                         if (200 == res.code) {
                             layer.msg(res.msg, {icon: 1});
-                            layer.close(index);
+                            layer.close(0);
                         } else {
                             layer.msg(res.msg, {icon: 2});
                         }

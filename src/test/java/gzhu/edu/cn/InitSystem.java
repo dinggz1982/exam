@@ -2,7 +2,6 @@ package gzhu.edu.cn;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Test;
@@ -15,18 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import gzhu.edu.cn.profile.entity.ClassInfo;
-import gzhu.edu.cn.profile.entity.College;
-import gzhu.edu.cn.profile.entity.Course;
-import gzhu.edu.cn.profile.entity.Major;
-import gzhu.edu.cn.profile.entity.School;
-import gzhu.edu.cn.profile.entity.Subject;
-import gzhu.edu.cn.profile.service.IClassInfoService;
-import gzhu.edu.cn.profile.service.ICollegeService;
-import gzhu.edu.cn.profile.service.ICourseService;
-import gzhu.edu.cn.profile.service.IMajorService;
-import gzhu.edu.cn.profile.service.ISchoolService;
-import gzhu.edu.cn.profile.service.ISubjectService;
+import gzhu.edu.cn.profile.service.IStudyTeamService;
 import gzhu.edu.cn.system.entity.Resource;
 import gzhu.edu.cn.system.entity.Role;
 import gzhu.edu.cn.system.entity.User;
@@ -59,6 +47,9 @@ public class InitSystem {
 
 	@Autowired
 	private IResourceService resourceService;
+	
+	@Autowired
+	private IStudyTeamService studyTeamService;
 
 	
 	@Test
@@ -199,5 +190,32 @@ public class InitSystem {
 		}
 
 	}
+	
+	/**
+	 * 初始化学期
+	 * @Description
+	 * @author 丁国柱
+	 * @date 2020年3月10日 下午10:46:53
+	 */
+	/*@Test
+	public void intStudyTeam(){
+		
+		for (int i = 2019; i < 2025; i++) {
+			StudyTeam studyTeam1  = new StudyTeam();
+			String name1 = i+"年" +"-" +  (i+1)+"年第一学期";
+			studyTeam1.setName(name1);
+			studyTeam1.setYear(String.valueOf(i));
+			this.studyTeamService.save(studyTeam1);
+			
+			StudyTeam studyTeam2  = new StudyTeam();
+			String name2 = i+"年" +"-" +  (i+1)+"年第二学期";
+			studyTeam2.setName(name2);
+			studyTeam2.setYear(String.valueOf((i+1)));
+			this.studyTeamService.save(studyTeam2);
+			
+		}
+		
+		
+	}*/
 	
 }
