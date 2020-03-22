@@ -8,10 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import gzhu.edu.cn.base.model.JsonData;
 import gzhu.edu.cn.base.model.PageData;
@@ -153,5 +150,16 @@ public class MajorController {
 		}
 		return map;
 	}
-	
+
+	/**
+	 * 根据学院id获取专业信息
+	 * @param college_id
+	 * @return
+	 */
+	@PostMapping("/major/getMajorByCollegeId/{college_id}")
+	@ResponseBody
+	public List<Major> getMajorByCollegeId(@PathVariable int college_id){
+		return this.majorService.find(" college.id=" + college_id);
+	}
+
 }

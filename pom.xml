@@ -214,6 +214,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork> <!-- 项目自动重启，如果没有该配置，devtools不会生效 -->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

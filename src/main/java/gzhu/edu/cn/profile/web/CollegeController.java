@@ -146,8 +146,13 @@ public class CollegeController {
 		}
 		return map;
 	}
-	
-	
+
+
+	/**
+	 * 根据学校id获取学院信息
+	 * @param school_id
+	 * @return
+	 */
 	@PostMapping("/college/getCollegeBySchoolId/{school_id}")
 	@ResponseBody
 	public List<College> getCollegeBySchoolId(@PathVariable int school_id){
