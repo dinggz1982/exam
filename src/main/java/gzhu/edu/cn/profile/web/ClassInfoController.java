@@ -12,10 +12,7 @@ import gzhu.edu.cn.profile.service.ISchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -54,6 +51,20 @@ public class ClassInfoController {
         model.addAttribute("schools", schools);
 
         return "profile/classinfo/index";
+    }
+
+    /**
+     * 班级具体信息
+     * @param model
+     * @param classInfoId
+     * @return
+     */
+    @GetMapping("/classInfo/detail/{classInfoId}")
+    public String classInfoDetail(Model model,@PathVariable  Integer classInfoId) throws SQLException {
+        //取得当前这个班级的全部学生数据
+        List<School> schools = this.schoolService.findAll();
+        model.addAttribute("schools", schools);
+        return "profile/classinfo/classInfoDetail";
     }
 
 

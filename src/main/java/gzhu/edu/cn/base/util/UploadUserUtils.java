@@ -71,8 +71,6 @@ public class UploadUserUtils {
 						role.setId(2);
 						Set<Role> roles = new HashSet<Role>();
 						roles.add(role);
-						
-						
 						user.setUrl(defaultUrl);
 						user.setRoles(roles);
 						users.add(user);

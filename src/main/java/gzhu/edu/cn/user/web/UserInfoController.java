@@ -33,10 +33,10 @@ import gzhu.edu.cn.system.service.IUserService;
 @Controller
 @RequestMapping("/user")
 public class UserInfoController {
-	
+
 	@Value("${file.uploadFolder}")
 	private String uploadFolder;
-	
+
 	@Value("${file.staticAccessPath}")
 	private String staticAccessPath;
 

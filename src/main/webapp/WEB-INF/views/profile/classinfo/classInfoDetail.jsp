@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>教师功能--我的课程</title>
+    <title>班级详细情况</title>
     <%@include file="/WEB-INF/views/include/head.jsp" %>
 </head>
 <body>
@@ -20,40 +20,13 @@
         <div class="layui-card-body table-tool-mini full-table">
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label w-auto">选择学校：</label>
-                        <div class="layui-input-inline mr0">
-                            <select name="school_id" lay-filter="getCollege">
-                                <option value="0">请选择学校</option>
-                                <c:forEach items="${schools }" var="school">
-                                    <option value="${school.id }">${school.name }</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label w-auto">选择学院：</label>
-                        <div class="layui-input-inline mr0">
-                            <select name="college_id" id="college_" lay-filter="getMajor">
-                                <option value="0">请选择学院</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- 相关专业 -->
-                    <div class="layui-inline">
-                        <label class="layui-form-label w-auto">选择专业：</label>
-                        <div class="layui-input-inline mr0">
-                            <select name="major_id" id="major_">
-                                <option value="0">请选择专业</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div class="layui-inline" style="padding-right: 110px;">
                         <button class="layui-btn icon-btn" lay-filter="formSubSearchClassInfo" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
                         <button id="btnAddClassInfo" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加
+                    </button>
+                        <button id="btnAddStudent" class="layui-btn icon-btn" lay-filter="importStudent"><i class="layui-icon">&#xe67c;</i>导入学生
                         </button>
                     </div>
                 </div>
@@ -69,66 +42,50 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-xs" lay-event="detail">查看班级详细情况</a>
 </script>
-
+<!-- 批量导入学生 -->
 <!-- 表单弹窗 -->
-<script type="text/html" id="modelClassInfo">
-    <form id="modelClassInfoForm" lay-filter="modelClassInfoForm" class="layui-form model-form">
+<script type="text/html" id="modelUploadStudent">
+    <form id="modelUploadStudentForm" lay-filter="modelUploadStudentForm" class="layui-form model-form">
         <input name="id" type="hidden"/>
         <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">学校</label>
             <div class="layui-input-block">
-                <select name="school_id" lay-filter="getCollege2">
-                    <option value="0">请选择学校</option>
-                    <c:forEach items="${schools }" var="school">
-                        <option value="${school.id }">${school.name }</option>
-                    </c:forEach>
-                </select>
+                提交批量导入学生信息，模板下载
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">学院</label>
-            <div class="layui-input-block">
-                <select name="college.id" id="college" lay-filter="getMajor2">
-                </select>
+            <div class="layui-input-block layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="studentFile">选择文件</button>
+                <button class="layui-btn" id="uploadFileBtn">开始上传</button>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">专业</label>
-            <div class="layui-input-block">
-                <select name="majorId" id="major">
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">年级</label>
-            <div class="layui-input-block">
-                <input name="grade" placeholder="请输入年级年级" type="text" class="layui-input" maxlength="20"
-                       lay-verType="tips" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label layui-form-required">班级名称</label>
-            <div class="layui-input-block">
-                <input name="name" placeholder="请输入班级名称" type="text" class="layui-input" maxlength="20"
-                       lay-verType="tips" lay-verify="required" required/>
-            </div>
-        </div>
-        <div class="layui-form-item text-right">
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
-            <button class="layui-btn" lay-filter="modelSubmitClassInfo" lay-submit>保存</button>
         </div>
     </form>
 </script>
 
+
+
 <!-- js部分 -->
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'admin'], function () {
+    layui.use(['layer', 'form', 'upload','table', 'util', 'admin'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
         var util = layui.util;
         var admin = layui.admin;
+        var upload = layui.upload;
+
+        //选完文件后不自动上传
+        upload.render({
+            elem: '#studentFile'
+            ,url: '${ctx}/student/saveUserFromFile' //改成您自己的上传接口
+            ,auto: false
+            //,multiple: true
+            ,bindAction: '#uploadFileBtn'
+            ,done: function(res){
+                layer.msg('上传成功');
+                //console.log(res)
+            }
+        });
 
         //更新学院信息
         form.on('select(getCollege)', function (data) {
@@ -222,6 +179,10 @@
             showEditModel();
         });
 
+        // 添加
+        $('#btnAddStudent').click(function () {
+            showUploadStudentModel();
+        });
         // 搜索
         form.on('submit(formSubSearchClassInfo)', function (data) {
             insTb.reload({where: data.field}, 'data');
@@ -234,20 +195,9 @@
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
             } else if (layEvent === 'del') { // 删除
+                alert();
                 doDel(data.id, data.name);
             } else if (layEvent === 'detail') { // 查看学校详细情况
-                //resetPsw(data.id, data.nickName);新开一个页面查看学校详细情况
-                layui.use(['index'], function () {
-                    var index = layui.index;
-
-                    index.openTab({
-                        title: data.name+'详细情况',
-                        url: '${ctx}/profile/classInfo/detail/'+data.id,
-                        end: function() {
-                            //insTb.reload();
-                        }
-                    });
-                });
             }
         });
 
@@ -289,6 +239,45 @@
                 }
             });
         }
+
+        //显示上传学生
+        function showUploadStudentModel(mClassInfo) {
+        admin.open({
+            type: 1,
+            title: (mClassInfo ? '修改' : '添加') + '学校',
+            content: $('#modelUploadStudent').html(),
+            success: function (layero, dIndex) {
+                $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                var url = '${ctx}/profile/classInfo/edit';
+                // 回显数据
+                form.val('modelClassInfoForm', mClassInfo);
+                // 表单提交事件
+                form.on('submit(modelSubmitClassInfo)', function (data) {
+                    //判断专业是否增加
+                    var major = $("#major").val();
+                    if(major>0){
+                        layer.load(2);
+                        //用post提交数据
+                        $.post(url, data.field, function (res) {
+                            layer.closeAll('loading');
+                            if (res.code == 200) {
+                                layer.close(dIndex);
+                                layer.msg(res.msg, {icon: 1});
+                                insTb.reload({}, 'data');
+                            } else {
+                                layer.msg(res.msg, {icon: 2});
+                            }
+                        }, 'json');
+                        return false;
+                    }else{
+                        layer.msg("您尚未选择班级对应的专业！", {icon: 2});
+                        return false;
+                    }
+                });
+
+            }
+        });
+    }
 
         // 删除
         function doDel(classInfoId, classInfoname) {

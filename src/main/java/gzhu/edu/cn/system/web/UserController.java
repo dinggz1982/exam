@@ -44,8 +44,10 @@ public class UserController {
 
 	@Autowired
 	private IUserService userService;
+
 	@Autowired
 	private IResourceButtonService resourceButtonService;
+
 	@Autowired
 	private IResourceService resourceService;
 
