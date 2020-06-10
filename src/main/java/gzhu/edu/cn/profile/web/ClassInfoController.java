@@ -44,7 +44,7 @@ public class ClassInfoController {
      *
      * @return
      */
-    @GetMapping("/classInfo/index")
+    @GetMapping("/classinfo/index")
     public String index(Model model) throws SQLException {
         //学校信息
         List<School> schools = this.schoolService.findAll();

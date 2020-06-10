@@ -52,4 +52,16 @@ public class UserUtils {
 		return path;
 	}
 
+	/**
+	 * 获取用户上传作业附件地址
+	 */
+	public static String getUploadHomeworkPath(String uploadFolder, User user) {
+		String path = uploadFolder + user.getId() + "/homework/";
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		return path;
+	}
+
 }

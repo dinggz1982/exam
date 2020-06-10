@@ -1,6 +1,7 @@
 package gzhu.edu.cn.homework.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.system.entity.User;
 
 import javax.persistence.*;
@@ -23,37 +24,28 @@ public class HomeWork extends BaseEntity {
 
     private String title;
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    private String content;
-
-    private float score;
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
-    @OneToOne
-    @JoinColumn(name="creator_id")
-    private User creator;
+   
+	@ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private User teacher;
 
     private Date createTime;
 
-    @ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @OrderBy("id asc")
-    private Set<User> students;
+    @ManyToOne
+    @JoinColumn(name = "classInfo_id")
+    private ClassInfo classInfo;
+    
+    private String content;
 
-    public long getId() {
+    public ClassInfo getClassInfo() {
+		return classInfo;
+	}
+
+	public void setClassInfo(ClassInfo classInfo) {
+		this.classInfo = classInfo;
+	}
+
+	public long getId() {
         return id;
     }
 
@@ -69,15 +61,6 @@ public class HomeWork extends BaseEntity {
         this.title = title;
     }
 
-    public float getScore() {
-        return score;
-    }
-
-    public void setScore(float score) {
-        this.score = score;
-    }
-
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -86,11 +69,24 @@ public class HomeWork extends BaseEntity {
         this.createTime = createTime;
     }
 
-    public Set<User> getStudents() {
-        return students;
+    public String getContent() {
+        return content;
     }
 
-    public void setStudents(Set<User> students) {
-        this.students = students;
+    public void setContent(String content) {
+        this.content = content;
     }
+
+   
+
+
+
+    public User getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(User teacher) {
+		this.teacher = teacher;
+	}
+
 }
