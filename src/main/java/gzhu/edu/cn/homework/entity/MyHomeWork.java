@@ -1,9 +1,11 @@
 package gzhu.edu.cn.homework.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.student.entity.Student;
 import gzhu.edu.cn.system.entity.User;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @program: exam
@@ -11,7 +13,7 @@ import javax.persistence.*;
  * @author: 丁国柱
  * @create: 2020-05-27 22:46
  */
-@Entity(name="myhomework")
+@Entity(name="its_myhomework")
 public class MyHomeWork extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +22,35 @@ public class MyHomeWork extends BaseEntity {
     //谁的作业
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private User user;
+    private Student student;
 
     private float score;
 
-	@ManyToOne
+    /**
+     * 状态0:未开始,1：已开始，2：结束
+     */
+    @Column(nullable=false,name="status",columnDefinition="int default 1")
+    private int status;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    private Date updateTime;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    @ManyToOne
     @JoinColumn(name = "homework_id")
     private HomeWork homeWork;
 
@@ -36,12 +62,12 @@ public class MyHomeWork extends BaseEntity {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public HomeWork getHomeWork() {

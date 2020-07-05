@@ -163,9 +163,9 @@
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'edit') { // 修改
+                console.log(data);
                 showEditModel(data);
             } else if (layEvent === 'del') { // 删除
-            	alert();
                 doDel(data.id, data.username);
             } else if (layEvent === 'reset') { // 重置密码
                 resetPsw(data.userId, data.nickName);

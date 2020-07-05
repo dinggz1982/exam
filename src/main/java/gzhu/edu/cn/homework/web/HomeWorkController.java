@@ -5,34 +5,22 @@ import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UserUtils;
 import gzhu.edu.cn.homework.entity.HomeWork;
 import gzhu.edu.cn.homework.service.IHomeWorkService;
-import gzhu.edu.cn.profile.entity.College;
+import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.Course;
-import gzhu.edu.cn.profile.entity.School;
-import gzhu.edu.cn.profile.service.ICollegeService;
 import gzhu.edu.cn.profile.service.ICourseService;
-import gzhu.edu.cn.system.entity.Role;
 import gzhu.edu.cn.system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @program: exam
@@ -124,6 +112,43 @@ public class HomeWorkController {
         return map;
     }
 
+
+
+
+    /**
+     * 根据课程id查看作业
+     * @param course_id
+     * @return
+     */
+    @GetMapping("/homework/showHomework/{course_id}")
+    public String showHomework(Model model, @PathVariable Integer course_id){
+        Course course = this.courseService.findById(course_id);
+        model.addAttribute("course",course);
+        return  "/teacher/homework/showHomework";
+    }
+
+    /**
+     * 专业信息分页
+     *
+     * @param page
+     * @param limit
+     * @param
+     * @return
+     */
+    @GetMapping("/homework/{course_id}/list.json")
+    @ResponseBody
+    public JsonData<HomeWork> homeworkList(Integer page, Integer limit, @PathVariable Integer course_id) {
+        page = page == null ? 1 : page < 1 ? 1 : page;
+        limit = limit == null ? 10 : limit < 1 ? 1 : limit;
+        User user = (User) session.getAttribute("currentUser");
+        PageData<HomeWork> pageData = this.homeworkService.getPageData(page, limit, " course_id=" + course_id + " and teacher_id="+ user.getId());
+        JsonData<HomeWork> pageJson = new JsonData<HomeWork>();
+        pageJson.setCode(0);
+        pageJson.setCount(pageData.getTotalCount());
+        pageJson.setMsg("课程作业列表");
+        pageJson.setData(pageData.getPageData());
+        return pageJson;
+    }
 
 
 }

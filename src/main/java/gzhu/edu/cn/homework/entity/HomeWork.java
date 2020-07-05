@@ -2,6 +2,7 @@ package gzhu.edu.cn.homework.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
 import gzhu.edu.cn.profile.entity.ClassInfo;
+import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.system.entity.User;
 
 import javax.persistence.*;
@@ -24,29 +25,64 @@ public class HomeWork extends BaseEntity {
 
     private String title;
 
-   
-	@ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "teacher_id")
     private User teacher;
 
     private Date createTime;
 
+    private Date startTime;
+
+    private Date endTime;
+
     @ManyToOne
     @JoinColumn(name = "classInfo_id")
     private ClassInfo classInfo;
-    
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    //作业的类型1.文本/附件2.知识建构
+    private int type;
+
     private String content;
 
     public ClassInfo getClassInfo() {
-		return classInfo;
-	}
+        return classInfo;
+    }
 
-	public void setClassInfo(ClassInfo classInfo) {
-		this.classInfo = classInfo;
-	}
+    public void setClassInfo(ClassInfo classInfo) {
+        this.classInfo = classInfo;
+    }
 
-	public long getId() {
+    public long getId() {
         return id;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public void setId(long id) {
@@ -77,16 +113,21 @@ public class HomeWork extends BaseEntity {
         this.content = content;
     }
 
-   
-
-
-
     public User getTeacher() {
-		return teacher;
-	}
+        return teacher;
+    }
 
-	public void setTeacher(User teacher) {
-		this.teacher = teacher;
-	}
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
+    }
+
 
 }

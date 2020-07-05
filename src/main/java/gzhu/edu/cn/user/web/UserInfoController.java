@@ -70,7 +70,6 @@ public class UserInfoController {
 		try {
 			String uuid = UUID.randomUUID().toString();
 			User user = (User) session.getAttribute("currentUser");
-			
 			String userImgPath = UserUtils.getUploadImgPath(uploadFolder, user) + uuid + ".png";
 			// 上传头像
 			getImageFromBase64(res, userImgPath);

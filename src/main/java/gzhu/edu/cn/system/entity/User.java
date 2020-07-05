@@ -137,7 +137,7 @@ public class User extends BaseEntity implements UserDetails{
 	@Column(name = "sex")
 	private String sex;
 	
-	@Column(name = "img")
+	@Column(columnDefinition = "varchar(255) comment '个人头像地址' DEFAULT '/assets/images/logo.png'")
 	private String img;
 
 	public String getImg() {

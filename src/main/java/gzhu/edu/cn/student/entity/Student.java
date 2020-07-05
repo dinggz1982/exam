@@ -24,9 +24,9 @@ public class Student extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User ser;
+    private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="classinfo_id")
     private ClassInfo classInfo;
 
@@ -46,12 +46,12 @@ public class Student extends BaseEntity {
         this.studentId = studentId;
     }
 
-    public User getSer() {
-        return ser;
+    public User getUser() {
+        return user;
     }
 
-    public void setSer(User ser) {
-        this.ser = ser;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public ClassInfo getClassInfo() {

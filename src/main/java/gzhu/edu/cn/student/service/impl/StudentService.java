@@ -5,7 +5,6 @@ import gzhu.edu.cn.student.entity.Student;
 import gzhu.edu.cn.student.service.IStudentService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
  * @program: exam
@@ -16,8 +15,5 @@ import java.util.List;
 @Service("studentService")
 public class StudentService extends BaseDAOImpl<Student,Long> implements IStudentService {
 
-    public void batchSave(List<Student> students){
 
-
-    }
 }

@@ -43,9 +43,6 @@ public class SchoolController {
 	 * 学校分页信息
 	 * @param page
 	 * @param limit
-	 * @param sex
-	 * @param username
-	 * @param realname
 	 * @return
 	 */
 	@GetMapping("/school/list.json")
@@ -106,7 +103,7 @@ public class SchoolController {
 	
 	/**
 	 * 软删除学校
-	 * @param id
+	 * @param schoolId
 	 * @return
 	 */
 	@PostMapping("/school/delete")

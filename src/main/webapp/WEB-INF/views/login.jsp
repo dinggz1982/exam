@@ -43,12 +43,12 @@
                 <div class="layui-form-item">
                 	<input type="submit" class="layui-btn layui-btn-fluid" value="登录"/>
                 </div>
-                <div class="layui-form-item login-other">
+               <%-- <div class="layui-form-item login-other">
                     <label>第三方登录</label>
                     <a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>
                     <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>
                     <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>
-                </div>
+                </div>--%>
             </form>
         </div>
     </div>

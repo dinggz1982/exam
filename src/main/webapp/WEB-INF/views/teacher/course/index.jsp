@@ -59,7 +59,7 @@
 	<script type="text/html" id="tableBarCourse">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看课程详细情况</a>
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看作业详细情况</a>
 </script>
 	<!-- 表单弹窗 -->
 	<script type="text/html" id="modelCourse">
@@ -191,11 +191,40 @@
 					showEditModel(data);
 				} else if (layEvent === 'del') { // 删除
 					doDel(data.id, data.name);
-				} else if (layEvent === 'detail') { // 查看学校详细情况
-					//resetPsw(data.id, data.nickName);新开一个页面查看学校详细情况
+				} else if (layEvent === 'detail') { // 查看作业详细情况
+					layui.use(['index'], function () {
+						var index = layui.index;
+						index.openTab({
+							title: data.name+'详细情况',
+							url: '${ctx}/homework/showHomework/'+data.id,
+							end: function() {
+								//insTb.reload();
+							}
+						});
+					});
 				}
 			});
-			
+			// 删除
+			function doDel(id, courseName) {
+				layer.confirm('确定要删除课程“' + courseName + '”吗？', {
+					skin: 'layui-layer-admin',
+					shade: .1
+				}, function (i) {
+					layer.close(i);
+					layer.load(2);
+					$.post('${ctx}/teacher/course/delete', {
+						id: id
+					}, function (res) {
+						layer.closeAll('loading');
+						if (res.code == 200) {
+							layer.msg(res.msg, {icon: 1});
+							insTb.reload({}, 'data');
+						} else {
+							layer.msg(res.msg, {icon: 2});
+						}
+					}, 'json');
+				});
+			}
 		// 显示表单弹窗
         function showEditModel(mCourse) {
             admin.open({
@@ -204,7 +233,11 @@
                 content: $('#modelCourse').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
-                    var url = '${ctx}/teacher/course/edit';
+                    if(mCourse!=null&&mCourse.id!=null){
+						var url = '${ctx}/teacher/course/edit?id='+mCourse.id;
+					}else{
+						var url = '${ctx}/teacher/course/edit';
+					}
                     // 回显数据
                     form.val('modelCourseForm', mCourse);
                     //加载班级树
@@ -257,7 +290,10 @@
 	                    		}, 'json'); 
                        }
                     });
-                }
+                },
+				end:function () {
+					insTb.reload();
+				}
             });
         }
     });

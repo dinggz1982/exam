@@ -24,10 +24,10 @@
                         <button class="layui-btn icon-btn" lay-filter="formSubSearchClassInfo" lay-submit>
                             <i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="btnAddClassInfo" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加
-                    </button>
-                        <button id="btnAddStudent" class="layui-btn icon-btn" lay-filter="importStudent"><i class="layui-icon">&#xe67c;</i>导入学生
-                        </button>
+                        <%--<button id="btnAddStudent" class="layui-btn icon-btn" lay-filter="importStudent"><i class="layui-icon">&#xe67c;</i>导入学生
+                        </button>--%>
+                            <button type="button" class="layui-btn layui-btn-normal" id="studentFile">选择文件</button>
+                            <button class="layui-btn" id="uploadFileBtn">开始上传</button>
                     </div>
                 </div>
             </div>
@@ -54,8 +54,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block layui-upload">
-                <button type="button" class="layui-btn layui-btn-normal" id="studentFile">选择文件</button>
-                <button class="layui-btn" id="uploadFileBtn">开始上传</button>
+                <button type="button" class="layui-btn" id="importStudent"><i class="layui-icon"></i>批量导入学生</button>
             </div>
         </div>
     </form>
@@ -73,19 +72,6 @@
         var util = layui.util;
         var admin = layui.admin;
         var upload = layui.upload;
-
-        //选完文件后不自动上传
-        upload.render({
-            elem: '#studentFile'
-            ,url: '${ctx}/student/saveUserFromFile' //改成您自己的上传接口
-            ,auto: false
-            //,multiple: true
-            ,bindAction: '#uploadFileBtn'
-            ,done: function(res){
-                layer.msg('上传成功');
-                //console.log(res)
-            }
-        });
 
         //更新学院信息
         form.on('select(getCollege)', function (data) {
@@ -152,23 +138,23 @@
         // 渲染表格
         var insTb = table.render({
             elem: '#tableClassInfo',//要渲染的表格id
-            url: '${ctx}/profile/classInfo/list.json',
+            url: '${ctx}/profile/classInfo/student.json/${classInfo.id}',
             page: true,
             toolbar: true,
             cellMinWidth: 100,
             cols: [[
                 {type: 'numbers'},
-                {field: 'name', sort: true, title: '班级'},
-                {field: 'grade', sort: true, title: '年级'},
-                {
-                    field: 'majorName', sort: true, title: '学校-学院-专业', templet: function (d) {
-                        return d.major.college.school.name+'-' + d.major.college.name+'-'+d.major.name;
+                {field: 'username', sort: true, title: '用户名',templet: function (d) {
+                    return d.user.username;
                     }
                 },
-                {
-                    field: 'createTime', sort: true, templet: function (d) {
-                        return util.toDateString(d.createTime);
-                    }, title: '创建时间'
+                {field: 'reaname', sort: true, title: '真实姓名',templet: function (d) {
+                        return d.user.realname;
+                    }
+                },
+                {field: 'sex', sort: true, title: '性别',templet: function (d) {
+                        return d.user.sex;
+                    }
                 },
                 {align: 'center', toolbar: '#tableBarClassInfo', title: '操作', minWidth: 200}
             ]]
@@ -195,9 +181,9 @@
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
             } else if (layEvent === 'del') { // 删除
-                alert();
                 doDel(data.id, data.name);
             } else if (layEvent === 'detail') { // 查看学校详细情况
+
             }
         });
 
@@ -205,7 +191,7 @@
         function showEditModel(mClassInfo) {
             admin.open({
                 type: 1,
-                title: (mClassInfo ? '修改' : '添加') + '学校',
+                title: (mClassInfo ? '修改' : '添加') + '学生',
                 content: $('#modelClassInfo').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
@@ -240,11 +226,25 @@
             });
         }
 
+        //批量导入学生
+        upload.render({ //允许上传的文件后缀
+            elem: '#studentFile'
+            ,url: '${ctx}/student/saveUserFromFile/${classInfo.id}' //改成您自己的上传接口
+            ,accept: 'file' //普通文件
+            ,exts: 'xlsx|xls' //只允许上传压缩文件
+            ,done: function(res){
+                layer.msg('上传成功');
+                console.log(res)
+            },error:function (e) {
+                layer.msg(e);
+            }
+        });
+
         //显示上传学生
         function showUploadStudentModel(mClassInfo) {
         admin.open({
             type: 1,
-            title: (mClassInfo ? '修改' : '添加') + '学校',
+            title: (mClassInfo ? '修改' : '添加') + '学生',
             content: $('#modelUploadStudent').html(),
             success: function (layero, dIndex) {
                 $(layero).children('.layui-layer-content').css('overflow', 'visible');

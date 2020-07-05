@@ -69,7 +69,7 @@ public class StudentCourseController {
 	 * 
 	 * @param page
 	 * @param limit
-	 * @param schoolId
+	 * @param
 	 * @param name
 	 * @return
 	 */

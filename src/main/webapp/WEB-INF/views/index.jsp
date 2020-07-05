@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>考试系统</title>
+<title>教育技术创新班项目</title>
 <%@include file="/WEB-INF/views/include/head.jsp"%>
 <link rel="stylesheet" href="${ctx }/assets/css/index.css">
 <link rel="stylesheet" href="${ctx }/assets/css/layui2.5.5.css">
@@ -21,7 +21,7 @@
 </head>
 <body>
 	<div class="ew-header">
-		<a class="layui-logo" href="/">教学系统</a>
+		<a class="layui-logo" href="/">教育技术创新班项目</a>
 		<div class="ew-nav-group">
 			<div class="nav-toggle">
 				<i class="layui-icon layui-icon-more-vertical"></i>
@@ -39,8 +39,8 @@
 		style="background-image:url(${ctx}/assets/images/index_logo.jpg);">
 		<div class="layui-container">
 			<div class="layuimini-top-content">
-				<h1>XX智能教学系统 后台管理模板</h1>
-				<p>纯粹用于教学</p>
+				<h1>智能教学系统 后台管理模板</h1>
+				<p>用于2018教育技术创新班教学</p>
 			</div>
 		</div>
 	</div>

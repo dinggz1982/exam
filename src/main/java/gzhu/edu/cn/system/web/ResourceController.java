@@ -114,15 +114,10 @@ public class ResourceController {
 		}
 		return map;
 	}
-	
+
 	/**
 	 * 软删除菜单
 	 * @param id
-	 * @param parentId
-	 * @param name
-	 * @param url
-	 * @param isMenu
-	 * @param orderNumber
 	 * @return
 	 */
 	@GetMapping("/resource/delete")

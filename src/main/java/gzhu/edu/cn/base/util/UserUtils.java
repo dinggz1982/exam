@@ -1,7 +1,9 @@
 package gzhu.edu.cn.base.util;
 
 import java.io.File;
+import java.util.Set;
 
+import gzhu.edu.cn.system.entity.Role;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -63,5 +65,37 @@ public class UserUtils {
 		}
 		return path;
 	}
+
+	/**
+	 * 获取作业用户上传的图片
+	 * @param uploadFolder
+	 * @param user
+	 * @return
+	 */
+	public static String getUploadHomeworkImagePath(String uploadFolder, User user) {
+		String path = uploadFolder + user.getId() + "/homework/images/";
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		return path;
+	}
+
+	/**
+	 * 判断用户是管理员或教师
+	 * @param user
+	 * @return
+	 */
+	public static boolean isTeacherOrAdmim(User user){
+		Set<Role> roles = user.getRoles();
+		for (Role role: roles
+			 ) {
+			if(role.getName().equals("教师")||role.getName().equals("管理员")){
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 }

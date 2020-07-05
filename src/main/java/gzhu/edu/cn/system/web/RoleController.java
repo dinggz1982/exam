@@ -42,9 +42,9 @@ public class RoleController {
 
 	/**
 	 * 返回角色json数据
-	 * 
-	 * @param pageIndex
-	 * @param pageSize
+	 * @param page
+	 * @param limit
+	 * @param name
 	 * @return
 	 */
 	@GetMapping("/role/list.json")
@@ -68,13 +68,7 @@ public class RoleController {
 
 	/**
 	 * 软删除角色
-	 * 
 	 * @param id
-	 * @param parentId
-	 * @param name
-	 * @param url
-	 * @param isMenu
-	 * @param orderNumber
 	 * @return
 	 */
 	@GetMapping("/role/delete")

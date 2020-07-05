@@ -1,16 +1,5 @@
 package gzhu.edu.cn.profile.service.impl;
 
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import gzhu.edu.cn.base.dao.impl.BaseDAOImpl;
 import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.College;
@@ -18,7 +7,16 @@ import gzhu.edu.cn.profile.entity.School;
 import gzhu.edu.cn.profile.service.IClassInfoService;
 import gzhu.edu.cn.profile.service.ICollegeService;
 import gzhu.edu.cn.profile.service.ISchoolService;
-import gzhu.edu.cn.system.entity.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 班级信息

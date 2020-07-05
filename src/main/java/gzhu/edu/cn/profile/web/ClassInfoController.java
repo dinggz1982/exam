@@ -9,6 +9,9 @@ import gzhu.edu.cn.profile.entity.School;
 import gzhu.edu.cn.profile.service.IClassInfoService;
 import gzhu.edu.cn.profile.service.ICollegeService;
 import gzhu.edu.cn.profile.service.ISchoolService;
+import gzhu.edu.cn.student.entity.Student;
+import gzhu.edu.cn.student.entity.Student_;
+import gzhu.edu.cn.student.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +42,9 @@ public class ClassInfoController {
     @Autowired
     private ISchoolService schoolService;
 
+    @Autowired
+    private IStudentService studentService;
+
     /**
      * 列出班级信息
      *
@@ -64,6 +70,8 @@ public class ClassInfoController {
         //取得当前这个班级的全部学生数据
         List<School> schools = this.schoolService.findAll();
         model.addAttribute("schools", schools);
+        ClassInfo classInfo = this.classInfoService.findById(classInfoId);
+        model.addAttribute("classInfo", classInfo);
         return "profile/classinfo/classInfoDetail";
     }
 
@@ -94,6 +102,26 @@ public class ClassInfoController {
         pageJson.setCode(0);
         pageJson.setCount(pageData.getTotalCount());
         pageJson.setMsg("学院列表");
+        pageJson.setData(pageData.getPageData());
+        return pageJson;
+    }
+
+    /**
+     * 根据班级id显示学生信息分页
+     * @param page
+     * @param limit
+     * @return
+     */
+    @GetMapping("/classInfo/student.json/{classInfo_id}")
+    @ResponseBody
+    public JsonData<Student> studentList(Integer page, Integer limit, @PathVariable Integer classInfo_id) {
+        page = page == null ? 1 : page < 1 ? 1 : page;
+        limit = limit == null ? 10 : limit < 1 ? 1 : limit;
+        PageData<Student> pageData = this.studentService.getPageData(page, limit, " classinfo_id="+classInfo_id);
+        JsonData<Student> pageJson = new JsonData<Student>();
+        pageJson.setCode(0);
+        pageJson.setCount(pageData.getTotalCount());
+        pageJson.setMsg("学生列表");
         pageJson.setData(pageData.getPageData());
         return pageJson;
     }
@@ -140,7 +168,7 @@ public class ClassInfoController {
 
     /**
      * 软删除班级
-     * @param id
+     * @param classInfoId
      * @return
      */
     @PostMapping("/classInfo/delete")

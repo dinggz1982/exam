@@ -81,11 +81,8 @@ public class UserController {
 	 * <p>
 	 * Company :
 	 * </p>
-	 * 
 	 * @author 丁国柱
 	 * @date 2018年1月30日 下午11:15:01
-	 * @param pageIndex
-	 * @param pageSize
 	 * @param model
 	 * @return
 	 * @throws SQLException 
@@ -120,8 +117,11 @@ public class UserController {
 
 	/**
 	 * 返回用户json数据
-	 * @param pageIndex
-	 * @param pageSize
+	 * @param page
+	 * @param limit
+	 * @param sex
+	 * @param username
+	 * @param realname
 	 * @return
 	 */
 	@GetMapping("/user/list.json")
@@ -151,14 +151,15 @@ public class UserController {
 		pageJson.setData(pageData.getPageData());
 		return pageJson;
 	}
-	
-	
+
+
 	/**
 	 * 编辑或修改用户
 	 * @param id
-	 * @param name
-	 * @param url
-	 * @param description
+	 * @param username
+	 * @param realname
+	 * @param sex
+	 * @param roleIds
 	 * @return
 	 */
 	@PostMapping("/user/edit")

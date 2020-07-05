@@ -4,35 +4,31 @@ import gzhu.edu.cn.base.model.JsonData;
 import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UserUtils;
 import gzhu.edu.cn.homework.entity.HomeWork;
+import gzhu.edu.cn.homework.entity.MyHomeWork;
 import gzhu.edu.cn.homework.service.IHomeWorkService;
-import gzhu.edu.cn.profile.entity.College;
+import gzhu.edu.cn.homework.service.IMyHomeWorkService;
+import gzhu.edu.cn.knowledge.entity.Knowledge;
+import gzhu.edu.cn.knowledge.entity.MyKnowledgeGraph;
+import gzhu.edu.cn.knowledge.service.IKnowledgeService;
+import gzhu.edu.cn.knowledge.service.IMyKnowledgeGraphService;
+import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.Course;
-import gzhu.edu.cn.profile.entity.School;
-import gzhu.edu.cn.profile.service.ICollegeService;
 import gzhu.edu.cn.profile.service.ICourseService;
-import gzhu.edu.cn.system.entity.Role;
 import gzhu.edu.cn.system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @program: exam
@@ -55,6 +51,13 @@ public class TeacherHomeWorkController {
 
     @Value("${file.staticAccessPath}")
     private String staticAccessPath;
+
+    @Autowired
+    private IMyHomeWorkService myHomeWorkService;
+
+    @Autowired
+    private IMyKnowledgeGraphService myKnowledgeGraphService;
+
 
 
 //    @GetMapping("/its/homework/index")
@@ -166,7 +169,7 @@ public class TeacherHomeWorkController {
     
     /**
 	 * 软删除作业
-	 * @param id
+	 * @param homeworkId
 	 * @return
 	 */
 	@PostMapping("/homework/delete")
@@ -190,13 +193,161 @@ public class TeacherHomeWorkController {
 	
 	/**
 	 * 根据课程id获取作业信息
-	 * @param homework_id
+	 * @param course_id
 	 * @return
 	 */
 	@PostMapping("/homework/getHomeworkByCourseId/{course_id}")
 	@ResponseBody
 	public List<HomeWork> getHomeworkByCourseId(@PathVariable int course_id){
 		return this.homeworkService.find(" course.id=" + course_id);
+	}
+
+	/**
+	 * 发布作业
+	 * @return
+	 */
+	@GetMapping("/homework/publishHomeWork/{course_id}")
+	public String publishHomeWork(@PathVariable Integer course_id,Model model,Long homework_id){
+		Course course = this.courseService.findById(course_id);
+		model.addAttribute("course",course);
+		if(homework_id!=null&&homework_id>0){
+			HomeWork homeWork = this.homeworkService.findById(homework_id);
+			model.addAttribute("homeWork",homeWork);
+		}
+		return  "teacher/homework/publishHomework";
+	}
+
+
+	@PostMapping("/homework/saveHomework")
+	@ResponseBody
+	public Map<String,Object> saveHomeWork(String title, String content,Long id, int type,String date, String classInfos, Integer course_id) throws ParseException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		User user = (User) session.getAttribute("currentUser");
+		String[] classes  = classInfos.split(",");
+		Date startTime = new Date();
+		Date endTime = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		if(date!=null&& date.length()>0){
+			//2020-06-11 - 2020-07-22
+			String[] times = date.split(" - ");
+			startTime = sdf.parse(times[0]);
+			endTime = sdf.parse(times[1]);
+		}
+		List<HomeWork> homeWorks = new ArrayList<>();
+		for (String c : classes){
+			if(c!=null&&c.length()>0){
+				HomeWork homeWork = new HomeWork();
+				if(id!=null&&id>0){
+					homeWork.setId(id);
+				}
+				homeWork.setTitle(title);
+				homeWork.setCreateTime(new Date());
+				ClassInfo classInfo = new ClassInfo();
+				classInfo.setId(Integer.parseInt(c));
+				homeWork.setClassInfo(classInfo);
+				Course course = new Course();
+				course.setId(course_id);
+				homeWork.setCourse(course);
+				homeWork.setTeacher(user);
+				homeWork.setStartTime(startTime);
+				homeWork.setEndTime(endTime);
+				homeWork.setContent(content);
+				homeWork.setType(type);
+				homeWorks.add(homeWork);
+			}
+		}
+		this.homeworkService.saveHomeWorks(homeWorks);
+
+		return map;
+	}
+
+
+	@GetMapping("/homework/details/{homework_id}")
+	public String details(@PathVariable Long homework_id,Model model){
+		HomeWork homework = this.homeworkService.findById(homework_id);
+		model.addAttribute("homework",homework);
+		return  "teacher/homework/homeworkDetails";
+	}
+
+	/**
+	 * 知识建构过程分析
+	 * @param homework_id
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/homework/showDetails/{homework_id}")
+	public String showDetails(@PathVariable Long homework_id,Model model){
+		HomeWork homework = this.homeworkService.findById(homework_id);
+		model.addAttribute("homework",homework);
+		return  "teacher/homework/showDetails";
+	}
+
+	/**
+	 * 学生作业信息分页
+	 */
+	@GetMapping("/homework/detailInfo/{homework_id}/list.json")
+	@ResponseBody
+	public JsonData<MyKnowledgeGraph> detailInfo(Integer page, Integer limit,@PathVariable  Long homework_id) {
+		page = page == null ? 1 : page < 1 ? 1 : page;
+		limit = limit == null ? 10 : limit < 1 ? 1 : limit;
+		PageData<MyKnowledgeGraph> pageData = this.myKnowledgeGraphService.getPageData(page, limit, " myHomeWork.homeWork.id="+homework_id);
+		JsonData<MyKnowledgeGraph> pageJson = new JsonData<>();
+		pageJson.setCode(0);
+		pageJson.setCount(pageData.getTotalCount());
+		pageJson.setMsg("知识建构列表");
+		pageJson.setData(pageData.getPageData());
+		return pageJson;
+	}
+
+	/**
+	 * 学生作业信息分页
+	 */
+	@GetMapping("/homeworkdetailInfo/{homework_id}/list.json")
+	@ResponseBody
+	public JsonData<MyHomeWork> homeworkdetailInfo(Integer page, Integer limit,@PathVariable  Long homework_id) {
+		page = page == null ? 1 : page < 1 ? 1 : page;
+		limit = limit == null ? 10 : limit < 1 ? 1 : limit;
+		PageData<MyHomeWork> pageData = this.myHomeWorkService.getPageData(page, limit, " homework_id="+homework_id);
+		JsonData<MyHomeWork> pageJson = new JsonData<>();
+		pageJson.setCode(0);
+		pageJson.setCount(pageData.getTotalCount());
+		pageJson.setMsg("学生作业列表");
+		pageJson.setData(pageData.getPageData());
+		return pageJson;
+	}
+
+
+	@GetMapping("/homework/showAll/{homework_id}")
+	public String showAll(@PathVariable long homework_id,Model model){
+		HomeWork homeWork = this.homeworkService.findById(homework_id);
+		model.addAttribute("homework", homeWork);
+		List<MyKnowledgeGraph> myKnowledgeGraphs = this.myKnowledgeGraphService.find(" myHomeWork.homeWork.id=" + homework_id );
+		//拿到全部节点
+//	nodes	{ id: 1, label: 'Eric Cartman', age: 'kid', gender: 'male' },
+//{ from: 1, to: 2, relation: 'friend', arrows: 'to, from', color: { color: 'red'} },
+		StringBuffer nodes = new StringBuffer();
+		StringBuffer edges = new StringBuffer();
+		Set<Knowledge> knowledges = new HashSet<>();
+		for (MyKnowledgeGraph graph : myKnowledgeGraphs
+		) {
+			//处理节点
+			Knowledge fromKnowledge = graph.getFromKnowledge();
+			Knowledge toKnowledge = graph.getToKnowledge();
+			if (!knowledges.contains(fromKnowledge)) {
+				nodes.append("{ id: " + fromKnowledge.getId() + ", label: \'" + fromKnowledge.getKnowledge() + "\'},");
+				knowledges.add(fromKnowledge);
+			}
+			if (!knowledges.contains(toKnowledge)) {
+				nodes.append("{ id: " + toKnowledge.getId() + ", label: \'" + toKnowledge.getKnowledge() + "\'},");
+				knowledges.add(toKnowledge);
+			}
+			//处理边
+			edges.append("{ from:" + fromKnowledge.getId() + ",to:" + toKnowledge.getId() + ",label:\'" + graph.getRelation() + "\',arrows: 'to' },");
+		}
+		model.addAttribute("edges", edges.toString());
+		model.addAttribute("nodes", nodes.toString());
+
+		return "teacher/homework/showAll";
 	}
 
 

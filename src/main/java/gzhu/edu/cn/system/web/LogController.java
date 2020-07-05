@@ -28,11 +28,13 @@ public class LogController {
 		
 		return "system/log/index";
 	}
-	
+
 	/**
-	 * 返回用户json数据
-	 * @param pageIndex
-	 * @param pageSize
+	 * 返回日志json数据
+	 * @param page
+	 * @param limit
+	 * @param username
+	 * @param operation
 	 * @return
 	 */
 	@GetMapping("/log/list.json")

@@ -52,7 +52,6 @@ public class TeacherCourseController {
 
 	/**
 	 * 我的课程
-	 * 
 	 * @Description
 	 * @author 丁国柱
 	 * @date 2020年3月10日 下午10:34:35
@@ -73,10 +72,9 @@ public class TeacherCourseController {
 
 	/**
 	 * 专业信息分页
-	 * 
 	 * @param page
 	 * @param limit
-	 * @param schoolId
+	 * @param team_id
 	 * @param name
 	 * @return
 	 */
@@ -106,12 +104,37 @@ public class TeacherCourseController {
 	}
 
 	/**
-	 * 编辑或修改教师的课程
-	 * 
+	 * 软删除课程
 	 * @param id
+	 * @return
+	 */
+	@PostMapping("/course/delete")
+	@ResponseBody
+	public Map<String,Object> delete(Long id){
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			int result = this.courseService.softDelete(id);
+			if(result==1){
+				map.put("msg", "删除成功！");
+			}else{
+				map.put("msg", "未能正常删除！");
+			}
+			map.put("code", 200);
+		} catch (Exception e) {
+			map.put("code", 200);
+			map.put("msg", "出现错误：" + e);
+		}
+		return map;
+	}
+
+	/**
+	 * 编辑或修改教师的课程
+	 * @param id
+	 * @param classHour
+	 * @param classInfoIds
 	 * @param name
-	 * @param url
-	 * @param description
+	 * @param subject_id
+	 * @param study_team_id
 	 * @return
 	 */
 	@PostMapping("/course/edit")
@@ -123,6 +146,39 @@ public class TeacherCourseController {
 			if (id == null) {
 				// 新增
 				Course course = new Course();
+				course.setName(name);
+				// 学期
+				StudyTeam studyTeam = new StudyTeam();
+				studyTeam.setId(study_team_id);
+				course.setStudyTeam(studyTeam);
+				course.setClassHour(classHour);
+				// 课元
+				Subject subject = new Subject();
+				subject.setId(subject_id);
+				// 授课老师
+				User user = (User) session.getAttribute("currentUser");
+				course.setTeacher(user);
+
+				// 拿到班级信息
+				if (classInfoIds != null && classInfoIds.length() > 0) {
+					classInfoIds = classInfoIds.replace("[", "").replace("]", "");
+					String[] cids = classInfoIds.split(",");
+					Set<ClassInfo> classInfos = new HashSet<ClassInfo>();
+					for (int i = 0; i < cids.length; i++) {
+						if (cids[i].indexOf("classinfo_") != -1) {
+							ClassInfo classInfo = new ClassInfo();
+							classInfo.setId(Integer.parseInt(cids[i].replace("classinfo_", "").replace("\"", "")));
+							classInfos.add(classInfo);
+						}
+					}
+					course.setClassInfos(classInfos);
+				}
+				this.courseService.save(course);
+				map.put("msg", "保存成功");
+			} else {
+				Course course = new Course();
+				course.setId(id);
+				course.setClassHour(classHour);
 				course.setName(name);
 				// 学期
 				StudyTeam studyTeam = new StudyTeam();
@@ -149,10 +205,7 @@ public class TeacherCourseController {
 					}
 					course.setClassInfos(classInfos);
 				}
-				this.courseService.save(course);
-				map.put("msg", "保存成功");
-			} else {
-
+				this.courseService.update(course);
 			}
 			map.put("code", 200);
 		} catch (Exception e) {

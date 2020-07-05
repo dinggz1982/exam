@@ -65,9 +65,7 @@
                 <li class="layui-nav-item">
                     <a><i class="layui-icon layui-icon-home"></i>&emsp;<cite>Dashboard</cite></a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="page/console/console.html">控制台</a></dd>
-                        <dd><a lay-href="page/console/workplace.html">工作台</a></dd>
-                        <dd><a lay-href="page/console/dashboard.html">分析页</a></dd>
+                        <dd><a lay-href="${ctx}/main">工作台</a></dd>
                     </dl>
                 </li>
                 <!-- 遍历当前用户的权限菜单 -->
@@ -112,7 +110,7 @@
 
         // 默认加载主页
         index.loadHome({
-            menuPath: 'page/console/console.html',
+            menuPath: '${ctx}/main',
             menuName: '<i class="layui-icon layui-icon-home"></i>'
         });
 
