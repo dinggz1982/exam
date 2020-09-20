@@ -3,6 +3,7 @@ package gzhu.edu.cn.homework.entity;
 import gzhu.edu.cn.base.entity.BaseEntity;
 import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.Course;
+import gzhu.edu.cn.system.entity.Role;
 import gzhu.edu.cn.system.entity.User;
 
 import javax.persistence.*;
@@ -22,9 +23,7 @@ public class HomeWork extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
     private String title;
-
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
@@ -36,9 +35,10 @@ public class HomeWork extends BaseEntity {
 
     private Date endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "classInfo_id")
-    private ClassInfo classInfo;
+    @ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @OrderBy("id asc")
+    private Set<ClassInfo> classInfos;
+
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -49,12 +49,12 @@ public class HomeWork extends BaseEntity {
 
     private String content;
 
-    public ClassInfo getClassInfo() {
-        return classInfo;
+    public Set<ClassInfo> getClassInfos() {
+        return classInfos;
     }
 
-    public void setClassInfo(ClassInfo classInfo) {
-        this.classInfo = classInfo;
+    public void setClassInfos(Set<ClassInfo> classInfos) {
+        this.classInfos = classInfos;
     }
 
     public long getId() {

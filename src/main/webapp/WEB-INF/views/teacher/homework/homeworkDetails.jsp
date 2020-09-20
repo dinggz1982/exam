@@ -125,7 +125,7 @@
 						sort : true,
 						title : '学生',
 						templet : function(d) {
-							return d.student.user.realname;
+							return d.id;
 						}
 					},
 					{

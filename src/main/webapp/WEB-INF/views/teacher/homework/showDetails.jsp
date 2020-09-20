@@ -132,7 +132,7 @@
                     sort: false,
                     title: '创建人',
                     templet : function(d) {
-                        return d.user.realname;
+                        return d.student.user.realname;
                     }
                 },
                 {

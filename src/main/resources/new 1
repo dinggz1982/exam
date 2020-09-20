@@ -1,1 +1,0 @@
-/usr/lib/judger/libjudger.so --max_cpu_time=1000 --max_memory=10000000 --exe_path="/usr/bin/python3" --args="/JudgeServer/uuu.py" --log_path="/JudgeServer/1.in" --output_path="/JudgeServer/1.out" --error_path="/JudgeServer/err.log"

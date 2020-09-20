@@ -7,6 +7,11 @@
 <meta charset="UTF-8">
 <title>${course.name}的作业</title>
 <%@include file="/WEB-INF/views/include/head.jsp"%>
+	<style>
+		a {
+			cursor:pointer;
+		}
+	</style>
 </head>
 <body>
 	<!-- 页面加载loading -->
@@ -119,14 +124,21 @@
 					{
 						field : 'title',
 						sort : true,
-						title : '作业标题'
+						title : '作业标题',
+						templet:function(d){
+							return '<a lay-href="#" lay-event="show">' + d.title + '</a>'
+						}
 					},
 					{
 						field : 'classInfo',
 						sort : true,
 						title : '班级',
-						templet : function(d) {
-							return d.classInfo.name;
+						templet: function (d) {
+							var classInfos="";
+							for (var classInfo of d.classInfos) { // 遍历Set
+								classInfos=classInfo.name + ",";
+							}
+							return classInfos
 						}
 					},
 					{
@@ -169,8 +181,21 @@
 				var layEvent = obj.event;
 				if (layEvent === 'edit') { // 修改
 					showEditModel(data);
-				} else if (layEvent === 'del') { // 删除
-					doDel(data.id, data.name);
+				}
+				else if(layEvent=="show"){
+					layui.use(['index'], function () {
+						var index = layui.index;
+						index.openTab({
+							title: '作业：' + data.title + '详细情况',
+							url: '/teacher/homework/' + data.id,
+							end: function () {
+								//insTb.reload();
+							}
+						});
+					});
+				}
+				else if (layEvent === 'del') { // 删除
+					doDel(data.id, data.title);
 				} else if (layEvent === 'detail') { // 查看作业详细情况
 					layui.use(['index'], function () {
 						var index = layui.index;
@@ -184,7 +209,25 @@
 					});
 				}
 			});
-			
+			// 删除作业
+			function doDel(id, title) {
+				layer.confirm('确定要删除“' + title + '”吗？', {
+					skin: 'layui-layer-admin',
+					shade: .1
+				}, function (i) {
+					layer.close(i);
+					layer.load(2);
+					$.post('${ctx}/teacher/homework/delete/'+id, {}, function (res) {
+						layer.closeAll('loading');
+						if (res.code == 200) {
+							layer.msg(res.msg, {icon: 1});
+							insTb.reload({}, 'data');
+						} else {
+							layer.msg(res.msg, {icon: 2});
+						}
+					}, 'json');
+				});
+			}
 		// 显示表单弹窗
         function showEditModel(course) {
 			layui.use(['index'], function () {

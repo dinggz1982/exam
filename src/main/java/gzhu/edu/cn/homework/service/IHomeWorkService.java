@@ -15,4 +15,10 @@ public interface IHomeWorkService extends BaseService<HomeWork,Long> {
      * @param homeWorks
      */
     public void saveHomeWorks(List<HomeWork> homeWorks);
+
+    /**
+     * 保存一个作业
+     * @param homeWork
+     */
+    public void saveOrUpdateHomeWork(HomeWork homeWork);
 }
