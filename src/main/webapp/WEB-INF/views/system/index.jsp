@@ -113,7 +113,6 @@
             menuPath: '${ctx}/main',
             menuName: '<i class="layui-icon layui-icon-home"></i>'
         });
-
     });
 </script>
 </body>
