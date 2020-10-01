@@ -50,7 +50,7 @@ public class SubmissionController {
             this.problemSubmissionsService.doJudge(id);
             return "success";
         }catch (Exception e){
-            return "fail";
+            return "fail:"+e.toString();
         }
     }
 

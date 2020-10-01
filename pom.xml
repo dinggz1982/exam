@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>gzhu.edu.cn</groupId>
 	<artifactId>exam</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>v1.0</version>
 	<name>exam-gzhu</name>
 	<description>examination system</description>
 
@@ -226,6 +226,9 @@
 					<include>**/**</include>
 				</includes>
 			</resource>
+				<resource>
+					<directory>src/main/resources</directory>
+				</resource>
 		</resources>
 		<plugins>
 			<plugin>
