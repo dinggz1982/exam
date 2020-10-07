@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import gzhu.edu.cn.profile.service.IClassInfoService;
-
+import java.util.Scanner;
 /**
 * @author : 丁国柱  
 * @email : dinggz@gzhu.edu.cn
@@ -35,5 +35,25 @@ public class ClassTreeTest {
 		System.out.println(this.classInfoService.getClassTreeByCourseId(null));
 		
 	}
+
+
+
+
+		public static void main(String[] args) {
+			Scanner in =new Scanner(System.in);
+			int a;                                      //定义数1
+			int b;                                      //定义数2
+			a = in.nextInt();                           //数1 输入
+			b = in.nextInt();                           //数2 输入
+			if(a>b)                                     //if语句  比较大小
+			{
+				System.out.println(a);
+			}
+			else
+			{
+				System.out.print(b);
+			}
+		}
+
 
 }

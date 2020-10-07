@@ -65,11 +65,9 @@
 <script>
     $(document).ready(function () {
         c = setInterval(getSubmitResult, 1500);//每1.5秒执行一次getSubmitResult方法
-        time++;
     });
 
     function getSubmitResult() {
-        var time = 1;
         $.ajax({
             type: "GET",
             url: "/problem/getSubmissionResult/${submissionId}",
@@ -84,20 +82,20 @@
                         $("#step2").removeClass("layui-this");
                         $("#step3").removeClass("layui-this");
 
-                        $("#s1").html("<p>第" + time + ":从服务器获取结果，状态为：" + judgeInfo + "---" + now + "</p>");
+                        $("#s1").html("<p>从服务器获取结果，状态为：" + judgeInfo + "---" + now + "</p>");
 
                     } else if (status == 2) {
                         judgeInfo = "正在测评中";
                         $("#step1").addClass("layui-this");
                         $("#step2").addClass("layui-this");
                         $("#step3").removeClass("layui-this");
-                        $("#s2").html("<p>第" + time + ":从服务器获取结果，状态为：" + judgeInfo + "---" + now + "</p>");
-                    } else {
+                        $("#s2").html("<p>从服务器获取结果，状态为：" + judgeInfo + "---" + now + "</p>");
+                    } else if (status == 3){
                         judgeInfo = "完成测评";
                         $("#step1").addClass("layui-this");
                         $("#step2").addClass("layui-this");
                         $("#step3").addClass("layui-this");
-                        $("#s2").html("<p>第" + time + ":从服务器获取结果，状态为：" + judgeInfo + "---" + now + "</p>");
+                        $("#s3").html("<p>从服务器获取结果，状态为：" + judgeInfo + "---" + now + "</p>");
                     }
                     if (problemSubmissions.status == 3) {
                         window.clearInterval(c);
@@ -110,11 +108,12 @@
                             //console.log(result);
                             var info = new Array();
                             info = result.split(":");
-                            $("#testResult").append("<td><td>" + index + "</td><td>" + info[0] + "</td></td><td>" + info[1] + "毫秒</td></td><td>" + info[2] + "K</td>");
+                            if(info.length>0&&info[1]!=null&&info[1]!=""){
+                            $("#testResult").append("<tr><td>" + index + "</td><td>" + info[0] + "</td><td>" + info[1] + "毫秒</td><td>" + info[2] + "(byte)</td></tr>");
                             index++;
+                            }
                         }
                     }
-                    time++;
                 }
         })
     }
@@ -138,5 +137,19 @@
             + seperator2 + date.getSeconds();
         return currentdate;
     }
+
+    // 计算文件大小函数(保留两位小数),Size为字节大小
+    // size：初始文件大小
+    function getfilesize(size) {
+        if (!size)
+            return "";
+        var num = 1024.00; //byte
+
+        if (size < num)
+            return size + "B";
+        if (size < Math.pow(num, 2))
+            return (size / num).toFixed(2) + "K"; //kb
+    }
+
 </script>
 </html>

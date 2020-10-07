@@ -25,7 +25,7 @@ C++
 Pascal
 </option><option value=3 selected>
 Java
-</option><option value=4>
+</option><%--<option value=4>
 Ruby
 </option><option value=5>
 Bash
@@ -37,7 +37,7 @@ PHP
 Perl
 </option><option value=9>
 C#
-</option></select>
+</option>--%></select>
 
 </span>
     <input id="Submit" class="layui-btn layui-btn-xs" type=button value="提交" onclick="submit_code();">
@@ -75,6 +75,12 @@ C#
         var language = $('#language').val();
         if(language==3){
             language = "java";
+        }
+        else if(language==0){
+            language = "c";
+        }
+        else if(language==1){
+            language = "cpp";
         }
         //拿到代码
         if (typeof (editor) != "undefined") {
