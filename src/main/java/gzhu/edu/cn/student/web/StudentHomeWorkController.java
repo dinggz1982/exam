@@ -5,11 +5,15 @@ import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UserUtils;
 import gzhu.edu.cn.homework.entity.HomeWork;
 import gzhu.edu.cn.homework.entity.MyHomeWork;
+import gzhu.edu.cn.homework.entity.MyHomeWorkProblem;
+import gzhu.edu.cn.homework.service.IMyHomeWorkProblemService;
 import gzhu.edu.cn.homework.service.IMyHomeWorkService;
 import gzhu.edu.cn.homework.service.impl.HomeWorkService;
 import gzhu.edu.cn.knowledge.entity.Knowledge;
 import gzhu.edu.cn.knowledge.entity.MyKnowledgeGraph;
 import gzhu.edu.cn.knowledge.service.IMyKnowledgeGraphService;
+import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
+import gzhu.edu.cn.problem.service.IProblemBaseInformationService;
 import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.profile.service.ICourseService;
 import gzhu.edu.cn.system.entity.User;
@@ -46,6 +50,12 @@ public class StudentHomeWorkController {
 
     @Autowired
     private IMyKnowledgeGraphService myKnowledgeGraphService;
+
+    @Autowired
+    private IProblemBaseInformationService problemBaseInformationService;
+
+    @Autowired
+    private IMyHomeWorkProblemService myHomeWorkProblemService;
 
     @Autowired
     private HttpSession session;
@@ -224,8 +234,13 @@ public class StudentHomeWorkController {
         return this.homeworkService.find(" course.id=" + course_id);
     }
 
-    @GetMapping("/finishMyHomework/{myhomework_id}")
-    public String finishMyHomework(@PathVariable Long myhomework_id, Model model) {
+    /**
+     * 完成知识图谱工作
+     * @param myhomework_id
+     * @param model
+     * @return
+     */
+    public String finishKg( Long myhomework_id, Model model){
         User user = (User) session.getAttribute("currentUser");
         MyHomeWork myHomeWork = this.myHomeWorkService.findById(myhomework_id);
 
@@ -264,7 +279,50 @@ public class StudentHomeWorkController {
         model.addAttribute("edges", edges.toString());
         model.addAttribute("nodes", nodes.toString());
 
-        return "student/myhomework/finishMyHomework";
+        return "student/myhomework/finishKg";
+    }
+
+
+    /**
+     * 完成测评
+     * @param myhomework_id
+     * @param model
+     * @return
+     */
+    public String finishTest(Long myhomework_id, Model model){
+        User user = (User) session.getAttribute("currentUser");
+        MyHomeWork myHomeWork = this.myHomeWorkService.findById(myhomework_id);
+
+        String ids = myHomeWork.getHomeWork().getProblemIds();
+
+
+        //List<ProblemBaseInformation> problems = this.problemBaseInformationService.find(" id in ("+ ids + ")");
+
+        model.addAttribute("homework", myHomeWork.getHomeWork());
+        model.addAttribute("myHomeWork", myHomeWork);
+        //拿到相关试题
+        List<MyHomeWorkProblem> problems = this.myHomeWorkProblemService.find(" myhomework_id="+myHomeWork.getId());
+        model.addAttribute("problems", problems);
+
+        return "student/myhomework/finishTest";
+    }
+
+    /**
+     * 完成作业
+     * @param type
+     * @param myhomework_id
+     * @param model
+     * @return
+     */
+    @GetMapping("/finishMyHomework/{type}/{myhomework_id}")
+    public String finishMyHomework(@PathVariable Integer type,@PathVariable Long myhomework_id, Model model) {
+        if(type==2){
+            return finishKg(myhomework_id,model);
+        }else if(type==3){
+            return finishTest(myhomework_id,model);
+        }else{
+            return null;
+        }
     }
 
     @GetMapping("/homework/showHomework/{myhomework_id}")

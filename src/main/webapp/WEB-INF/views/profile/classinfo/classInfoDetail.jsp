@@ -39,8 +39,8 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="tableBarClassInfo">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看班级详细情况</a>
+    <%--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>--%>
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看学生作业情况</a>
 </script>
 <!-- 批量导入学生 -->
 <!-- 表单弹窗 -->

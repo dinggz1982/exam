@@ -9,13 +9,13 @@ import gzhu.edu.cn.homework.service.IHomeWorkService;
 import gzhu.edu.cn.homework.service.IMyHomeWorkService;
 import gzhu.edu.cn.knowledge.entity.Knowledge;
 import gzhu.edu.cn.knowledge.entity.MyKnowledgeGraph;
-import gzhu.edu.cn.knowledge.service.IKnowledgeService;
 import gzhu.edu.cn.knowledge.service.IMyKnowledgeGraphService;
 import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.profile.service.ICourseService;
 import gzhu.edu.cn.system.entity.User;
-import org.apache.jena.sparql.function.library.date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -67,6 +67,10 @@ public class TeacherHomeWorkController {
 //
 //        return "homework/index";
 //    }
+
+    private final static Logger logger = LoggerFactory.getLogger(TeacherHomeWorkController.class);
+
+
     @GetMapping("/homework/index")
     public String list(Integer pageIndex, Integer pageSize, Model model) throws SQLException {
         List<Course> courses = this.courseService.findAll();
@@ -129,6 +133,7 @@ public class TeacherHomeWorkController {
                 String savePath = staticAccessPath + user.getId() + "/homework/" + fileName;
                 map.put("filePath", savePath);
             } catch (IOException e) {
+                logger.error(e.toString());
                 map.put("result", "error");//文件上传上传
             }
         }
@@ -238,7 +243,7 @@ public class TeacherHomeWorkController {
 
     @PostMapping("/homework/saveHomework")
     @ResponseBody
-    public Map<String, Object> saveHomeWork(String title, String content, Long id, int type, String classInfos,String date, Integer course_id) throws ParseException {
+    public Map<String, Object> saveHomeWork(String title, String content, Long id, int type, String classInfos,String date, Integer course_id,String problemIds) throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             User user = (User) session.getAttribute("currentUser");
@@ -272,6 +277,7 @@ public class TeacherHomeWorkController {
             homeWork.setEndTime(endTime);
             homeWork.setContent(content);
             homeWork.setType(type);
+            homeWork.setProblemIds(problemIds.trim());
             if (id != null && id > 0) {
                 homeWork.setId(id);
                 map.put("msg", "修改成功");
@@ -281,6 +287,7 @@ public class TeacherHomeWorkController {
         this.homeworkService.saveOrUpdateHomeWork(homeWork);
             map.put("code", 200);
         } catch (Exception e) {
+            logger.error(e.toString());
             map.put("msg", "出现错误：" + e);
         }
         return map;

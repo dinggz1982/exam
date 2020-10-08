@@ -248,10 +248,11 @@
             var layEvent = obj.event;
             if (layEvent === 'edit') { // 修改
                 layui.use(['index'], function () {
+                    console.log(data);
                     var index = layui.index;
                     index.openTab({
                         title: '查看作业',
-                        url: '${ctx}/student/finishMyHomework/'+data.id,
+                        url: '${ctx}/student/finishMyHomework/'+data.homeWork.type+"/"+data.id,
                         end: function() {
                         }
                     });

@@ -39,6 +39,17 @@ public class HomeWork extends BaseEntity {
     @OrderBy("id asc")
     private Set<ClassInfo> classInfos;
 
+    public String getProblemIds() {
+        return problemIds;
+    }
+
+    public void setProblemIds(String problemIds) {
+        this.problemIds = problemIds;
+    }
+
+    //测评对应的id，用;号隔开
+    private String problemIds;
+
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -47,6 +58,7 @@ public class HomeWork extends BaseEntity {
     //作业的类型1.文本/附件2.知识建构
     private int type;
 
+    @Column(name = "content",columnDefinition="text")
     private String content;
 
     public Set<ClassInfo> getClassInfos() {

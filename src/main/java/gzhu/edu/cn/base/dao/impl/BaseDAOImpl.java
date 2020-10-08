@@ -537,7 +537,6 @@ public class BaseDAOImpl<T, ID extends Serializable> implements BaseDAO<T, ID> {
 	}
 
 	@Override
-	@Transactional
 	public void batchSave(List<T> entitys) {
 		for (int i = 0; i < entitys.size(); i++) {
 			entityManager.persist(entitys.get(i));

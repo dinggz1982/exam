@@ -4,6 +4,7 @@ import gzhu.edu.cn.base.dao.impl.BaseDAOImpl;
 import gzhu.edu.cn.homework.entity.HomeWork;
 import gzhu.edu.cn.homework.entity.MyHomeWork;
 import gzhu.edu.cn.homework.service.IHomeWorkService;
+import gzhu.edu.cn.homework.service.IMyHomeWorkProblemService;
 import gzhu.edu.cn.homework.service.IMyHomeWorkService;
 import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.student.entity.Student;
@@ -32,22 +33,25 @@ public class HomeWorkService extends BaseDAOImpl<HomeWork, Long> implements IHom
     @Autowired
     private IStudentService studentService;
 
+    @Autowired
+    private IMyHomeWorkProblemService myHomeWorkProblemService;
+
     @Override
     @Transactional
     public void saveHomeWorks(List<HomeWork> homeWorks) {
         for (HomeWork homework : homeWorks
         ) {
             //保存教师的作业
-            if(homework.getId()>0){
+            if (homework.getId() > 0) {
                 this.update(homework);
-            }else{
+            } else {
                 this.save(homework);
             }
             List<MyHomeWork> myHomeWorks = new ArrayList<>();
             //拿到作业对应的班级
             Set<ClassInfo> classInfos = homework.getClassInfos();
-            for (ClassInfo classInfo: classInfos
-                 ) {
+            for (ClassInfo classInfo : classInfos
+            ) {
                 List<Student> students = studentService.find(" classinfo_id=" + classInfo.getId());
                 for (Student student : students
                 ) {
@@ -71,15 +75,15 @@ public class HomeWorkService extends BaseDAOImpl<HomeWork, Long> implements IHom
     @Transactional
     public void saveOrUpdateHomeWork(HomeWork homework) {
         //保存教师的作业
-        if(homework.getId()>0){
+        if (homework.getId() > 0) {
             this.update(homework);
-        }else{
+        } else {
             this.save(homework);
         }
         List<MyHomeWork> myHomeWorks = new ArrayList<>();
         //拿到作业对应的班级
         Set<ClassInfo> classInfos = homework.getClassInfos();
-        for (ClassInfo classInfo: classInfos
+        for (ClassInfo classInfo : classInfos
         ) {
             List<Student> students = studentService.find(" classinfo_id=" + classInfo.getId());
             for (Student student : students
@@ -94,7 +98,7 @@ public class HomeWorkService extends BaseDAOImpl<HomeWork, Long> implements IHom
                     myHomeWorks.add(myHomeWork);
                 }
             }
-            this.myHomeWorkService.batchSave(myHomeWorks);
         }
+        this.myHomeWorkService.batchSaveMyHomeWork(myHomeWorks,homework);
     }
 }

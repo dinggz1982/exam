@@ -2,8 +2,6 @@ package gzhu.edu.cn.homework.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
 import gzhu.edu.cn.student.entity.Student;
-import gzhu.edu.cn.system.entity.User;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -50,7 +48,7 @@ public class MyHomeWork extends BaseEntity {
         this.status = status;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.REFRESH)
     @JoinColumn(name = "homework_id")
     private HomeWork homeWork;
 
@@ -84,4 +82,15 @@ public class MyHomeWork extends BaseEntity {
 	public void setScore(float score) {
 		this.score = score;
 	}
+
+    public String getProblemIds() {
+        return problemIds;
+    }
+
+    public void setProblemIds(String problemIds) {
+        this.problemIds = problemIds;
+    }
+
+    //测评对应的id，用;号隔开
+    private String problemIds;
 }

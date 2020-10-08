@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>教师端功能--布置作业</title>
     <%@include file="/WEB-INF/views/include/head.jsp" %>
-    <script src="${ctx}/assets/libs/tinymce/tinymce.min.js"></script>
+    <script src="${ctx}/assets/module/tinymce/tinymce.min.js"></script>
     <script src="${ctx}/assets/libs/jquery/jquery-3.2.1.min.js"></script>
 </head>
 <body>
@@ -40,12 +40,26 @@
                             <c:when test="${homeWork.type==1}">
                                 <input type="radio" name="type" value="1" title="文件提交" checked="true">
                                 <input type="radio" name="type" value="2" title="知识图谱">
+                                <input type="radio" name="type" value="3" title="程序测评">
+                            </c:when>
+                            <c:when test="${homeWork.type==2}">
+                                <input type="radio" name="type" value="1" title="文件提交" >
+                                <input type="radio" name="type" value="2" title="知识图谱" checked="true">
+                                <input type="radio" name="type" value="3" title="程序测评">
                             </c:when>
                             <c:otherwise>
                                 <input type="radio" name="type" value="1" title="文件提交">
-                                <input type="radio" name="type" value="2" title="知识图谱" checked="true">
+                                <input type="radio" name="type" value="2" title="知识图谱" >
+                                <input type="radio" name="type" value="3" title="程序测评" checked="true">
                             </c:otherwise>
                         </c:choose>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">题号:</label>
+                    <div class="layui-input-block">
+                        <input name="problemIds" placeholder="题号（用英文状态的;隔开）" value="${homeWork.problemIds}" class="layui-input"
+                               lay-verType="tips" lay-verify="required" required/>
                     </div>
                 </div>
                 <div class="layui-form-item">

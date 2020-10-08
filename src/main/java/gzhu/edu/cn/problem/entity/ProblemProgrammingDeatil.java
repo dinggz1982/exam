@@ -58,7 +58,7 @@ public class ProblemProgrammingDeatil extends BaseEntity {
 	private Integer deltCol;		// 颜色抖动误差
 	private Integer deltAp;		// 正确点数通过的比例
 	private Integer deltCouts;		// 是否测试
-	private String testMsg;//goc前端测评加密数据
+	private String testMsg;//前端测评加密数据
 
 	public String getDescription() {
 		return description;

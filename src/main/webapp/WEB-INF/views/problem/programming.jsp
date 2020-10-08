@@ -19,14 +19,14 @@
                     <br>
                     <strong style='font-size:30px;'>${problem.title }</strong>&nbsp;
                     <br> <br>
-                    <span class='layui-badge layui-bg-black'><i class='fa fa-clock-o'></i>&nbsp;时间限制: ${problem.timeLimit}</span>&nbsp;&nbsp;<span
-                        class='layui-badge layui-bg-black'><i class='fa fa-database'></i>&nbsp; 内存限制: ${problem.space} MB</span>
+                    <span class='layui-badge layui-bg-black'><i class='fa fa-clock-o'></i>&nbsp;时间限制: 1秒</span>&nbsp;&nbsp;<span
+                        class='layui-badge layui-bg-black'><i class='fa fa-database'></i>&nbsp; 内存限制: 64 MB</span>
                     <span class="layui-badge layui-bg-black">提交&nbsp;&nbsp;${problem.submitcounter}</span> <span
                         class="layui-badge layui-bg-black">解决&nbsp;&nbsp;${problem.acceptcounter}</span></div>
                 <div class="layui-col-md6">
                     <div class="layui-card">
                         <div class="layui-card-header"><span class="layui-badge layui-bg-orange">标签</span></div>
-                        <div class="layui-card-body">入门 水体
+                        <div class="layui-card-body">
 
                         </div>
                     </div>
