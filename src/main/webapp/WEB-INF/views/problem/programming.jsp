@@ -27,7 +27,9 @@
                     <div class="layui-card">
                         <div class="layui-card-header"><span class="layui-badge layui-bg-orange">标签</span></div>
                         <div class="layui-card-body">
-
+                                <c:forEach items="${problem.problemTags}" var="tag">
+                                    ${tag.name},
+                                </c:forEach>
                         </div>
                     </div>
                     <div class='layui-btn-group'>
@@ -78,7 +80,7 @@
     </div>
 
     <br>
-</div>a
+</div>
 </body>
 <script>
     layui.use(['layer', 'util'], function () {

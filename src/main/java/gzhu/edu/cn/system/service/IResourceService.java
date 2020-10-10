@@ -26,7 +26,7 @@ public interface IResourceService extends BaseService<Resource, Long>{
 	 * <p>Company : </p>
 	 * @author 丁国柱
 	 * @date 2017年11月26日 上午1:54:28
-	 * @param roleId
+	 * @param role
 	 * @return
 	 */
 	public Set<Resource> getResourcesByRoleId(Role role);
@@ -38,7 +38,7 @@ public interface IResourceService extends BaseService<Resource, Long>{
 	 * <p>Company : </p>
 	 * @author 丁国柱
 	 * @date 2017年11月26日 上午1:55:09
-	 * @param userId
+	 * @param user
 	 * @return
 	 */
 	public Set<Resource> getResourcesByUserId(User user);

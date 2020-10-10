@@ -30,7 +30,7 @@ public class ProblemKoinfo extends BaseEntity {
 	private Integer problemId;		// 题目id
 	private String kopointid;		// 知识点id
 	private Integer percent;		// 试题对应的知识点所占百分比
-	private Kopoint kopoint;
+	private KoPoint kopoint;
 
 
 	@NotNull(message="题目id不能为空")
@@ -59,11 +59,11 @@ public class ProblemKoinfo extends BaseEntity {
 		this.percent = percent;
 	}
 
-	public Kopoint getKopoint() {
+	public KoPoint getKopoint() {
 		return kopoint;
 	}
 
-	public void setKopoint(Kopoint kopoint) {
+	public void setKopoint(KoPoint kopoint) {
 		this.kopoint = kopoint;
 	}
 	

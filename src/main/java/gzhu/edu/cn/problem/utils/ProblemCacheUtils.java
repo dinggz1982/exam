@@ -5,9 +5,11 @@ import gzhu.edu.cn.base.util.SpringContextHolder;
 import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
 import gzhu.edu.cn.problem.entity.ProblemProgrammingDeatil;
 import gzhu.edu.cn.problem.entity.ProblemProgrammingSamples;
+import gzhu.edu.cn.problem.entity.ProblemTag;
 import gzhu.edu.cn.problem.service.impl.ProblemBaseInformationService;
 import gzhu.edu.cn.problem.service.impl.ProblemProgrammingDeatilService;
 import gzhu.edu.cn.problem.service.impl.ProblemProgrammingSamplesService;
+import gzhu.edu.cn.problem.service.impl.ProblemTagService;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -26,6 +28,7 @@ public class ProblemCacheUtils {
     private static ProblemBaseInformationService problemBaseInformationService = SpringContextHolder.getBean(ProblemBaseInformationService.class);
     private static ProblemProgrammingDeatilService problemProgrammingDeatilService = SpringContextHolder.getBean(ProblemProgrammingDeatilService.class);
     private static ProblemProgrammingSamplesService problemProgrammingSamplesService = SpringContextHolder.getBean(ProblemProgrammingSamplesService.class);
+    private static ProblemTagService problemTagService = SpringContextHolder.getBean(ProblemTagService.class);
 
     public static final String CACHE_PROBLEM = "problemCache";
 
@@ -40,6 +43,9 @@ public class ProblemCacheUtils {
         Cache cache = CacheManager.getInstance().getCache(cacheName);
         if (cache == null) {
             problemBaseInformation = problemBaseInformationService.findById(problemId);
+            //获取标签
+            List<ProblemTag> problemTags = problemTagService.find(" problemId="+problemId);
+            problemBaseInformation.setProblemTags(problemTags);
             Element element = new Element(cacheName, problemBaseInformation);
             CacheManager.getInstance().addCache(cacheName);
             cache = CacheManager.getInstance().getCache(cacheName);
@@ -48,6 +54,9 @@ public class ProblemCacheUtils {
             Element element = cache.get(cacheName);
             if (element == null) {
                 problemBaseInformation = problemBaseInformationService.findById(problemId);
+                //获取标签
+                List<ProblemTag> problemTags = problemTagService.find(" problemId="+problemId);
+                problemBaseInformation.setProblemTags(problemTags);
                 element = new Element(cacheName, problemBaseInformation);
                 //CacheManager.getInstance().addCache(cacheName);
                 //cache = CacheManager.getInstance().getCache(cacheName);

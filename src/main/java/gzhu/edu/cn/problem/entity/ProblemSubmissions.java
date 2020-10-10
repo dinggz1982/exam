@@ -233,7 +233,6 @@ public class ProblemSubmissions extends BaseEntity {
 		this.contestTitle = contestTitle;
 	}
 
-
 	public Integer getMark() {
 		return mark;
 	}

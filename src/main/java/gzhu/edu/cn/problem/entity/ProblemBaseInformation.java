@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 题目基本信息Entity
@@ -65,6 +66,17 @@ public class ProblemBaseInformation extends BaseEntity {
 	private String timeLimit;	//虚拟字段   时限
 	private String space;	//虚拟字段  空间限制
 	private String cogitation;	//计算思维
+
+	public List<ProblemTag> getProblemTags() {
+		return ProblemTags;
+	}
+
+	public void setProblemTags(List<ProblemTag> problemTags) {
+		ProblemTags = problemTags;
+	}
+
+	@Transient
+	private List<ProblemTag> ProblemTags;
 
 	public Integer getType() {
 		return type;

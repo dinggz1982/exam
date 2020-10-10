@@ -125,7 +125,6 @@ public class Course extends BaseEntity{
 		return subject;
 	}
 
-
 	public void setSubject(Subject subject) {
 		this.subject = subject;
 	}
@@ -133,7 +132,6 @@ public class Course extends BaseEntity{
 	public User getTeacher() {
 		return teacher;
 	}
-
 
 	public void setTeacher(User teacher) {
 		this.teacher = teacher;

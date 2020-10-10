@@ -75,7 +75,7 @@
                         </td>
                         <td>${myproblem.submissionTimes}</td>
                         <td><a class="layui-btn layui-btn-primary layui-btn-xs"
-                               onclick="view(${myproblem.problem.id})">查看试题</a></td>
+                               onclick="view('${myproblem.problem.title}',${myproblem.problem.id})">查看试题</a></td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -90,12 +90,11 @@
 <script>
 
         //查看试题
-        function view(id) {
-            alert();
+        function view(title,id) {
             layui.use(['index'], function () {
                 var index = layui.index;
                 index.openTab({
-                    title: '编程试题：${myproblem.problem.title}',
+                    title: '试题：'+title,
                     url: '${ctx}/programming/'+id,
                     end: function() {
                     }
