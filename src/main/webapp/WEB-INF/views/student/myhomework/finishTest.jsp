@@ -89,13 +89,13 @@
 </div>
 <script>
 
-        //查看试题
+        //查看作业试题
         function view(title,id) {
             layui.use(['index'], function () {
                 var index = layui.index;
                 index.openTab({
                     title: '试题：'+title,
-                    url: '${ctx}/programming/'+id,
+                    url: '${ctx}/myHomeWorkForProgramming/${myHomeWork.id}/'+id,
                     end: function() {
                     }
                 });

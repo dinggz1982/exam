@@ -2,6 +2,9 @@ package gzhu.edu.cn.homework.entity;
 
 import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.problem.entity.ProblemSubmissions;
+import gzhu.edu.cn.system.entity.User;
+import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -28,8 +31,44 @@ public class MyHomeWorkProblem extends BaseEntity {
 
     private int submissionTimes;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
+    public String getSubmissionIds() {
+        return submissionIds;
+    }
+
+    public void setSubmissionIds(String submissionIds) {
+        this.submissionIds = submissionIds;
+    }
+
+    @Type(type = "text")
+    @Column(columnDefinition = "text comment '针对当前试题提交的id，用;号隔开'")
+    private String submissionIds;
+
     //排序
     private int sort;
+
+    public ProblemSubmissions getProblemSubmission() {
+        return problemSubmission;
+    }
+
+    public void setProblemSubmission(ProblemSubmissions problemSubmission) {
+        this.problemSubmission = problemSubmission;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="submission_id")
+    private ProblemSubmissions problemSubmission;
 
     @ManyToOne
     @JoinColumn(name="problem_id")

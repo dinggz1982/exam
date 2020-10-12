@@ -5,7 +5,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>试题--${problem.title }</title>
+    <title>我的编程作业--${problem.title }</title>
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
 </head>
@@ -95,7 +95,7 @@
                 ,shade: false
                 ,maxmin: true
                 ,offset: 'rt'
-                ,content: '${ctx}/problem/submissionCode/${problem.id}?homeWorkId='+${homeWorkId}
+                ,content: '${ctx}/problem/submissionCodeForHomeWork/${myHomeWorkId}/${problem.id}'
                 ,anim: 2
                 ,zIndex: layer.zIndex //重点1
                 ,success: function(layero){

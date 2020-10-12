@@ -22,12 +22,7 @@ public class HomeWorkProblem extends BaseEntity {
     @Column(columnDefinition = "text comment '作业说明'")
     private String description;
 
-    /**
-     * 一个作业有若干试题
-     */
-    @ManyToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @OrderBy("id asc")
-    private Set<ProblemBaseInformation> problemBaseInformations;
+
 
     public Integer getId() {
         return id;
@@ -53,11 +48,4 @@ public class HomeWorkProblem extends BaseEntity {
         this.description = description;
     }
 
-    public Set<ProblemBaseInformation> getProblemBaseInformations() {
-        return problemBaseInformations;
-    }
-
-    public void setProblemBaseInformations(Set<ProblemBaseInformation> problemBaseInformations) {
-        this.problemBaseInformations = problemBaseInformations;
-    }
 }

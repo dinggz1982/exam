@@ -46,7 +46,6 @@ public class MyHomeWorkService extends BaseDAOImpl<MyHomeWork,Long> implements I
            for (MyHomeWork myHomeWork:myHomeWorks){
                 if(problemIds!=null&&problemIds.length()>0){
                     String[] ids = problemIds.split(";");
-
                     int i=1;
                     for (String id:ids){
                         ProblemBaseInformation problem = new ProblemBaseInformation();
@@ -54,6 +53,7 @@ public class MyHomeWorkService extends BaseDAOImpl<MyHomeWork,Long> implements I
                         MyHomeWorkProblem myHomeWorkProblem = new MyHomeWorkProblem();
                         myHomeWorkProblem.setMyHomeWork(myHomeWork);
                         myHomeWorkProblem.setProblem(problem);
+                        myHomeWorkProblem.setUser(myHomeWork.getStudent().getUser());
                         myHomeWorkProblem.setSort(i++);
                         myHomeWorkProblem.setPass(false);
                         myHomeWorkProblem.setSubmissionTimes(0);

@@ -56,7 +56,6 @@ C#
     function switchLang(lang) {
         var langnames = new Array("c_cpp", "c_cpp", "pascal", "java", "ruby", "sh", "python", "php", "perl", "csharp", "objectivec", "vbscript", "scheme", "c_cpp", "c_cpp", "lua", "javascript", "golang");
         editor.getSession().setMode("ace/mode/" + langnames[lang]);
-
     }
 
     function reloadtemplate(lang) {
@@ -87,9 +86,9 @@ C#
             $("#hide_source").val(editor.getValue());
         }
         $.ajax({
-            url: "${ctx}/problem/submitProgrammingCode",    // 提交到controller的url路径
+            url: "${ctx}/problem/submitProgrammingCodeForHomeWork",    // 提交到controller的url路径
             type: "post",    // 提交方式
-            data: {"id": ${id}, "code": $("#hide_source").val(), "language": language},
+            data: {"id": ${id}, "code": $("#hide_source").val(), "language": language,"myHomeWorkId": ${myHomeWorkId}},
             dataType: "json",    // 服务器端返回的数据类型
             success: function (data) {    // 请求成功后的回调函数，其中的参数data为controller返回的map,也就是说,@ResponseBody将返回的map转化为JSON格式的数据，然后通过data这个参数取JSON数据中的值
                 if (data.status == "success") {
@@ -101,7 +100,7 @@ C#
                         shadeClose: true,
                         shade: 0.8,
                         area: ['800px', '60%'],
-                        content: '${ctx}/problem/goToSubmissionResult/'+submissionId+"&homeWorkId="+${homeWorkId} //获取结果
+                        content: '${ctx}/problem/goToSubmissionResult/'+submissionId //获取结果
                     });
                 } else {
                     alert("提交出错！请联系管理员！");

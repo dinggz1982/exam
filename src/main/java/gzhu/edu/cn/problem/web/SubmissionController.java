@@ -45,10 +45,35 @@ public class SubmissionController {
     @Autowired
     private IProblemProgrammingDeatilService problemProgrammingDeatilService;
 
+    /**
+     * 提交代码
+     *
+     * @param id
+     * @param model
+     * @param homeWorkId
+     * @return
+     */
     @GetMapping("/problem/submissionCode/{id}")
-    public String post_submission(@PathVariable Integer id, Model model) {
+    public String post_submission(@PathVariable Integer id, Model model, Integer homeWorkId) {
         model.addAttribute("id", id);
+        if (homeWorkId != null && homeWorkId > 0) {
+            model.addAttribute("homeWorkId", homeWorkId);
+        }
         return "problem/submissionCode";
+    }
+
+    /**
+     * @param id
+     * @param model
+     * @param homeWorkId
+     * @return
+     */
+    @GetMapping("/problem/submissionCodeForHomeWork/{myHomeWorkId}/{id}")
+    public String submissionCodeForHomeWork(@PathVariable Long myHomeWorkId, @PathVariable Integer id, Model model, Integer homeWorkId) {
+        //试题的id
+        model.addAttribute("id", id);
+        model.addAttribute("myHomeWorkId", myHomeWorkId);
+        return "problem/submissionCodeForHomeWork";
     }
 
     @GetMapping("/problem/doJudge/{id}")
@@ -69,7 +94,7 @@ public class SubmissionController {
      */
     @PostMapping("/problem/submitProgrammingCode")
     @ResponseBody
-    public Map<String, Object> doSubmitCode(Integer id, String code, String language) {
+    public Map<String, Object> doSubmitCode(Integer id, String code, String language, Long myHomeWorkId) {
         Map<String, Object> map = new HashMap();
         User user = (User) session.getAttribute("currentUser");
         ProblemProgrammingDeatil problemProgrammingDeatil = problemProgrammingDeatilService.getByProblemId(id);
@@ -90,7 +115,7 @@ public class SubmissionController {
             map.put("status", "success");
             map.put("submissionId", problemSubmissions.getId());
 
-             //上一个版本：通过访问url来触发测评
+            //上一个版本：通过访问url来触发测评
             /* Thread t = new Thread() {
                 public void run() {
                     try {
@@ -104,8 +129,62 @@ public class SubmissionController {
             };
             t.start();*/
             //this.rabbitTemplate.convertAndSend("judge_queue", problemSubmissions.getId());
-            this.submissionSender.sendSubmission(problemSubmissions.getId());
-            //rabbitTemplate.convertAndSend("judge_topic_exchange","submissionId",problemSubmissions.getId());
+
+            String message=myHomeWorkId+":"+problemSubmissions.getId();
+            this.submissionSender.sendSubmission(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("status", "fail");
+        }
+        return map;
+    }
+
+
+    /**
+     * 提交编程题代码
+     *
+     * @return
+     */
+    @PostMapping("/problem/submitProgrammingCodeForHomeWork")
+    @ResponseBody
+    public Map<String, Object> submitProgrammingCodeForHomeWork(Integer id, String code, String language, Long myHomeWorkId) {
+        Map<String, Object> map = new HashMap();
+        User user = (User) session.getAttribute("currentUser");
+        ProblemProgrammingDeatil problemProgrammingDeatil = problemProgrammingDeatilService.getByProblemId(id);
+        ProblemBaseInformation problemBase = new ProblemBaseInformation();
+        problemBase.setId(id);
+        try {
+            ProblemSubmissions problemSubmissions = new ProblemSubmissions();
+            problemSubmissions.setSubmitTime(new Date());
+            problemSubmissions.setCode(code);
+            problemSubmissions.setStatus(1);
+            problemSubmissions.setIsCompleteProgramming("0");// 0表示程序题
+            problemSubmissions.setTestNumber(String.valueOf(problemProgrammingDeatil.getTestnumber()));
+            problemSubmissions.setAcceptNumber("0");
+            problemSubmissions.setSubmitUser(user);
+            problemSubmissions.setLanguage(language);
+            problemSubmissions.setProblemBase(problemBase);
+            this.problemSubmissionsService.save(problemSubmissions);
+            map.put("status", "success");
+            map.put("submissionId", problemSubmissions.getId());
+
+            //上一个版本：通过访问url来触发测评
+            /* Thread t = new Thread() {
+                public void run() {
+                    try {
+                        //请求测评的url
+                        String judgeUrl = "http://127.0.0.1/problem/doJudge/"+id;
+                        String returnStr = HttpUtils.httpGet(judgeUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            t.start();*/
+            //this.rabbitTemplate.convertAndSend("judge_queue", problemSubmissions.getId());
+            //用户id：我的作业id：试题id：测评代码id
+            String message=user.getId()+":"+myHomeWorkId+":"+problemBase.getId()+":"+problemSubmissions.getId();
+            this.submissionSender.sendSubmission(message);
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status", "fail");

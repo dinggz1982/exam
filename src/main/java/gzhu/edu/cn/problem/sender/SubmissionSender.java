@@ -5,7 +5,6 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 
 /**
@@ -40,6 +39,19 @@ public class SubmissionSender implements RabbitTemplate.ConfirmCallback, RabbitT
         this.rabbitTemplate.convertAndSend("JUDGE-EXCHANGE-1","judge_queue", submissionId);
     }
 
+    /**
+     * 发送完成测评作业的消息
+     * @param info
+     */
+    public void sendSubmission(String info){
+        this.rabbitTemplate.convertAndSend("JUDGE-EXCHANGE-1","judge_queue", info);
+    }
+
+   /* public void sendSubmission(Map<String,Object> message){
+        AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder().contentEncoding("UTF-8").contentType("text/plain").headers(new HashMap<String, Object>()).priority(0);
+        this.rabbitTemplate.convertAndSend("JUDGE-EXCHANGE-1","judge_queue", message);
+    }
+*/
 
     @Override
     public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {

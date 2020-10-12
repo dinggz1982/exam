@@ -4,7 +4,6 @@ import gzhu.edu.cn.base.dao.impl.BaseDAOImpl;
 import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
 import gzhu.edu.cn.problem.service.IProblemBaseInformationService;
 import org.springframework.stereotype.Service;
-import scala.Int;
 
 /**
  * @program: exam

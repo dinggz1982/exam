@@ -92,16 +92,16 @@ public class HomeWorkController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             if (id == null) {
-                System.out.println("id="+id);
-                System.out.println("title="+title);
-                System.out.println("homeworkContent="+homeworkContent);
-                System.out.println("files="+files);
+//                System.out.println("id="+id);
+//                System.out.println("title="+title);
+//                System.out.println("homeworkContent="+homeworkContent);
+//                System.out.println("files="+files);
                 map.put("msg", "保存成功");
             } else {
                 // 修改
-                System.out.println("title="+title);
-                System.out.println("homeworkContent="+homeworkContent);
-                System.out.println("files="+files);
+//                System.out.println("title="+title);
+//                System.out.println("homeworkContent="+homeworkContent);
+//                System.out.println("files="+files);
                 map.put("msg", "修改成功");
             }
             map.put("code", 200);
