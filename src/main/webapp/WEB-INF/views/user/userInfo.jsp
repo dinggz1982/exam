@@ -118,31 +118,27 @@
                             <img src="${currentUser.img }"/>
                         </div>
                         <h2 style="padding-top: 20px;">${currentUser.username }</h2>
-                        <p style="padding-top: 8px;">海纳百川，有容乃大</p>
+                       <%-- <p style="padding-top: 8px;">海纳百川，有容乃大</p>--%>
                     </div>
                     <div class="layui-text" style="padding-top: 30px;">
                         <div class="info-list-item">
                             <i class="layui-icon layui-icon-username"></i>
-                            <p>交互专家</p>
+                            <p>${currentUser.realname }</p>
                         </div>
                         <div class="info-list-item">
                             <i class="layui-icon layui-icon-release"></i>
-                            <p>某某公司－某某某事业群－某某平台部－某某技术部－UED</p>
+                            <p>广州大学-教育技术-程序入门菜鸟</p>
                         </div>
                         <div class="info-list-item">
                             <i class="layui-icon layui-icon-location"></i>
-                            <p>浙江省杭州市</p>
+                            <p>广东省广州市</p>
                         </div>
                     </div>
                     <div class="dash"></div>
                     <h3>标签</h3>
                     <div class="layui-badge-list" style="padding-top: 6px;">
                         <span class="layui-badge layui-bg-gray">很有想法的</span>
-                        <span class="layui-badge layui-bg-gray">专注设计</span>
-                        <span class="layui-badge layui-bg-gray">辣~</span>
-                        <span class="layui-badge layui-bg-gray">大长腿</span>
-                        <span class="layui-badge layui-bg-gray">川妹子</span>
-                        <span class="layui-badge layui-bg-gray">海纳百川</span>
+                        <span class="layui-badge layui-bg-gray">编程菜鸟</span>
                     </div>
                 </div>
             </div>
@@ -154,101 +150,19 @@
 
                     <div class="layui-tab layui-tab-brief" lay-filter="userInfoTab">
                         <ul class="layui-tab-title">
-                            <li class="layui-this">基本信息</li>
-                            <li>账号绑定</li>
+                            <li class="layui-this">知识地图</li>
+                            <li>智能推荐</li>
                         </ul>
                         <div class="layui-tab-content">
                             <div class="layui-tab-item layui-show">
 
-                                <div class="layui-form user-info-form layui-text"
-                                     style="max-width: 400px;padding-top: 25px;">
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">邮箱:</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="email" value="easyweb@layui.com"
-                                                   class="layui-input" lay-verify="required" required/>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">昵称:</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="name" value="Serati Ma"
-                                                   class="layui-input" lay-verify="required" required/>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">个人简介:</label>
-                                        <div class="layui-input-block">
-                                            <textarea name="desc" placeholder="个人简介" class="layui-textarea"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">街道地址:</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="address" value="西湖区工专路 77 号"
-                                                   class="layui-input" lay-verify="required" required/>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">联系电话:</label>
-                                        <div class="layui-input-block">
-                                            <input type="text" name="phone1" value="0752" style="width: 60px;"
-                                                   class="layui-input" lay-verify="required" required/>
-                                            <div style="position: absolute;left: 65px;right: 0;top: 0;">
-                                                <input type="text" name="phone2" value="268888888" class="layui-input"
-                                                       lay-verify="required" required/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="layui-form-item">
-                                        <div class="layui-input-block">
-                                            <button class="layui-btn" lay-filter="userInfoSubmit" lay-submit>
-                                                更新基本信息
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                               正在开发中
 
                             </div>
                             <div class="layui-tab-item" style="padding: 6px 25px 30px 25px;">
 
                                 <div class="bd-list layui-text">
-                                    <div class="bd-list-item">
-                                        <div class="bd-list-item-content">
-                                            <div class="bd-list-item-lable">密保手机</div>
-                                            <div class="bd-list-item-text">已绑定手机：138****8293</div>
-                                        </div>
-                                        <a class="bd-list-item-oper">修改</a>
-                                    </div>
-                                    <div class="bd-list-item">
-                                        <div class="bd-list-item-content">
-                                            <div class="bd-list-item-lable">密保邮箱</div>
-                                            <div class="bd-list-item-text">已绑定邮箱：easyweb@layui.com</div>
-                                        </div>
-                                        <a class="bd-list-item-oper">修改</a>
-                                    </div>
-                                    <div class="bd-list-item">
-                                        <div class="bd-list-item-img">
-                                            <i class="layui-icon layui-icon-login-qq"
-                                               style="color: #3492ED;font-size: 48px;"></i>
-                                        </div>
-                                        <div class="bd-list-item-content">
-                                            <div class="bd-list-item-lable">绑定QQ</div>
-                                            <div class="bd-list-item-text">当前未绑定QQ账号</div>
-                                        </div>
-                                        <a class="bd-list-item-oper">绑定</a>
-                                    </div>
-                                    <div class="bd-list-item">
-                                        <div class="bd-list-item-img">
-                                            <i class="layui-icon layui-icon-login-wechat"
-                                               style="color: #4DAF29;font-size: 48px;"></i>
-                                        </div>
-                                        <div class="bd-list-item-content">
-                                            <div class="bd-list-item-lable">绑定微信</div>
-                                            <div class="bd-list-item-text">当前未绑定绑定微信账号</div>
-                                        </div>
-                                        <a class="bd-list-item-oper">绑定</a>
-                                    </div>
+                                    正在开发中
                                 </div>
 
                             </div>

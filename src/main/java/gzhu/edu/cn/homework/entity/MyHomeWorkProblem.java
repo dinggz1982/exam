@@ -1,10 +1,11 @@
 package gzhu.edu.cn.homework.entity;
 
-import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
 import gzhu.edu.cn.problem.entity.ProblemSubmissions;
 import gzhu.edu.cn.system.entity.User;
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -27,21 +28,13 @@ public class MyHomeWorkProblem extends BaseEntity {
 
     private boolean isPass;
 
-    private Date passTime;
+    //通过测评的次数
+    private int passTimes;
+
+    //最后一次提交的时间
+    private Date lastSubmissionTime;
 
     private int submissionTimes;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
 
     public String getSubmissionIds() {
         return submissionIds;
@@ -69,6 +62,18 @@ public class MyHomeWorkProblem extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="submission_id")
     private ProblemSubmissions problemSubmission;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name="problem_id")
@@ -98,9 +103,7 @@ public class MyHomeWorkProblem extends BaseEntity {
         isPass = pass;
     }
 
-    public Date getPassTime() {
-        return passTime;
-    }
+
 
     public int getSubmissionTimes() {
         return submissionTimes;
@@ -118,15 +121,27 @@ public class MyHomeWorkProblem extends BaseEntity {
         this.sort = sort;
     }
 
-    public void setPassTime(Date passTime) {
-        this.passTime = passTime;
-    }
-
     public ProblemBaseInformation getProblem() {
         return problem;
     }
 
     public void setProblem(ProblemBaseInformation problem) {
         this.problem = problem;
+    }
+
+    public int getPassTimes() {
+        return passTimes;
+    }
+
+    public void setPassTimes(int passTimes) {
+        this.passTimes = passTimes;
+    }
+
+    public Date getLastSubmissionTime() {
+        return lastSubmissionTime;
+    }
+
+    public void setLastSubmissionTime(Date lastSubmissionTime) {
+        this.lastSubmissionTime = lastSubmissionTime;
     }
 }

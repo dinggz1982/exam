@@ -5,7 +5,11 @@ import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UserUtils;
 import gzhu.edu.cn.homework.entity.HomeWork;
 import gzhu.edu.cn.homework.entity.MyHomeWork;
+import gzhu.edu.cn.homework.entity.MyHomeWorkProblem;
+import gzhu.edu.cn.homework.model.ClassHomeWorkForProgrammingInfo;
+import gzhu.edu.cn.homework.model.StudentHomeWorkProblem;
 import gzhu.edu.cn.homework.service.IHomeWorkService;
+import gzhu.edu.cn.homework.service.IMyHomeWorkProblemService;
 import gzhu.edu.cn.homework.service.IMyHomeWorkService;
 import gzhu.edu.cn.knowledge.entity.Knowledge;
 import gzhu.edu.cn.knowledge.entity.MyKnowledgeGraph;
@@ -13,6 +17,8 @@ import gzhu.edu.cn.knowledge.service.IMyKnowledgeGraphService;
 import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.profile.service.ICourseService;
+import gzhu.edu.cn.student.entity.Student;
+import gzhu.edu.cn.student.service.IStudentService;
 import gzhu.edu.cn.system.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,12 +67,10 @@ public class TeacherHomeWorkController {
     private IMyKnowledgeGraphService myKnowledgeGraphService;
 
     @Autowired
-    private HttpServletRequest request;
-    //    @GetMapping("/its/homework/index")
-//    public String index(){
-//
-//        return "homework/index";
-//    }
+    private IStudentService studentService;
+
+    @Autowired
+    private IMyHomeWorkProblemService myHomeWorkProblemService;
 
     private final static Logger logger = LoggerFactory.getLogger(TeacherHomeWorkController.class);
 
@@ -142,6 +146,7 @@ public class TeacherHomeWorkController {
 
     /**
      * 显示作业信息
+     *
      * @param id
      * @return
      */
@@ -149,7 +154,45 @@ public class TeacherHomeWorkController {
     public String homework(@PathVariable Long id, Model model) {
         HomeWork homeWork = this.homeworkService.findById(id);
         model.addAttribute("homeWork", homeWork);
-        return "teacher/homework/homework";
+        //编程作业
+        if (homeWork.getType() == 3) {
+            getProgrammingResults(homeWork,model);
+            return "teacher/homework/homeworkForProgramming";
+        } else {
+            return "teacher/homework/homework";
+        }
+
+    }
+
+    public void getProgrammingResults(HomeWork homeWork, Model model) {
+        List<ClassHomeWorkForProgrammingInfo> classHomeWorkForProgrammingInfos = new ArrayList<>();
+        //先取得班级信息
+        Set<ClassInfo> classInfos = homeWork.getClassInfos();
+        for (ClassInfo classInfo : classInfos
+        ) {
+            ClassHomeWorkForProgrammingInfo classHomeWorkForProgrammingInfo = new ClassHomeWorkForProgrammingInfo();
+            classHomeWorkForProgrammingInfo.setClassInfo(classInfo);
+            classHomeWorkForProgrammingInfo.setHomeWork(homeWork);
+            //获取本班学生信息
+            List<Student> students = this.studentService.find(" classinfo_id=" + classInfo.getId());
+
+            List<StudentHomeWorkProblem> studentHomeWorkProblems = new ArrayList<>();
+
+            for (Student student : students
+            ) {
+                //每个学生的作业信息
+                MyHomeWork myHomeWork = myHomeWorkService.getByHql(" and student_id=" + student.getId() + " and homework_id=" + homeWork.getId());
+                List<MyHomeWorkProblem> myHomeWorkProblems = this.myHomeWorkProblemService.find(" myhomework_id=" + myHomeWork.getId() + " order by sort asc ");
+                StudentHomeWorkProblem studentHomeWorkProblem = new StudentHomeWorkProblem();
+                studentHomeWorkProblem.setStudent(student);
+                studentHomeWorkProblem.setMyHomeWorkProblems(myHomeWorkProblems);
+                studentHomeWorkProblems.add(studentHomeWorkProblem);
+            }
+            classHomeWorkForProgrammingInfo.setStudentHomeWorkProblems(studentHomeWorkProblems);
+            classHomeWorkForProgrammingInfos.add(classHomeWorkForProgrammingInfo);
+        }
+        model.addAttribute("classHomeWorkForProgrammingInfos",classHomeWorkForProgrammingInfos);
+
     }
 
     /**
@@ -243,7 +286,7 @@ public class TeacherHomeWorkController {
 
     @PostMapping("/homework/saveHomework")
     @ResponseBody
-    public Map<String, Object> saveHomeWork(String title, String content, Long id, int type, String classInfos,String date, Integer course_id,String problemIds) throws ParseException {
+    public Map<String, Object> saveHomeWork(String title, String content, Long id, int type, String classInfos, String date, Integer course_id, String problemIds) throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             User user = (User) session.getAttribute("currentUser");
@@ -284,7 +327,7 @@ public class TeacherHomeWorkController {
             } else {
                 map.put("msg", "保存成功");
             }
-        this.homeworkService.saveOrUpdateHomeWork(homeWork);
+            this.homeworkService.saveOrUpdateHomeWork(homeWork);
             map.put("code", 200);
         } catch (Exception e) {
             logger.error(e.toString());

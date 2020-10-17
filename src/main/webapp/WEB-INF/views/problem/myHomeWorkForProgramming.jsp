@@ -74,9 +74,9 @@
             <div class='layui-card-header ' style='background-color:#F0E68C'> 提示</div>
             <div class='layui-card-body'></div>
         </div>
-        <center>
+       <%-- <center>
             <button id='submitCode' class='layui-btn layui-btn-danger '>提交</button>
-        </center>
+        </center>--%>
     </div>
 
     <br>

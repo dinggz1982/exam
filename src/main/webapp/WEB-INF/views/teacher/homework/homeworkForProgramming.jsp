@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>学生端功能--完成编程测试作业</title>
+    <title>${homeWork.title}作业情况</title>
     <%@include file="/WEB-INF/views/include/head.jsp" %>
     <script type="text/javascript" src="${ctx }/assets/vis/vis-network.min.js"></script>
     <script type="text/javascript" src="${ctx }/assets/libs/jquery/jquery-3.2.1.min.js"></script>
@@ -43,6 +43,16 @@
         </div>
 
         <div>
+            <c:forEach items="${classHomeWorkForProgrammingInfos}" var="cps">
+                    <div>${cps.classInfo.name}</div>
+                <table class="layui-table">
+                    <tr>
+                        <th>序号</th>
+                        <th>姓名</th>
+
+                    </tr>
+                </table>
+            </c:forEach>
             <table class="layui-table">
                 <colgroup>
                     <col width="30">

@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>学生端功能--完成编程测试作业</title>
+    <title>我的代码</title>
     <%@include file="/WEB-INF/views/include/head.jsp" %>
     <script type="text/javascript" src="${ctx }/assets/vis/vis-network.min.js"></script>
     <script type="text/javascript" src="${ctx }/assets/libs/jquery/jquery-3.2.1.min.js"></script>
@@ -34,9 +34,8 @@
             <div class="layui-card-body">
                 <div class="layui-inline">
                     <br>学生姓名：<span class="layui-badge layui-bg-green"
-                                   style="margin-right: 20px">${myHomeWork.student.user.realname}</span> 来自课程：<span
-                        class="layui-badge layui-bg-blue" style="margin-right: 20px">${homework.course.name}</span>发布/更新时间：<span
-                        class="layui-badge-rim" style="margin-right: 20px">${myHomeWork.updateTime}</span>
+                                   style="margin-right: 20px">${currentUser.realname}</span> 试题：<span
+                        class="layui-badge layui-bg-blue" style="margin-right: 20px">${problem.title}</span>
                     <br>
                 </div>
             </div>
@@ -54,33 +53,47 @@
                 <thead>
                 <tr>
                     <th>序号</th>
-                    <th>试题标题</th>
+                    <th>提交时间</th>
                     <th>是否通过</th>
-                    <th>提交次数</th>
-                    <th>通过次数</th>
+                    <th>测评状态</th>
+                    <th>编译信息</th>
+                    <th>测评结果</th>
+
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${problems}" var="myproblem" varStatus="status">
+                <c:forEach items="${submissions}" var="submission" varStatus="status">
                     <tr>
                         <td>${status.index+1}</td>
-                        <td>${myproblem.problem.title}</td>
+                        <td>${submission.submitTime}</td>
                         <td>
                             <c:choose>
-                                <c:when test="${myproblem.pass}">
+                                <c:when test="${submission.acceptNumber eq submission.testNumber}">
                                     通过
                                 </c:when>
                                 <c:otherwise>没通过</c:otherwise>
                             </c:choose>
                         </td>
-                        <td>${myproblem.submissionTimes}</td>
-                        <td>${myproblem.passTimes}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${submission.status ==1 }">
+                                    等待测评
+                                </c:when>
+                                <c:when test="${submission.status ==2 }">
+                                    正在测评
+                                </c:when>
+                                <c:when test="${submission.status ==3 }">
+                                    完成测评
+                                </c:when>
+                                <c:otherwise>其他状态</c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>${submission.compileInfo}</td>
+                        <td>${submission.judgeResult}</td>
                         <td><a class="layui-btn layui-btn-primary layui-btn-xs"
-                               onclick="view('${myproblem.problem.title}',${myproblem.problem.id})">查看试题</a>
+                               onclick="viewCode(${submission.id})">查看代码</a>
 
-                            <a class="layui-btn layui-btn-primary layui-btn-xs"
-                               onclick="viewMyCode('${myproblem.problem.title}',${myproblem.problem.id})">查看我的答题记录</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -95,30 +108,24 @@
 </div>
 <script>
     //查看作业试题
-    function view(title, id) {
-        layui.use(['index'], function () {
-            var index = layui.index;
-            index.openTab({
-                title: '试题：' + title,
-                url: '${ctx}/myHomeWorkForProgramming/${myHomeWork.id}/' + id,
-                end: function () {
-                }
-            });
+    function viewCode(id) {
+        var index = layer.open({
+            type: 2
+            ,title: '查看'
+            ,area: ['60%', '100%']
+            ,shade: false
+            ,maxmin: true
+            ,offset: 'rt'
+            ,content: '${ctx}/showCode/'+id
+            ,anim: 2
+            ,zIndex: layer.zIndex //重点1
+            ,success: function(layero){
+                layer.setTop(layero); //重点2
+            }
         });
     }
 
-    //查看我的代码
-    function viewMyCode(title, id) {
-        layui.use(['index'], function () {
-            var index = layui.index;
-            index.openTab({
-                title: '我的代码：' + title,
-                url: '${ctx}/viewMyCode/${myHomeWork.id}/' + id,
-                end: function () {
-                }
-            });
-        });
-    }
+
 </script>
 </body>
 </html>

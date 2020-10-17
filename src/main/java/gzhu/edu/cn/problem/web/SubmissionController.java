@@ -1,6 +1,5 @@
 package gzhu.edu.cn.problem.web;
 
-import gzhu.edu.cn.base.util.HttpUtils;
 import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
 import gzhu.edu.cn.problem.entity.ProblemProgrammingDeatil;
 import gzhu.edu.cn.problem.entity.ProblemSubmissions;
@@ -8,7 +7,6 @@ import gzhu.edu.cn.problem.sender.SubmissionSender;
 import gzhu.edu.cn.problem.service.IProblemProgrammingDeatilService;
 import gzhu.edu.cn.problem.service.IProblemSubmissionsService;
 import gzhu.edu.cn.system.entity.User;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +30,6 @@ import java.util.Map;
 public class SubmissionController {
     @Autowired
     private HttpSession session;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private IProblemSubmissionsService problemSubmissionsService;
