@@ -13,8 +13,6 @@ public class ProblemChoiceDescription extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
 
-
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -63,7 +61,5 @@ public class ProblemChoiceDescription extends BaseEntity {
 	public void setIsRightAnswer(String isRightAnswer) {
 		this.isRightAnswer = isRightAnswer;
 	}
-	
-	
-	
+
 }

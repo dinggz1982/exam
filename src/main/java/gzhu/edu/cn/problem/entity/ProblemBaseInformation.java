@@ -1,6 +1,7 @@
 package gzhu.edu.cn.problem.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.system.entity.User;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -27,28 +28,52 @@ public class ProblemBaseInformation extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+	@Column(name = "type", columnDefinition = ("int(2) comment '题目类型(1.填空题,2.判断题3.单选题,4.多选题5.编程题 6.程序填空题 7.选择填空题' "))
 	private Integer type;		// 题目类型(1.填空题,2.判断题3.单选题,4.多选题5.编程题 6.程序填空题 7.选择填空题)
 	private String title;		// 题目标题
-	private Integer level;		// 题目等级(1.游客, 2.注册用户 ,3.付费用户 ,4.管理员)
-	private Integer price;		// 价格。单位：10分
-	private Integer salepersent;		// 打折
-	//private boolean isprivated;		// 是否私有
-	private Integer property;		// 属性 0：私有题 1：公开题 2：比赛题
+
+	@Column(name = "difficulty", columnDefinition = ("int(2) comment '难度系数(1-5)，必填' default 1 "))
 	private Integer difficulty;		// 难度系数(1-5)，必填
+
+	@Column(name = "quality", columnDefinition = ("int(2) comment '题目质量(1-5,默认3,AI自动调整)' default 3 "))
 	private Integer quality;		// 题目质量(1-5,默认3,AI自动调整)
+
+	@Column(name = "recommendValue", columnDefinition = ("int(2) comment '推荐度(1-5,默认1,AI自动调整)' default 1 "))
 	private Integer recommendValue;		// 推荐度(1-5,默认1,AI自动调整)
+
+	@Column(name = "thumbsup", columnDefinition = ("int(2) comment '点赞' default 0 "))
 	private Integer thumbsup;		// 点赞
+	@Column(name = "thumbsdown", columnDefinition = ("int(2) comment '差评' default 0 "))
 	private Integer thumbsdown;		// 差评
+	@Column(name = "confirmStatus", columnDefinition = ("int(2) comment '审核状态：0未提交、1待审核、2:审核通过、3审核未通过' default 2 "))
 	private Integer confirmStatus;		// 审核状态：0未提交、1待审核、2:审核通过、3审核未通过
 	private String confirmuserid;		// 审核人的userID，支持多人审核
+
+	public User getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(User createUser) {
+		this.createUser = createUser;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="create_user_id")
+	private User createUser;
+	@Column(name = "submitcounter", columnDefinition = ("int(32) comment '提交次数' default 0 "))
 	private Integer submitcounter;		// 提交次数
+
+	@Column(name = "acceptcounter", columnDefinition = ("int(32) comment 'accept次数' default 0 "))
 	private Integer acceptcounter;		// accept次数
+	@Column(name = "isPass", columnDefinition = ("bit(1) comment '用户状态' default 0 "))
 	private boolean isPass;//是否发布
+
+	@Transient
 	private Integer programmingId;		// 对应编程题的id
 	private Date publishTime;			//发布时间  私有题：publishTime自动为上传题目时的时间，公开题:publishTime为管理员审核通过的时间
-										//比赛题：教师自己填写publishTime
-	private boolean isAccept=false;				//是否通过 虚拟字段
+
+	@Column(name = "isAccept", columnDefinition = ("bit(1) comment '是否通过' default 1 "))
+	private boolean isAccept=false;				//是否通过
 	private ProblemFillBlanksDescription fillDescription;//填空题描述
 	private ProblemChoiceDescription choiceDescription;//选择题、判断题描述
 	private ProblemChoiceItem choiceItem;//判断题
@@ -66,6 +91,10 @@ public class ProblemBaseInformation extends BaseEntity {
 	private String timeLimit;	//虚拟字段   时限
 	private String space;	//虚拟字段  空间限制
 	private String cogitation;	//计算思维
+
+	//提示信息
+	@Column(columnDefinition = "text")
+	private String tips;
 
 	public List<ProblemTag> getProblemTags() {
 		return ProblemTags;
@@ -93,39 +122,6 @@ public class ProblemBaseInformation extends BaseEntity {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	
-	public Integer getLevel() {
-		return level;
-	}
-
-	public void setLevel(Integer level) {
-		this.level = level;
-	}
-	
-	@Length(min=0,  max=200, message="电话长度必须介于 1 和 200 之间")
-	public Integer getPrice() {
-		return price;
-	}
-
-	public void setPrice(Integer price) {
-		this.price = price;
-	}
-	
-	public Integer getSalepersent() {
-		return salepersent;
-	}
-
-	public void setSalepersent(Integer salepersent) {
-		this.salepersent = salepersent;
-	}
-
-	public Integer getProperty() {
-		return property;
-	}
-
-	public void setProperty(Integer property) {
-		this.property = property;
 	}
 
 	public Integer getDifficulty() {
@@ -376,6 +372,12 @@ public class ProblemBaseInformation extends BaseEntity {
 	public void setCogitation(String cogitation) {
 		this.cogitation = cogitation;
 	}
-	
-	
+
+	public String getTips() {
+		return tips;
+	}
+
+	public void setTips(String tips) {
+		this.tips = tips;
+	}
 }

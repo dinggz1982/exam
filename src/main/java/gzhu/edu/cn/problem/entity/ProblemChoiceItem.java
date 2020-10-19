@@ -2,6 +2,7 @@ package gzhu.edu.cn.problem.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 /**
  * 选择题、判断题目选项Entity
  */
+@Entity(name="problem_choice_item")
 public class ProblemChoiceItem extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
@@ -25,6 +27,7 @@ public class ProblemChoiceItem extends BaseEntity {
 		this.id = id;
 	}
 	private Integer problemId;		// 试题id
+
 	private boolean isRightAnswer;		// 本选项是否是正确答案
 	private String item;		// 选项的内容
 	private Integer itemIndex;		// 第几个选项

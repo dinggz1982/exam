@@ -1,6 +1,7 @@
 package gzhu.edu.cn.knowledge.entity;
 
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.profile.entity.Course;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -18,6 +19,18 @@ public class Knowledge extends BaseEntity {
     private Long id;
 
     private String knowledge;
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="course_id")
+    private Course course;
 
     @Override
     public boolean equals(Object o) {

@@ -14,6 +14,8 @@ import gzhu.edu.cn.homework.service.IMyHomeWorkService;
 import gzhu.edu.cn.knowledge.entity.Knowledge;
 import gzhu.edu.cn.knowledge.entity.MyKnowledgeGraph;
 import gzhu.edu.cn.knowledge.service.IMyKnowledgeGraphService;
+import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
+import gzhu.edu.cn.problem.service.IProblemBaseInformationService;
 import gzhu.edu.cn.profile.entity.ClassInfo;
 import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.profile.service.ICourseService;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +74,9 @@ public class TeacherHomeWorkController {
 
     @Autowired
     private IMyHomeWorkProblemService myHomeWorkProblemService;
+
+    @Autowired
+    private IProblemBaseInformationService problemBaseInformationService;
 
     private final static Logger logger = LoggerFactory.getLogger(TeacherHomeWorkController.class);
 
@@ -150,13 +156,13 @@ public class TeacherHomeWorkController {
      * @param id
      * @return
      */
-    @GetMapping("/homework/{id}")
+    @GetMapping("/homework/result/{id}")
     public String homework(@PathVariable Long id, Model model) {
         HomeWork homeWork = this.homeworkService.findById(id);
         model.addAttribute("homeWork", homeWork);
         //编程作业
         if (homeWork.getType() == 3) {
-            getProgrammingResults(homeWork,model);
+            getProgrammingResults2(homeWork,model);
             return "teacher/homework/homeworkForProgramming";
         } else {
             return "teacher/homework/homework";
@@ -164,6 +170,75 @@ public class TeacherHomeWorkController {
 
     }
 
+    /**
+     * 判断一个字符是否可以转成int
+     * @param str
+     * @return
+     */
+    public static boolean isNumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            System.out.println(str.charAt(i));
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void getProgrammingResults2(HomeWork homeWork, Model model){
+
+        //1.取得相关试题
+        if(homeWork.getType()==3){
+            String[] problemIds = homeWork.getProblemIds().split(";");
+            String pIdS = "";
+            for (String id:problemIds){
+                if(id!=null&&isNumeric(id)){
+                    pIdS=pIdS+id+",";
+                }
+            }
+            if(pIdS.indexOf(",")!=-1){
+                pIdS=pIdS.substring(0,pIdS.length()-1);
+            }
+            List<ProblemBaseInformation> problems = this.problemBaseInformationService.find(" id in ("+pIdS+")");
+            model.addAttribute("problems",problems);
+            List<ClassHomeWorkForProgrammingInfo> classHomeWorkForProgrammingInfos = new ArrayList<>();
+            //先取得班级信息
+            Set<ClassInfo> classInfos = homeWork.getClassInfos();
+            for (ClassInfo classInfo : classInfos
+            ) {
+                ClassHomeWorkForProgrammingInfo classHomeWorkForProgrammingInfo = new ClassHomeWorkForProgrammingInfo();
+                classHomeWorkForProgrammingInfo.setClassInfo(classInfo);
+                classHomeWorkForProgrammingInfo.setHomeWork(homeWork);
+                //获取本班学生信息
+                List<Student> students = this.studentService.find(" classinfo_id=" + classInfo.getId());
+
+                List<StudentHomeWorkProblem> studentHomeWorkProblems = new ArrayList<>();
+
+                for (Student student : students
+                ) {
+                    //每个学生的作业信息
+                    MyHomeWork myHomeWork = myHomeWorkService.getByHql(" and student_id=" + student.getId() + " and homework_id=" + homeWork.getId());
+                    List<MyHomeWorkProblem> myHomeWorkProblems = this.myHomeWorkProblemService.find(" myhomework_id=" + myHomeWork.getId() + " order by sort asc ");
+                    StudentHomeWorkProblem studentHomeWorkProblem = new StudentHomeWorkProblem();
+                    studentHomeWorkProblem.setStudent(student);
+                    studentHomeWorkProblem.setMyHomeWorkProblems(myHomeWorkProblems);
+                    studentHomeWorkProblems.add(studentHomeWorkProblem);
+                }
+                classHomeWorkForProgrammingInfo.setStudentHomeWorkProblems(studentHomeWorkProblems);
+                classHomeWorkForProgrammingInfos.add(classHomeWorkForProgrammingInfo);
+            }
+            model.addAttribute("classHomeWorkForProgrammingInfos",classHomeWorkForProgrammingInfos);
+        }
+
+
+
+    }
+
+    /**
+     * 根据作业获取学生全部答题情况
+     * @param homeWork
+     * @param model
+     */
     public void getProgrammingResults(HomeWork homeWork, Model model) {
         List<ClassHomeWorkForProgrammingInfo> classHomeWorkForProgrammingInfos = new ArrayList<>();
         //先取得班级信息

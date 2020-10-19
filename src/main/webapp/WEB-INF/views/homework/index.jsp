@@ -81,7 +81,7 @@
 					if (res.code == 200) {
 						layer.close(dIndex);
 						layer.msg(res.msg, {icon: 1});
-						insTb.reload({}, 'data');
+						//insTb.reload({}, 'data');
 					} else {
 						layer.msg(res.msg, {icon: 2});
 					}

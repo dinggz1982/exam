@@ -82,6 +82,20 @@ public class UserUtils {
 	}
 
 	/**
+	 * 获取试题的上传
+	 * @param uploadFolder
+	 * @return
+	 */
+	public static String getUploadProblemImagePath(String uploadFolder) {
+		String path = uploadFolder  + "/problem/images/";
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		return path;
+	}
+
+	/**
 	 * 判断用户是管理员或教师
 	 * @param user
 	 * @return

@@ -103,8 +103,6 @@ public class MyHomeWorkProblem extends BaseEntity {
         isPass = pass;
     }
 
-
-
     public int getSubmissionTimes() {
         return submissionTimes;
     }

@@ -1,15 +1,13 @@
 package gzhu.edu.cn.problem.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import gzhu.edu.cn.base.entity.BaseEntity;
+import gzhu.edu.cn.knowledge.entity.ItsTag;
 import org.hibernate.validator.constraints.Length;
 
 /**
- * 编程题标签Entity
+ * 题目标签Entity
  */
 @Entity(name="problem_tags")
 public class ProblemTag extends BaseEntity {
@@ -24,32 +22,31 @@ public class ProblemTag extends BaseEntity {
 		return id;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "tag_id")
+	private ItsTag tag;
+
+	@ManyToOne
+	@JoinColumn(name="problem_id")
+	private ProblemBaseInformation problem;
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	private Integer problemId;		// 关联题目基本信息表
 
-	public String getName() {
-		return name;
+	public ItsTag getTag() {
+		return tag;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTag(ItsTag tag) {
+		this.tag = tag;
 	}
 
-	private String name;		// 标签名称
-
-
-	@NotNull(message="关联题目基本信息表不能为空")
-	public Integer getProblemId() {
-		return problemId;
+	public ProblemBaseInformation getProblem() {
+		return problem;
 	}
 
-	public void setProblemId(Integer problemId) {
-		this.problemId = problemId;
-	}
-
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
+	public void setProblem(ProblemBaseInformation problem) {
+		this.problem = problem;
 	}
 }

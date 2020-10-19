@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import gzhu.edu.cn.base.model.PageData;
@@ -56,6 +57,13 @@ public class CourseController {
 		
 		return "homework/add";
 	}
-	
+
+	@GetMapping("/setting/{id}")
+	public String setting(@PathVariable Integer id,Model model){
+		//根据课程id获取
+		Course course = this.courseService.findById(id);
+		model.addAttribute("course",course);
+		return "teacher/course/setting";
+	}
 	
 }

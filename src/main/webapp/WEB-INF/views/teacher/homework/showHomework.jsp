@@ -201,7 +201,7 @@
 						var index = layui.index;
 						index.openTab({
 							title: data.title+'详细情况',
-							url: '/teacher/homework/details/'+data.id,
+							url: '/teacher/homework/result/'+data.id,
 							end: function() {
 								//insTb.reload();
 							}

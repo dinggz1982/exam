@@ -34,13 +34,13 @@ public class ProblemTagsTest {
     public void addProblemTags(){
         List<ProblemTag> problemTags = new ArrayList<>();
         ProblemTag problemTag1 = new ProblemTag();
-        problemTag1.setProblemId(888);
-        problemTag1.setName("比大小");
+        //problemTag1.setProblemId(888);
+        //problemTag1.setName("比大小");
         problemTag1.setDelFlag(false);
 
         ProblemTag problemTag2 = new ProblemTag();
-        problemTag2.setProblemId(888);
-        problemTag2.setName("输入输出");
+        //problemTag2.setProblemId(888);
+        //problemTag2.setName("输入输出");
         problemTag2.setDelFlag(false);
 
         problemTags.add(problemTag1);

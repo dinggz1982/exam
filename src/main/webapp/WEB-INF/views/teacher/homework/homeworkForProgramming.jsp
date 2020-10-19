@@ -30,73 +30,35 @@
 <div class="layui-fluid">
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-header"><h1>${homework.title}</h1></div>
-            <div class="layui-card-body">
-                <div class="layui-inline">
-                    <br>学生姓名：<span class="layui-badge layui-bg-green"
-                                   style="margin-right: 20px">${myHomeWork.student.user.realname}</span> 来自课程：<span
-                        class="layui-badge layui-bg-blue" style="margin-right: 20px">${homework.course.name}</span>发布/更新时间：<span
-                        class="layui-badge-rim" style="margin-right: 20px">${myHomeWork.updateTime}</span>
-                    <br>
-                </div>
-            </div>
+            <div class="layui-card-header"><h1>${homeWork.title}</h1></div>
         </div>
 
         <div>
             <c:forEach items="${classHomeWorkForProgrammingInfos}" var="cps">
-                    <div>${cps.classInfo.name}</div>
+                <div style="text-align: center"><h2>${cps.classInfo.name}</h2></div>
                 <table class="layui-table">
                     <tr>
                         <th>序号</th>
                         <th>姓名</th>
-
+                        <c:forEach items="${problems}" var="problem">
+                            <th title="${problem.title}">${problem.id}</th>
+                        </c:forEach>
                     </tr>
+                    <c:forEach items="${cps.studentHomeWorkProblems}" var="shp" varStatus="status">
+                        <tr>
+                            <td>${status.index+1}</td>
+                            <td>${shp.student.user.realname}</td>
+                            <c:forEach items="${shp.myHomeWorkProblems}" var="mpro">
+                                <c:choose>
+                                    <c:when test="${mpro.pass}"><td bgcolor="#4ad26a">通过</td></c:when>
+                                    <c:otherwise><td bgcolor="#a9a9a9">FAILED</td></c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </tr>
+
+                    </c:forEach>
                 </table>
             </c:forEach>
-            <table class="layui-table">
-                <colgroup>
-                    <col width="30">
-                    <col width="250">
-                    <col width="100">
-                    <col width="100">
-                    <col width="100">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>试题标题</th>
-                    <th>是否通过</th>
-                    <th>提交次数</th>
-                    <th>通过次数</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${problems}" var="myproblem" varStatus="status">
-                    <tr>
-                        <td>${status.index+1}</td>
-                        <td>${myproblem.problem.title}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${myproblem.pass}">
-                                    通过
-                                </c:when>
-                                <c:otherwise>没通过</c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>${myproblem.submissionTimes}</td>
-                        <td>${myproblem.passTimes}</td>
-                        <td><a class="layui-btn layui-btn-primary layui-btn-xs"
-                               onclick="view('${myproblem.problem.title}',${myproblem.problem.id})">查看试题</a>
-
-                            <a class="layui-btn layui-btn-primary layui-btn-xs"
-                               onclick="viewMyCode('${myproblem.problem.title}',${myproblem.problem.id})">查看我的答题记录</a>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-
         </div>
     </div>
 </div>

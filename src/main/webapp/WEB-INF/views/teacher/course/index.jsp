@@ -59,7 +59,8 @@
 	<script type="text/html" id="tableBarCourse">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看作业详细情况</a>
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看/布置作业</a>
+	<a class="layui-btn layui-btn-xs" lay-event="course-setting">课程设置</a>
 </script>
 	<!-- 表单弹窗 -->
 	<script type="text/html" id="modelCourse">
@@ -197,6 +198,18 @@
 						index.openTab({
 							title: data.name+'详细情况',
 							url: '${ctx}/homework/showHomework/'+data.id,
+							end: function() {
+								//insTb.reload();
+							}
+						});
+					});
+				}else if(layEvent==="course-setting"){
+					//课程设置
+					layui.use(['index'], function () {
+						var index = layui.index;
+						index.openTab({
+							title: '课程:'+data.name+'设置',
+							url: '${ctx}/course/setting/'+data.id,
 							end: function() {
 								//insTb.reload();
 							}
