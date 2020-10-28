@@ -246,17 +246,23 @@
         table.on('tool(myHomework)', function(obj) {
             var data = obj.data;
             var layEvent = obj.event;
-            if (layEvent === 'edit') { // 修改
-                layui.use(['index'], function () {
-                    console.log(data);
-                    var index = layui.index;
-                    index.openTab({
-                        title: '查看作业',
-                        url: '${ctx}/student/finishMyHomework/'+data.homeWork.type+"/"+data.id,
-                        end: function() {
-                        }
+            if (layEvent === 'edit') { // 查看并完成作业
+                var type = data.homeWork.evalutionType;
+                if(type==1){
+                    layui.use(['index'], function () {
+                        var index = layui.index;
+                        index.openTab({
+                            title: '查看作业',
+                            url: '${ctx}/student/finishMyHomework/'+data.homeWork.type+"/"+data.id,
+                            end: function() {
+                            }
+                        });
                     });
-                });
+                }else{
+                    //课堂测评
+                    window.open('${ctx}/student/finishMyCourseEvalution/'+data.homeWork.type+'/'+data.id);
+                }
+
             }else if(layEvent === 'showAll'){
                 layui.use(['index'], function () {
                     var index = layui.index;

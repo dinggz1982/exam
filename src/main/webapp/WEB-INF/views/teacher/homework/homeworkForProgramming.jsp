@@ -30,9 +30,8 @@
 <div class="layui-fluid">
     <div class="layui-col-md12">
         <div class="layui-card">
-            <div class="layui-card-header"><h1>${homeWork.title}</h1></div>
+            <div class="layui-card-header" style="text-align: center"><h1>${homeWork.title}</h1></div>
         </div>
-
         <div>
             <c:forEach items="${classHomeWorkForProgrammingInfos}" var="cps">
                 <div style="text-align: center"><h2>${cps.classInfo.name}</h2></div>
@@ -50,8 +49,13 @@
                             <td>${shp.student.user.realname}</td>
                             <c:forEach items="${shp.myHomeWorkProblems}" var="mpro">
                                 <c:choose>
-                                    <c:when test="${mpro.pass}"><td bgcolor="#4ad26a">通过</td></c:when>
-                                    <c:otherwise><td bgcolor="#a9a9a9">FAILED</td></c:otherwise>
+                                    <c:when test="${mpro.pass}"><td bgcolor="#4ad26a">通过(${mpro.passTimes}/${mpro.submissionTimes})</td></c:when>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${mpro.submissionTimes>0}"><td bgcolor="#a9a9a9">FAILED(0/${mpro.submissionTimes})</td></c:when>
+                                            <c:otherwise><td bgcolor="#CC0033">没做！(0/${mpro.submissionTimes})</td></c:otherwise>
+                                        </c:choose>
+                                        </c:otherwise>
                                 </c:choose>
                             </c:forEach>
                         </tr>

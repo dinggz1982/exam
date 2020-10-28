@@ -361,7 +361,7 @@ public class TeacherHomeWorkController {
 
     @PostMapping("/homework/saveHomework")
     @ResponseBody
-    public Map<String, Object> saveHomeWork(String title, String content, Long id, int type, String classInfos, String date, Integer course_id, String problemIds) throws ParseException {
+    public Map<String, Object> saveHomeWork(String title, String content, Long id, int type,int evalutionType,  String classInfos, String date, Integer course_id, String problemIds) throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             User user = (User) session.getAttribute("currentUser");
@@ -387,6 +387,7 @@ public class TeacherHomeWorkController {
             homeWork.setTitle(title);
             homeWork.setCreateTime(new Date());
             homeWork.setClassInfos(classInfoSet);
+            homeWork.setEvalutionType(evalutionType);
             Course course = new Course();
             course.setId(course_id);
             homeWork.setCourse(course);

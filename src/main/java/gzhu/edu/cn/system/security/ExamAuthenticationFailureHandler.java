@@ -31,7 +31,7 @@ public class ExamAuthenticationFailureHandler implements AuthenticationFailureHa
 		// TODO Auto-generated method stub
         //假设login.jsp在webapp路径下  
         //注意：不能访问WEB-INF下的jsp。  
-        String strUrl = request.getContextPath() + "/login.jsp";  
+        String strUrl = request.getContextPath() + "/hasEvalution.jsp";
         request.getSession().setAttribute("ok", 0);  
         request.getSession().setAttribute("message", exception.getLocalizedMessage());  
         request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, exception);  

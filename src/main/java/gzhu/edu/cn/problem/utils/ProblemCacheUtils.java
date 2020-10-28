@@ -55,7 +55,7 @@ public class ProblemCacheUtils {
             if (element == null) {
                 problemBaseInformation = problemBaseInformationService.findById(problemId);
                 //获取标签
-                List<ProblemTag> problemTags = problemTagService.find(" problemId="+problemId);
+                List<ProblemTag> problemTags = problemTagService.find(" problem_id="+problemId);
                 problemBaseInformation.setProblemTags(problemTags);
                 element = new Element(cacheName, problemBaseInformation);
                 //CacheManager.getInstance().addCache(cacheName);

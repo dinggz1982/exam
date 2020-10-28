@@ -55,6 +55,21 @@
                         </c:choose>
                     </div>
                 </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label layui-form-required">作业完成的类型:</label>
+                    <div class="layui-input-block">
+                        <c:choose>
+                            <c:when test="${homeWork.evalutionType==1}">
+                                <input type="radio" name="evalutionType" value="1" title="课后作业" checked="true">
+                                <input type="radio" name="evalutionType" value="2" title="课堂测评">
+                            </c:when>
+                            <c:otherwise>
+                                <input type="radio" name="evalutionType" value="1" title="课后作业">
+                                <input type="radio" name="evalutionType" value="2" title="课堂测评" checked="true">
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label layui-form-required">题号:</label>
                     <div class="layui-input-block">

@@ -22,7 +22,19 @@ public class MyHomeWork extends BaseEntity {
     @JoinColumn(name = "student_id")
     private Student student;
 
+    public boolean isSubmissioned() {
+        return isSubmissioned;
+    }
+
+    public void setSubmissioned(boolean submissioned) {
+        isSubmissioned = submissioned;
+    }
+
     private float score;
+
+    //是否已提交
+    @Column(columnDefinition = "bit(1) DEFAULT 0 comment '是否已提交，课堂作业只能提交一次'")
+    private boolean isSubmissioned;
 
     /**
      * 状态0:未开始,1：已开始，2：结束

@@ -43,7 +43,7 @@
             <li class="layui-nav-item" lay-unselect>
                 <a>
                     <img src="${currentUser.img }" class="layui-nav-img">
-                    <cite>${currentUser.username}</cite>
+                    <cite>${currentUser.realname}</cite>
                 </a>
                 <dl class="layui-nav-child">
                     <dd lay-unselect><a ew-href="${ctx }/user/userInfo">个人中心</a></dd>

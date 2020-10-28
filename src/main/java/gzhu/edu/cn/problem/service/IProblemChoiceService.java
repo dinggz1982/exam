@@ -37,5 +37,15 @@ public interface IProblemChoiceService extends BaseService<ProblemChoice,Integer
      */
     public ProblemChoice getItemsByProblemId(Integer problemId);
 
+    /**
+     * 对单选题进行测评
+     * @param myhomeworkId
+     * @param problemId
+     * @param choiceId
+     * @param user
+     */
+    public void judgeProblemChoice(Long myhomeworkId,int problemId,int choiceId,User user,int userChoiceItemId,String userChoiceItem);
+
+
 
 }

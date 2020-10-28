@@ -13,6 +13,15 @@
     <meta http-equiv="cache-control" content="no-cache">
 </head>
 <script type="text/javascript" src="${ctx }/assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="${ctx }/assets/libs/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<style>
+    #choiceDesc p{
+        display:inline;
+    }
+    .question_info pre{
+        display:inline;
+    }
+</style>
 <script>
     var HH = 0;//时
     var mm = 0;//分
@@ -58,10 +67,14 @@
         activeQuestion = id;
         $(".question").find(".question_info").remove();
         var question = questions[id];
-        //如果是编程题
         if (question.type == 5) {
+            //编程题
             parseProgramming(question, id);
+        } else if (question.type == 3) {
+            //单选题
+            parseSingleChoice(question, id);
         }
+
         progress();
     }
 
@@ -70,7 +83,7 @@
         //隐藏非编程题
         $("#notProgrammingQuestion").css("display", "none");
         $("#programmingQuestion").css("display", "block");
-        $("#questionType").text("【编程题】");
+        $("#questionType").text("【编程题】(题目id：" + question.id + ")");
         $("#programming_title").html("<strong>第 " + (id + 1) + " 题 、</strong>" + question.title);
         $("#question_desc").html(question.description);
         $("#inputStyle").html(question.inputStyle);
@@ -83,6 +96,25 @@
             $("#samples").empty();
             $("#samples").append("<div class='panel panel-default'><div class='panel-heading'><h3 class='panel-title'>输入输出样例" + j + "</div> <div class='panel-body'>输入：<code>" + value.inputsample + "</code>输出：<code>" + value.outputsample + "</code></div></div>");
         });
+    }
+
+    /*解析单选题*/
+    function parseSingleChoice(question, id) {
+        //隐藏非编程题
+        $("#notProgrammingQuestion").css("display", "block");
+        $("#programmingQuestion").css("display", "none");
+        $("#questionType").text("【单选题】");
+        //$(".question_title").html("<strong>第 " + (id + 1) + " 题 、" + question.title + "</strong>");
+        //$("#titleId").html("第 " + (id + 1) + " 题 、");
+        $("#choiceDesc").html("第" + (id + 1) + " 题(题目id：" + question.id + ") 、" + question.title);
+        //渲染选项
+        var items = question.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = " <li class='question_info' onclick='clickTrim(this)' id='"
+                + items[i].itemId + "'><input name='itemInfo' type='hidden' value='" + items[i].item + "'/><input name='thisProblem' type='hidden' value='" + question.id + "'/><input name='choiceId' type='hidden' value='" + question.choiceId + "'/><div class='radio'><label style='display:inline'><input type='radio' name='item' id='item_" + items[i].itemId + "' value='" + items[i].itemId + "'>"+itemList[i]+"." + items[i].item + "</label></div></li>";
+            $(".question").append(item);
+        }
+
     }
 
     /*答题卡*/
@@ -99,6 +131,9 @@
 
     function clickTrim(source) {
         var id = source.id;
+        var pid = $("input[name='thisProblem']").val();
+        var choiceId = $("input[name='choiceId']").val();
+        var itemInfo = $("input[name='itemInfo']").val();
         $("#" + id).find("input").prop("checked", "checked");
         $("#" + id).addClass("clickTrim");
         $("#ques" + activeQuestion).removeClass("question_id").addClass("clickQue");
@@ -106,24 +141,32 @@
         for (var i = 0; i < checkQues.length; i++) {
             if (checkQues[i].id == activeQuestion && checkQues[i].item != id) {
                 ques = checkQues[i].id;
-                checkQues[i].item = id;//获取当前考题的选项ID
+                checkQues[i].item = itemInfo;//获取当前考题的选项ID
+                checkQues[i].pid = pid;
+                checkQues[i].choiceId = choiceId;
                 checkQues[i].answer = $("#" + id).find("input[name=item]:checked").val();//获取当前考题的选项值
             }
         }
         if (checkQues.length == 0 || Question != activeQuestion && activeQuestion != ques) {
             var check = {};
-            check.id = activeQuestion;//获取当前考题的编号
-            check.item = id;//获取当前考题的选项ID
+            check.id = pid;//获取当前考题的id
+            check.pid = pid;
+            check.item = itemInfo;//获取当前考题的选项内容
+            check.choiceId = choiceId;
             check.answer = $("#" + id).find("input[name=item]:checked").val();//获取当前考题的选项值
+            hasChecked.add(id);
+            //console.log(id);
             checkQues.push(check);
         }
+        //console.log(checkQues);
         $(".question_info").each(function () {
             var otherId = $(this).attr("id");
             if (otherId != id) {
                 $("#" + otherId).find("input").prop("checked", false);
                 $("#" + otherId).removeClass("clickTrim");
             }
-        })
+        });
+        progress();
         Question = activeQuestion;
     }
 
@@ -143,7 +186,7 @@
     }
 
     //获取已经提交的试题数
-    function getSubmitQuestion(){
+    function getSubmitQuestion() {
 
     }
 
@@ -198,8 +241,43 @@
         //提交试卷
         $("#submitQuestions").click(function () {
             /*alert(JSON.stringify(checkQues));*/
-            alert("已做答:" + ($(".clickQue").length) + "道题,还有" + (questions.length - ($(".clickQue").length)) + "道题未完成");
+            //("已做答:" + ($(".clickQue").length) + "道题,还有" + (questions.length - ($(".clickQue").length)) + "道题未完成");
+            if (hasChecked.size == questions.length) {
+                if (confirm('确认提交？')) {
+                    doSubmist();
+                }
+            } else {
+                if (hasChecked.size < questions.length) {
+                    if (confirm('还有试题未完成确认提交？')) {
+                        doSubmist();
+                    }
+                }
+            }
         })
+
+        function doSubmist() {
+            $('#loadingModal').modal('show');
+            //$('#loading').modal('hide');
+            var checkQuesJson = JSON.stringify(checkQues);
+            $.ajax({
+                type: "POST",
+                url: "/course/evalutionMyHomeWork/${myhomework_id}",
+                data: {checkQuesJson: checkQuesJson},
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    //alert("OK");
+                    $('#loadingModal').modal('hide');
+                    if (data.result == "success") {
+                        alert("测评成功！");
+                    } else {
+                        alert("测评有误！请联系管理员！"+data.status);
+                    }
+                    window.open("${ctx}/course/evalution/result/"+${myhomework_id});
+                }
+            });
+        }
+
         //进入下一题
         $("#nextQuestion").click(function () {
             if ((activeQuestion + 1) != questions.length) showQuestion(activeQuestion + 1);
@@ -207,30 +285,29 @@
         })
     })
 
-
     layui.use(['layer', 'util'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         //拿到当前id
 
         //监听按钮
-        $('#submitCode').click(function() {
+        $('#submitCode').click(function () {
             var id = $("#submitCode").val();
             hasChecked.add(id);//认为用户已完成了此题
             var index = layer.open({
                 type: 2
-                ,title: '提交代码'
-                ,area: ['60%', '100%']
-                ,shade: false
-                ,maxmin: true
-                ,offset: 'rt'
-                ,content: '/problem/submissionCodeForHomeWork/121/'+id
-                ,anim: 2
-                ,zIndex: layer.zIndex //重点1
-                ,success: function(layero){
+                , title: '提交代码'
+                , area: ['60%', '100%']
+                , shade: false
+                , maxmin: true
+                , offset: 'rt'
+                , content: '/problem/submissionCodeForHomeWork/121/' + id
+                , anim: 2
+                , zIndex: layer.zIndex //重点1
+                , success: function (layero) {
                     layer.setTop(layero); //重点2
-                },end:function (){
-                     progress();
+                }, end: function () {
+                    progress();
                 }
             });
         });
@@ -240,9 +317,11 @@
 <body>
 
 <div>
+
     <div class="col-md-1"></div>
-    <div class="col-md-10">
+    <div class="col-md-10" style="margin: 0 auto;">
         <div class="content">
+                <h1 style="margin: 0 auto;text-align: center;margin-top: 20px;margin-bottom: 10px;">课堂练习：${myHomeWork.homeWork.title}</h1>
             <div id="answerCard" style="width: 80%;margin: 0 auto;">
                 <div class="panel-body form-horizontal" style="padding: 0px;">
                     <ul class="list-unstyled">
@@ -297,8 +376,17 @@
                             <div style="width: 100%;height: 90%;padding:20px 20px 0px 20px;">
                                 <!--试题区域-->
                                 <!--非编程题 -->
+                                <div class="row" style="display: inline-block;margin: 0 auto;">
+                                    <div>
+                                        <h3 id="choiceDesc" class="form-inline;display:inline; "></h3>
+
+                                        <%--<label class="form-inline"><span id="titleId"></span><span
+                                                id="choiceDesc" ></span></label>--%>
+                                    </div>
+                                </div>
+                                <div style="clear: both;"></div>
                                 <ul class="list-unstyled question" id="notProgrammingQuestion" name="">
-                                    <li class="question_title"></li>
+
                                 </ul>
                                 <!--编程题 -->
                                 <div id="programmingQuestion" style="display: none" class="grid-demo grid-demo-bg1"
@@ -351,6 +439,20 @@
         </div>
     </div>
 </div>
+</div>
+<!--loading-->
+<div class="modal fade" id="loadingModal" backdrop="static" keyboard="false">
+    　　
+    <div style="width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px">
+        　　　　
+        <div class="progress progress-striped active" style="margin-bottom: 0;">
+            　　　　　　
+            <div class="progress-bar" style="width: 100%;"></div>
+            　　　　
+        </div>
+        　　　　<h5 id="loadText">loading...</h5>
+        　　
+    </div>
 </div>
 </body>
 

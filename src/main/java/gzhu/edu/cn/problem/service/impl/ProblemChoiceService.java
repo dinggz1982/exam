@@ -1,18 +1,20 @@
 package gzhu.edu.cn.problem.service.impl;
 
 import gzhu.edu.cn.base.dao.impl.BaseDAOImpl;
-import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
-import gzhu.edu.cn.problem.entity.ProblemChoice;
-import gzhu.edu.cn.problem.entity.ProblemChoiceItem;
+import gzhu.edu.cn.homework.entity.MyHomeWorkProblem;
+import gzhu.edu.cn.homework.service.IMyHomeWorkProblemService;
+import gzhu.edu.cn.problem.entity.*;
 import gzhu.edu.cn.problem.service.IProblemBaseInformationService;
 import gzhu.edu.cn.problem.service.IProblemChoiceItemService;
 import gzhu.edu.cn.problem.service.IProblemChoiceService;
+import gzhu.edu.cn.problem.service.IProblemChoiceSubmissionsService;
 import gzhu.edu.cn.system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,11 +30,16 @@ public class ProblemChoiceService extends BaseDAOImpl<ProblemChoice, Integer> im
     private IProblemBaseInformationService problemBaseInformationService;
 
     @Autowired
+    private IMyHomeWorkProblemService myHomeWorkProblemService;
+
+    @Autowired
     private IProblemChoiceItemService problemChoiceItemService;
+    @Autowired
+    private IProblemChoiceSubmissionsService problemChoiceSubmissionsService;
 
     @Override
     @Transactional
-    public void saveSingleChoice(User user, Integer problemId, String problemTitle, int score, Integer choiceId, String content, String itemA, String itemB, String itemC, String itemD, String itemE, String itemF, String answer) {
+    public void saveSingleChoice(User user, Integer problemId, String problemTitle, int score, Integer choiceId, String description, String itemA, String itemB, String itemC, String itemD, String itemE, String itemF, String answer) {
         //如果problemId存在，在更新
         ProblemBaseInformation problem = null;
         if (problemId != null && problemId > 0) {
@@ -52,13 +59,13 @@ public class ProblemChoiceService extends BaseDAOImpl<ProblemChoice, Integer> im
         ProblemChoice choice = null;
         if (choiceId != null && choiceId > 0) {
             choice = this.findById(choiceId);
-            choice.setContent(content);
+            choice.setDescription(description);
             choice.setProblemBaseInformation(problem);
             this.update(choice);
         }else{
             //如果选择题不存在
             choice = new ProblemChoice();
-            choice.setContent(content);
+            choice.setDescription(description);
             choice.setProblemBaseInformation(problem);
             this.save(choice);
         }
@@ -145,9 +152,68 @@ public class ProblemChoiceService extends BaseDAOImpl<ProblemChoice, Integer> im
 
     @Override
     public ProblemChoice getItemsByProblemId(Integer problemId) {
-        List<ProblemChoiceItem> items =  this.problemChoiceItemService.find(" problemId="+problemId);
-        ProblemChoice choice = this.getByHql(" problem_id="+problemId);
+        List<ProblemChoiceItem> items =  this.problemChoiceItemService.find("  problemId="+problemId);
+        ProblemChoice choice = this.getByHql(" and problemId="+problemId);
         choice.setChoiceItem(items);
         return choice;
+    }
+
+    @Override
+    @Transactional
+    public void judgeProblemChoice(Long myhomeworkId, int problemId, int choiceId, User user, int userChoiceItemId,String userChoiceItem) {
+        //1.得到choiceId的正确itemId
+        ProblemChoiceItem choiceItem =  this.problemChoiceItemService.getByHql(" and problemId="+problemId +" and isRightAnswer=1");
+        ProblemChoice choice = this.getItemsByProblemId(problemId);
+        boolean isPassed = false;
+        if(choiceItem!=null){
+            if(choiceItem.getId()==userChoiceItemId){
+                isPassed = true;
+            }
+        }
+        //2.提交测评
+        ProblemChoiceSubmissions problemChoiceSubmissions = new ProblemChoiceSubmissions();
+        problemChoiceSubmissions.setAnswer(userChoiceItem);
+        problemChoiceSubmissions.setIsFullScore(isPassed);
+        problemChoiceSubmissions.setProblemId(problemId);
+        problemChoiceSubmissions.setProblemTitle(choice.getDescription());
+        problemChoiceSubmissions.setSelectedItems(userChoiceItem);
+        problemChoiceSubmissions.setSubmitTime(new Date());
+        this.problemChoiceSubmissionsService.save(problemChoiceSubmissions);
+
+        MyHomeWorkProblem myHomeWorkProblem = this.myHomeWorkProblemService.getByHql(" and problem_id="+problemId+" and myhomework_id="+myhomeworkId);
+        //如果目前还没有对应试题的结果
+        if(myHomeWorkProblem==null){
+            myHomeWorkProblem = new MyHomeWorkProblem();
+            myHomeWorkProblem.setSubmissionTimes(1);
+            myHomeWorkProblem.setPass(isPassed);
+            if(isPassed){
+                myHomeWorkProblem.setPassTimes(1);
+            }
+            myHomeWorkProblem.setUser(user);
+            ProblemBaseInformation problem = new ProblemBaseInformation();
+            problem.setId(problemId);
+            myHomeWorkProblem.setProblem(problem);
+            myHomeWorkProblem.setLastSubmissionTime(new Date());
+            myHomeWorkProblem.setChoiceSubmissionId(String.valueOf(problemChoiceSubmissions.getId()));
+            myHomeWorkProblem.setSubmissionTimes(1);
+            myHomeWorkProblem.setSubmissionIds(problemChoiceSubmissions.getId()+";");
+            this.myHomeWorkProblemService.save(myHomeWorkProblem);
+        }else{
+            myHomeWorkProblem.setSubmissionTimes(1);
+            myHomeWorkProblem.setPass(isPassed);
+            if(isPassed){
+                myHomeWorkProblem.setPassTimes(myHomeWorkProblem.getPassTimes()+1);
+            }
+            myHomeWorkProblem.setUser(user);
+            ProblemBaseInformation problem = new ProblemBaseInformation();
+            problem.setId(problemId);
+            myHomeWorkProblem.setProblem(problem);
+            myHomeWorkProblem.setLastSubmissionTime(new Date());
+            myHomeWorkProblem.setChoiceSubmissionId(String.valueOf(problemChoiceSubmissions.getId()));
+            myHomeWorkProblem.setSubmissionIds(myHomeWorkProblem.getSubmissionIds()+problemChoiceSubmissions.getId()+";");
+            myHomeWorkProblem.setSubmissionTimes(myHomeWorkProblem.getSubmissionTimes()+1);
+            this.myHomeWorkProblemService.update(myHomeWorkProblem);
+        }
+
     }
 }

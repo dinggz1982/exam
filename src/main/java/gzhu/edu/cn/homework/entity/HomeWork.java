@@ -58,6 +58,18 @@ public class HomeWork extends BaseEntity {
     //作业的类型1.文本/附件2.知识建构
     private int type;
 
+    public int getEvalutionType() {
+        return evalutionType;
+    }
+
+    public void setEvalutionType(int evalutionType) {
+        this.evalutionType = evalutionType;
+    }
+
+    //作业完成的类型，1.课后作业, 2.课堂测评
+    @Column(name = "evalutionType", columnDefinition = ("int(2) comment '作业完成的类型，1：课堂测评，2.课后作业' default 1 "))
+    private int evalutionType;
+
     @Column(name = "content",columnDefinition="text")
     private String content;
 

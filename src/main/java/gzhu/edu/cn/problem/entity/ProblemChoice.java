@@ -11,15 +11,15 @@ import java.util.List;
  * @author: 丁国柱
  * @create: 2020-10-18 18:22
  */
-@Entity(name="problem_chioce")
+@Entity(name="problem_chioce_description")
 public class ProblemChoice extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "content",columnDefinition="text")
-    private String content;
+    @Column(name = "description",columnDefinition="text")
+    private String description;
 
     public ProblemBaseInformation getProblemBaseInformation() {
         return problemBaseInformation;
@@ -30,7 +30,7 @@ public class ProblemChoice extends BaseEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name="problem_id")
+    @JoinColumn(name="problemId")
     private ProblemBaseInformation problemBaseInformation;
 
     @Transient
@@ -44,12 +44,12 @@ public class ProblemChoice extends BaseEntity {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<ProblemChoiceItem> getChoiceItem() {

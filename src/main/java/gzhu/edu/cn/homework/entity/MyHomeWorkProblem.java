@@ -59,6 +59,17 @@ public class MyHomeWorkProblem extends BaseEntity {
         this.problemSubmission = problemSubmission;
     }
 
+    public String getChoiceSubmissionId() {
+        return choiceSubmissionId;
+    }
+
+    public void setChoiceSubmissionId(String choiceSubmissionId) {
+        this.choiceSubmissionId = choiceSubmissionId;
+    }
+
+    //客观题的提交id
+    private String choiceSubmissionId;
+
     @ManyToOne
     @JoinColumn(name="submission_id")
     private ProblemSubmissions problemSubmission;

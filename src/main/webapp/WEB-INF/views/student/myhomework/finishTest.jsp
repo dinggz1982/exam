@@ -77,7 +77,7 @@
                         <td>${myproblem.submissionTimes}</td>
                         <td>${myproblem.passTimes}</td>
                         <td><a class="layui-btn layui-btn-primary layui-btn-xs"
-                               onclick="view('${myproblem.problem.title}',${myproblem.problem.id})">查看试题</a>
+                               onclick="view(${myproblem.problem.type},'${myproblem.problem.title}',${myproblem.problem.id})">查看试题</a>
 
                             <a class="layui-btn layui-btn-primary layui-btn-xs"
                                onclick="viewMyCode('${myproblem.problem.title}',${myproblem.problem.id})">查看我的答题记录</a>
@@ -95,12 +95,19 @@
 </div>
 <script>
     //查看作业试题
-    function view(title, id) {
+    function view(type,title, id) {
+        var url = "";
+        if(type==5){
+            url =   '${ctx}/myHomeWorkForProgramming/${myHomeWork.id}/' + id;
+        }else if(type==3){
+            //单选题
+            url =   '${ctx}/myHomeWorkForChoice/${myHomeWork.id}/' + id;
+        }
         layui.use(['index'], function () {
             var index = layui.index;
             index.openTab({
                 title: '试题：' + title,
-                url: '${ctx}/myHomeWorkForProgramming/${myHomeWork.id}/' + id,
+                url: url,
                 end: function () {
                 }
             });

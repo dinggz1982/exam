@@ -4,44 +4,43 @@ import gzhu.edu.cn.base.entity.BaseEntity;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 
 /**
  * 客观题测评记录表Entity
- * @author liangsw
- * @version 2019-01-11
  */
+@Entity(name="problem_choice_submissions")
 public class ProblemChoiceSubmissions extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	public Integer getId() {
+	private Long id;
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	private Integer problemId;		// 题目的ID
 	private String answer;
 	private String selectedItems;		// 用户作答的选项答案
 	private Date submitTime;		// 提交时间
-	private Integer fromWhere;		// 来源 1.Contest 2.Chapter 3.其他
-	private Integer fromWhereId;		// 来源ID
-	private Integer acceptNumber;		//通过个数
-	private Integer testNumber;			//测评点个数
-	private Integer score; 			//分数
+//	private Integer fromWhere;		// 来源 1.Contest 2.Chapter 3.其他
+//	private Integer fromWhereId;		// 来源ID
+//	private Integer acceptNumber;		//通过个数
+//	private Integer testNumber;			//测评点个数
+//	private Integer score; 			//分数
+	@Column(name = "problemTitle",columnDefinition="text")
 	private String problemTitle;		// 题目标题
 	private Date beginSubmitTime;		// 开始 提交时间
 	private Date endSubmitTime;		// 结束 提交时间
 	private String type;		// 试题类型
 	private Boolean isFullScore;			//是否满分
-	private ProblemBaseInformation problemBase;
+
 	private String finish;	//虚拟记录 0：未结束 1:已结束 
 	
 	private String groupId;	//虚拟字段 团队ID
@@ -72,7 +71,7 @@ public class ProblemChoiceSubmissions extends BaseEntity {
 		this.submitTime = submitTime;
 	}
 	
-	public Integer getFromWhere() {
+	/*public Integer getFromWhere() {
 		return fromWhere;
 	}
 
@@ -110,7 +109,7 @@ public class ProblemChoiceSubmissions extends BaseEntity {
 
 	public void setScore(Integer score) {
 		this.score = score;
-	}
+	}*/
 
 	public String getProblemTitle() {
 		return problemTitle;
@@ -150,14 +149,6 @@ public class ProblemChoiceSubmissions extends BaseEntity {
 
 	public void setIsFullScore(Boolean isFullScore) {
 		this.isFullScore = isFullScore;
-	}
-
-	public ProblemBaseInformation getProblemBase() {
-		return problemBase;
-	}
-
-	public void setProblemBase(ProblemBaseInformation problemBase) {
-		this.problemBase = problemBase;
 	}
 
 	public String getAnswer() {

@@ -1,18 +1,10 @@
 package gzhu.edu.cn.problem.web;
 
 import gzhu.edu.cn.base.util.UserUtils;
-import gzhu.edu.cn.homework.entity.HomeWork;
-import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
-import gzhu.edu.cn.problem.entity.ProblemChoice;
-import gzhu.edu.cn.problem.entity.ProblemChoiceItem;
 import gzhu.edu.cn.problem.service.IProblemChoiceService;
-import gzhu.edu.cn.profile.entity.ClassInfo;
-import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.system.entity.User;
-import org.apache.jena.sparql.function.library.date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -88,7 +79,7 @@ public class ProblemController {
 
     @PostMapping("/saveChoice")
     @ResponseBody
-    public Map<String, Object> saveHomeWork(String title, String content,int score, Integer id,Integer problemChoiceId, int type, String itemA, String itemB,String itemC,String itemD,String itemE,String itemF,String answer) throws ParseException {
+    public Map<String, Object> saveHomeWork(String title, String content,int score, Integer id,Integer problemChoiceId,int type, String itemA, String itemB,String itemC,String itemD,String itemE,String itemF,String answer) throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             User user = (User) session.getAttribute("currentUser");

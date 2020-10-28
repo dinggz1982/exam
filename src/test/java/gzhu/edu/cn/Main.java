@@ -1,22 +1,14 @@
-package gzhu.edu.cn;
 import java.util.Scanner;
-
-/**
- * @program: exam
- * @description:
- * @author: 丁国柱
- * @create: 2020-10-02 11:05
- */
-public class Main {
-    public static void main(String[] args) {
+public class Main{
+    public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
-        long a = scanner.nextLong();
-        long b = scanner.nextLong();
+        int a = scanner.nextInt();
+        int b = scanner.nextInt();
         if(a>b){
-            System.out.print(a);
-        }else{
-            System.out.print(b);
+            System.out.println(a);
         }
-        scanner.close();
+        else{
+            System.out.println(b);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package gzhu.edu.cn.student.web;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import gzhu.edu.cn.base.model.JsonData;
 import gzhu.edu.cn.base.model.PageData;
 import gzhu.edu.cn.base.util.UserUtils;
@@ -12,8 +14,11 @@ import gzhu.edu.cn.homework.service.impl.HomeWorkService;
 import gzhu.edu.cn.knowledge.entity.Knowledge;
 import gzhu.edu.cn.knowledge.entity.MyKnowledgeGraph;
 import gzhu.edu.cn.knowledge.service.IMyKnowledgeGraphService;
-import gzhu.edu.cn.problem.entity.ProblemBaseInformation;
+import gzhu.edu.cn.problem.entity.*;
 import gzhu.edu.cn.problem.service.IProblemBaseInformationService;
+import gzhu.edu.cn.problem.service.IProblemChoiceItemService;
+import gzhu.edu.cn.problem.service.IProblemChoiceService;
+import gzhu.edu.cn.problem.utils.ProblemCacheUtils;
 import gzhu.edu.cn.profile.entity.Course;
 import gzhu.edu.cn.profile.service.ICourseService;
 import gzhu.edu.cn.system.entity.User;
@@ -56,6 +61,8 @@ public class StudentHomeWorkController {
 
     @Autowired
     private IMyHomeWorkProblemService myHomeWorkProblemService;
+    @Autowired
+    private IProblemChoiceService problemChoiceService;
 
     @Autowired
     private HttpSession session;
@@ -236,11 +243,12 @@ public class StudentHomeWorkController {
 
     /**
      * 完成知识图谱工作
+     *
      * @param myhomework_id
      * @param model
      * @return
      */
-    public String finishKg( Long myhomework_id, Model model){
+    public String finishKg(Long myhomework_id, Model model) {
         User user = (User) session.getAttribute("currentUser");
         MyHomeWork myHomeWork = this.myHomeWorkService.findById(myhomework_id);
 
@@ -248,8 +256,7 @@ public class StudentHomeWorkController {
         model.addAttribute("myHomeWork", myHomeWork);
 
 
-
-        List<MyKnowledgeGraph> myKnowledgeGraphs = this.myKnowledgeGraphService.find(" myhomework_id=" + myhomework_id );
+        List<MyKnowledgeGraph> myKnowledgeGraphs = this.myKnowledgeGraphService.find(" myhomework_id=" + myhomework_id);
         //拿到全部节点
 //	nodes	{ id: 1, label: 'Eric Cartman', age: 'kid', gender: 'male' },
 //{ from: 1, to: 2, relation: 'friend', arrows: 'to, from', color: { color: 'red'} },
@@ -285,11 +292,12 @@ public class StudentHomeWorkController {
 
     /**
      * 完成测评
+     *
      * @param myhomework_id
      * @param model
      * @return
      */
-    public String finishTest(Long myhomework_id, Model model){
+    public String finishTest(Long myhomework_id, Model model) {
         User user = (User) session.getAttribute("currentUser");
         MyHomeWork myHomeWork = this.myHomeWorkService.findById(myhomework_id);
 
@@ -301,7 +309,7 @@ public class StudentHomeWorkController {
         model.addAttribute("homework", myHomeWork.getHomeWork());
         model.addAttribute("myHomeWork", myHomeWork);
         //拿到相关试题
-        List<MyHomeWorkProblem> problems = this.myHomeWorkProblemService.find(" myhomework_id="+myHomeWork.getId());
+        List<MyHomeWorkProblem> problems = this.myHomeWorkProblemService.find(" myhomework_id=" + myHomeWork.getId());
         model.addAttribute("problems", problems);
 
         return "student/myhomework/finishTest";
@@ -309,30 +317,79 @@ public class StudentHomeWorkController {
 
     /**
      * 完成作业
+     *
      * @param type
      * @param myhomework_id
      * @param model
      * @return
      */
     @GetMapping("/finishMyHomework/{type}/{myhomework_id}")
-    public String finishMyHomework(@PathVariable Integer type,@PathVariable Long myhomework_id, Model model) {
-        if(type==2){
-            return finishKg(myhomework_id,model);
-        }else if(type==3){
-            return finishTest(myhomework_id,model);
-        }else{
+    public String finishMyHomework(@PathVariable Integer type, @PathVariable Long myhomework_id, Model model) {
+        if (type == 2) {
+            return finishKg(myhomework_id, model);
+        } else if (type == 3) {
+            return finishTest(myhomework_id, model);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 完成课堂测试
+     *
+     * @param type
+     * @param myhomework_id
+     * @param model
+     * @return
+     */
+    @GetMapping("/finishMyCourseEvalution/{type}/{myhomework_id}")
+    public String finishMyCourseEvalution(@PathVariable Integer type, @PathVariable Long myhomework_id, Model model) throws Exception {
+        MyHomeWork myHomeWork = this.myHomeWorkService.findById(myhomework_id);
+        model.addAttribute("myHomeWork",myHomeWork);
+        if(myHomeWork.isSubmissioned()){
+            return "course/hasEvalution";
+        }
+
+        if (type == 2) {
+            return finishKg(myhomework_id, model);
+        } else if (type == 3) {
+            model.addAttribute("myhomework_id",myhomework_id);
+
+            if (myHomeWork.getHomeWork().getProblemIds() != null) {
+                String pids = myHomeWork.getHomeWork().getProblemIds().replaceAll(";", ",");
+                //pids = pids.substring(0, pids.length() - 1);
+                List<ProblemBaseInformation> problems = this.problemBaseInformationService.find(" id in(" + pids + ")");
+                JSONArray jsonArray = new JSONArray();
+                for (ProblemBaseInformation problem : problems) {
+                    //单选题
+                    if (problem.getType() == 3) {
+                        jsonArray.add(parseSingleChoice(problem));
+                    }
+                    //编程题
+                    else if (problem.getType() == 5) {
+                        jsonArray.add(parseProgramming(problem));
+
+                    }
+                }
+                model.addAttribute("programmingList", jsonArray);
+                return "course/evaluate";
+            }else{
+                return "course/noProblems";
+            }
+
+        } else {
             return null;
         }
     }
 
     @GetMapping("/homework/showHomework/{myhomework_id}")
-    public String showHomework(@PathVariable Long myhomework_id,Model model){
+    public String showHomework(@PathVariable Long myhomework_id, Model model) {
         MyHomeWork myHomeWork = this.myHomeWorkService.findById(myhomework_id);
 
         model.addAttribute("homework", myHomeWork.getHomeWork());
         model.addAttribute("myHomeWork", myHomeWork);
 
-        List<MyKnowledgeGraph> myKnowledgeGraphs = this.myKnowledgeGraphService.find(" myhomework_id=" + myhomework_id );
+        List<MyKnowledgeGraph> myKnowledgeGraphs = this.myKnowledgeGraphService.find(" myhomework_id=" + myhomework_id);
         //拿到全部节点
 //	nodes	{ id: 1, label: 'Eric Cartman', age: 'kid', gender: 'male' },
 //{ from: 1, to: 2, relation: 'friend', arrows: 'to, from', color: { color: 'red'} },
@@ -359,6 +416,50 @@ public class StudentHomeWorkController {
         model.addAttribute("nodes", nodes.toString());
 
         return "student/myhomework/showStudentHomework";
+    }
+
+    private JSONObject parseSingleChoice(ProblemBaseInformation problem) {
+        JSONObject object = new JSONObject();
+        object.put("type", "3");
+        ProblemChoice problemChoice = this.problemChoiceService.getItemsByProblemId(problem.getId());
+        object.put("title", problemChoice.getDescription());
+        object.put("id", problem.getId());
+        object.put("choiceId",problemChoice.getId());
+        JSONArray jsonArray = new JSONArray();
+        for (ProblemChoiceItem item : problemChoice.getChoiceItem()) {
+            JSONObject itemObject = new JSONObject();
+            itemObject.put("itemId", item.getId());
+            itemObject.put("item", item.getItem());
+            jsonArray.add(itemObject);
+        }
+        object.put("items", jsonArray);
+        return object;
+    }
+
+
+    private JSONObject parseProgramming(ProblemBaseInformation problem) throws Exception {
+        JSONObject object = new JSONObject();
+        int problemId = problem.getId();
+
+        ProblemProgrammingDeatil programming = ProblemCacheUtils.getProgrammingDeatil(problemId);
+        object.put("type", "5");
+        object.put("title", problem.getTitle());
+        object.put("id", problem.getId());
+        object.put("description", programming.getDescription());
+        object.put("inputStyle", programming.getInputstyle());
+        object.put("outputStyle", programming.getOutputstyle());
+
+        //编程题样例
+        List<ProblemProgrammingSamples> samples = ProblemCacheUtils.getProgrammingSamplesList(problemId);
+        JSONArray jsonArray = new JSONArray();
+        for (ProblemProgrammingSamples sample : samples) {
+            JSONObject sampleObject = new JSONObject();
+            sampleObject.put("inputSample", sample.getInputsample());
+            sampleObject.put("outputSample", sample.getOutputsample());
+            jsonArray.add(sampleObject);
+        }
+        object.put("samples", samples);
+        return object;
     }
 
 }

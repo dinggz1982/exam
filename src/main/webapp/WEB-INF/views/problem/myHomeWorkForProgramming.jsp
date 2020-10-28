@@ -28,7 +28,7 @@
                         <div class="layui-card-header"><span class="layui-badge layui-bg-orange">标签</span></div>
                         <div class="layui-card-body">
                                 <c:forEach items="${problem.problemTags}" var="tag">
-                                    ${tag.name},
+                                    ${tag.tag.name},
                                 </c:forEach>
                         </div>
                     </div>
