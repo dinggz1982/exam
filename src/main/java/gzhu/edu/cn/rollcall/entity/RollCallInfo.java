@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import gzhu.edu.cn.base.entity.BaseEntity;
 import gzhu.edu.cn.system.entity.User;
 
+import java.util.Date;
+
 /**
  * 点名的具体情况
  * <p>Title : RollCallInfo</p>
@@ -38,6 +40,16 @@ public class RollCallInfo extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "rollCall_id")
 	private RollCall rollCall;
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	private Date createTime;
 	
 	
 	public RollCall getRollCall() {

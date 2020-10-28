@@ -49,6 +49,17 @@ public class RollCall extends BaseEntity {
 	@JoinColumn(name = "classInfo_id")
 	private ClassInfo classInfo;
 
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
+	}
+
+	//上课的周次
+	private String week;
+
 	//点名的时间
 	private Date date;
 	

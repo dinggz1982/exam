@@ -1,82 +1,67 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
+<head>
     <title>课堂点名</title>
-   <%@include file="/WEB-INF/views/include/head.jsp" %>
-  </head>
-  <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 课堂点名 </nav>
-<div class="pd-20" style="text-align: center;margin: 0 auto; ">
-  
-  <form action="submitRollCall" method="get">
-    <table class="table table-border table-bordered table-hover table-bg table-sort" style="width: 60%;text-align: center;margin: 0 auto; ">
-  
-  <tr>
-    		<td style="text-align: center;">点名信息：</td>
-    		<td colspan="2">
-    											<input type="text" class="input-text valid" autocomplete="off" placeholder="点名信息" name="name" id="name" data-filtered="filtered">
-    		
-    		</td>
-    	</tr>
-    	
-  <tr>
-    		<td style="text-align: center;">指定学生：</td>
-    		<td colspan="2">
-				<select name="selectStu" id="selectStu"  onchange="selectStudent()">
-					<c:forEach var="student" items="${allStudents }">
-						<option value="${student[0] }" label="${student[2] }">${student[1] }</option>
-					</c:forEach>
-				</select>    		
-    		</td>
-    	</tr>
-    	</table>
-  <table class="table table-border table-bordered table-hover table-bg table-sort" style="width: 60%;text-align: center;margin: 0 auto; ">
-    <thead>
-      <tr class="text-c">
-        <th width="100">姓名</th>
-        <th width="150">学号</th>
-        <th width="70">状态</th>
-      </tr>
-    </thead>
-    
-    <tbody id="stubody">
-    	<c:forEach items="${users }" var="user" varStatus="status">
-      <tr class="text-c">
-      	
-        <td><u style="cursor:pointer" class="text-primary">${user.username }</u></td>
-        <td>${user.xuehao }<input type="hidden" name="xuehao" value="${user.xuehao }"/></td>
-        <td class="user-status">
-        <!-- 1.上课 2.迟到  3.早退 4.请假   5.旷课-->
-        <select class="select valid" size="1" name="type" data-filtered="filtered">
-										<option value="1" data-filtered="filtered">上课</option>
-										<option value="2" data-filtered="filtered">迟到</option>
-										<option value="3" data-filtered="filtered">早退</option>
-										<option value="4" data-filtered="filtered">请假</option>
-										<option value="5" data-filtered="filtered">旷课</option>
-									</select>
-        
-        </td>
-      </tr>
-      </c:forEach>
-    </tbody>
-  </table>
-  <p style="margin-top: 10px;">
-  <input class="btn btn-primary" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" data-filtered="filtered">
-  </form>
+    <%@include file="/WEB-INF/views/include/head.jsp" %>
+</head>
+<body>
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header" style="margin-bottom: 5px;"><h2>课堂点名+提问</h2></div>
+        <div class="layui-card-body">
+            <h2>${rollcall.classInfo.name}/${rollcall.course.name}/第${rollcall.week}周</h2>
+            <form method="post" class="layui-form" lay-filter="rollcallForm" style="max-width: 960px;">
+                <input type="hidden" name="rollcall" value="${rollcall.id}">
+                <c:forEach var="student" items="${users }">
+                    <div class="layui-form-item">
+                        <input id="userid" name="userid" value="${student.id}" type="hidden">
+                        <label class="layui-form-label" style="width: 200px;">学生：<b>${student.username}</b></label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="1" title="上课" checked>
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="2" title="迟到">
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="3" title="早退">
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="4" title="旷课">
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="5" title="回答正确">
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="6" title="回答错误">
+                            <input type="radio" name="status" lay-filter="raQT" name="type" value="7" title="没回答">
+                        </div>
+                    </div>
+                </c:forEach>
+                <div class="layui-form-item">
+                    <div class="layui-input-block text-center">
+                        <button class="layui-btn" lay-filter="submitRollCall" lay-submit>&emsp;提交&emsp;</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-<!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
-<script type="text/javascript" src="lib/datatables/1.10.0/jquery.dataTables.min.js"></script> 
-<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
-function selectStudent(){
-	var s1 = $('#selectStu').val();
-	var s3 = $('#selectStu option:selected').attr("label");
-	var s2 = $('#selectStu option:selected').text();
-	$('#stubody').append("<tr class='text-c'><input type='hidden' name='xuehao' value='"+s3+"'/><td><u style='cursor:pointer' class='text-primary'>"+s2+"</u></td><td>"+s3+"</td><td class='user-status'><select class='select valid' size='1' name='type' data-filtered='filtered'><option value='1' data-filtered='filtered'>上课</option><option value='2' data-filtered='filtered'>迟到</option><option value='3' data-filtered='filtered'>早退</option><option value='4' data-filtered='filtered'>请假</option><option value='5' data-filtered='filtered'>旷课</option></select></td></tr>").show();
-}
+    layui.use(['layer', 'form'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        form.on('submit(submitRollCall)', function (data) {
+            //layer.msg("表单验证通过", {icon: 1});
+            //console.log(data);
+            //提交表单
+            layer.load(2);
+            $.post('${ctx}/submitRollCall', data.field, function (res) {
+                layer.closeAll('loading');
+                if (res.code == 200) {
+                    //layer.close(dIndex);
+                    layer.msg(res.msg, {icon: 1});
+                    //insTb.reload({}, 'data');
+                } else {
+                    layer.msg(res.msg, {icon: 2});
+                }
+            }, 'json');
+            return false;
+        });
+    });
+
 </script>
-  </body>
+</body>
 </html>

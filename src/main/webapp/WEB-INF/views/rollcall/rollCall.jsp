@@ -5,7 +5,7 @@
 <html>
 <head>
 <title>点名系统</title>
-<link rel="stylesheet" href="${ctx }/static/rollcall/css/style.css">
+<link rel="stylesheet" href="${ctx }/assets/libs/rollcall/css/style.css">
 <style type="text/css">
 h3 {
 font-size:14px;
@@ -62,20 +62,43 @@ margin-bottom:2px;
 clear:both;
 }
 #rollcall{
- {position:absolute;left;0;bottom:0;}
+ {position:absolute;left;bottom:0;}
 }
 </style>
 </head>
 <body>
-<form action="saveRollCall" id="rollcall" method="get"></form>
-	<h1 style="text-align: center;margin-top: 20px;">课堂点名
+<form action="saveRollCall" id="rollcall" method="POST">
+<h1 style="text-align: center;margin-top: 20px;">课堂点名</h1>
+<div style="margin: 0 auto;text-align: center;">
+	<h2>
+		选择课程<select id="course" name="course">
+		<c:forEach var="course" items="${courses}">
+			<c:choose>
+				<c:when test="${course.id == courseId}">
+					<option value="${course.id}" selected>${course.name}</option>
+				</c:when>
+				<c:otherwise>
+					<option value="${course.id}">${course.name}</option>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+	</select>
 	选择班级：<select id="classInfo" name=classInfo>
-		<option value="1">教育技术161</option>
-				<option value="2">英语161_1班</option>
-						<option value="3">英语161_2班</option>
-	</select></h1>
+			<c:forEach var="classInfo" items="${classInfos}">
+				<c:choose>
+					<c:when test="${classInfo.id == classInfoId}">
+						<option value="${classInfo.id}" selected>${classInfo.name}</option>
+					</c:when>
+					<c:otherwise>
+						<option value="${classInfo.id}">${classInfo.name}</option>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+	</select>&nbsp;&nbsp;&nbsp;上课周<select id="week" name=week>
+		</select></h2></div>
 	<div class='luck-back'>
 		<div class="luck-content ce-pack-end">
+			<input type="hidden" name="teacher_id" value="${teacher.id}">
 			<div id="luckuser" class="slotMachine">
 				<div class="slot">
 					<span class="name">姓名</span>
@@ -94,13 +117,28 @@ clear:both;
 				</div>
 			</div>
 		</div>
+
+	</div>
 	</div>
 		<input type="hidden" id="cango" name="cango" value="0">
-	<script src="${ctx }/static/rollcall/js/jquery-2.2.1.min.js"
+</form>
+	<script src="${ctx }/assets/libs/rollcall/js/jquery-2.2.1.min.js"
 		type="text/javascript"></script>
 	<div style="text-align:center;"></div>
-	
+
 	<script type="text/javascript">
+		$(function () {
+			var $select = $("#week");
+			for (var i = 1; i <=22; i++) {
+				var weekId = ${week};
+				if(weekId!=null&&weekId===i){
+					$select.append("<option selected value=" + i + ">第" + i + "周</option>");
+				}else {
+					$select.append("<option value=" + i + ">第" + i + "周</option>");
+				}
+			}
+		});
+
              var arrList = new Array();   
             // arrList = "${users}".replace('[','').replace(']','').split(',');   
 
@@ -149,10 +187,8 @@ alert("还未选好人！");
             var ss = $(this).children('option:selected').val();  
             window.location.href="/rollCall?classInfo="+ss;
         }); 		
- 			
- 			
         </script>
-	<script src="${ctx }/static/rollcall/js/Luckdraw.js"
+	<script src="${ctx }/assets/libs/rollcall/js/Luckdraw.js"
 		type="text/javascript"></script>
 </body>
 </html>

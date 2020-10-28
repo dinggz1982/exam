@@ -1,4 +1,3 @@
-
 var nametxt = $('.slot');
 var phonetxt = $('.name');
 var pcount = xinm.length-1;//参加人数
@@ -6,7 +5,7 @@ var runing = true;
 var trigger = true;
 var inUser = (Math.floor(Math.random() * 10000)) % 5 + 1;
 var num = 0;
-var Lotterynumber = 5; //设置单次点名人数
+var Lotterynumber = 1; //设置单次点名人数
 
 $(function () {
 	nametxt.css('background-image','url('+xinm[0]+')');
@@ -45,7 +44,7 @@ function startNum() {
 	num = Math.floor(Math.random() * pcount);
 	nametxt.css('background-image','url('+xinm[num]+')');
 	phonetxt.html(phone[num]);
-	console.log(text)
+	//console.log(text)
 	t = setTimeout(startNum, 0);
 }
 
@@ -79,12 +78,12 @@ function zd() {
 
 					$('#start').text('自动点名中('+ Lotterynumber+')');
 
-					if ( i == 5 ) {
+					if ( i == 1 ) {
 						console.log("点名结束");
 						window.clearInterval(stopTime);
 						$('#start').text("开始");
 						$('#cango').val(1);
-						Lotterynumber = 5;
+						Lotterynumber = 1;
 						trigger = true;
 					};
 
